@@ -27,11 +27,21 @@ x86/
 [Aa][Rr][Mm]/
 [Aa][Rr][Mm]64/
 bld/
+build/
 [Bb]in/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+[Ww][Ss][Ll]-[Gg][Cc][Cc]-*/
+x64-*/
+x86-*/
+
+# Install Folder
+[Ii]nstall/
+
+# System-spacific CMakeSettings
+CMakeSettings.json
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
