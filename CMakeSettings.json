@@ -1,0 +1,101 @@
+{
+  "configurations": [
+    {
+      "name": "WSL-GCC-Release",
+      "environments": [
+        {
+          "namespace": "lin",
+          // Replace the global property entirely.
+          "Geant4_linux": "/mnt/c/Workspace/Codes/Geant4_install/WSL-GCC-Release/lib/Geant4-11.0.0",
+          "Geant4_bin": "/mnt/c/Workspace/Codes/Geant4_install/WSL-GCC-Release/bin"
+          // This environment does not specify a namespace, hence by default "env" will be assumed.
+          // "namespace" : "name" would require that this variable be referenced with "${name.BuildDir}".
+        }
+      ],
+      "generator": "Ninja",
+      "configurationType": "Release",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux_x64" ],
+      "wslPath": "${defaultWSLPath}",
+      "addressSanitizerRuntimeFlags": "detect_leaks=0",
+      //"remotePrebuildCommand": "source ${lin.Geant4_bin}/geant4.sh",
+      "variables": [
+        {
+          "name": "Geant4_DIR",
+          "value": "${lin.Geant4_linux}",
+          "type": "FILEPATH"
+        }
+        //{
+        //  "name": "VTK_DIR",
+        //  "value": "/mnt/c/Workspace/vtk/install/lib/cmake/vtk-9.1",
+        //  "type": "FILEPATH"
+        //}
+      ]
+    },
+    {
+      "name": "WSL-GCC-Debug",
+      "environments": [
+        {
+          // Replace the global property entirely.
+          "Geant4_linux": "/mnt/c/Workspace/Codes/Geant4_install/WSL-GCC-Release/lib/Geant4-11.0.0",
+          "Geant4_bin": "/mnt/c/Workspace/Codes/Geant4_install/WSL-GCC-Release/bin"
+          // This environment does not specify a namespace, hence by default "env" will be assumed.
+          // "namespace" : "name" would require that this variable be referenced with "${name.BuildDir}".
+        }
+      ],
+      "generator": "Ninja",
+      "configurationType": "Debug",
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeExecutable": "cmake",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      "inheritEnvironments": [ "linux_x64" ],
+      "wslPath": "${defaultWSLPath}",
+      "addressSanitizerRuntimeFlags": "detect_leaks=0",
+      "remotePrebuildCommand": "source ${env.Geant4_bin}/geant4.sh",
+      "variables": [
+        {
+          "name": "Geant4_DIR",
+          "value": "${env.Geant4_linux}",
+          "type": "FILEPATH"
+        }
+      ]
+    },
+    {
+      "name": "x64-Release",
+      "environments": [
+        {
+          // Replace the global property entirely.
+          "Geant4_windows": "C:\\Workspace\\Codes\\Geant4_install\\x64-Release\\lib\\Geant4-11.0.0",
+          "Geant4_bin": "C:\\Workspace\\Codes\\Geant4_install\\x64-Release\\bin",
+          "opmd": "C:\\Workspace\\Codes\\openPMD-api\\install\\Win\\cmake"
+          // This environment does not specify a namespace, hence by default "env" will be assumed.
+          // "namespace" : "name" would require that this variable be referenced with "${name.BuildDir}".
+        }
+      ],
+      "generator": "Visual Studio 16 2019 Win64",
+      "configurationType": "Release",
+      "inheritEnvironments": [ "msvc_x64_x64" ],
+      "buildRoot": "${projectDir}\\build\\${name}",
+      "installRoot": "${projectDir}\\install\\${name}",
+      "cmakeCommandArgs": "",
+      "buildCommandArgs": "",
+      "ctestCommandArgs": "",
+      //"remotePrebuildCommand": "Invoke-BatchFile ${env.Geant4_bin}/geant4.bat",
+      "variables": [
+        {
+          "name": "Geant4_DIR",
+          "value": "${env.Geant4_windows}",
+          "type": "FILEPATH"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/install/strip.dir
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/install/local.dir
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/edit_cache.dir
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/install.dir
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/list_install_components.dir
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/rebuild_cache.dir
+/mnt/c/Workspace/Codes/GRAPPA/build/WSL-GCC-Release/CMakeFiles/GRAPPA.dir
