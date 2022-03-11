@@ -23,11 +23,11 @@ Besides, other optional requirements will enable extra features:
 
 ### Build instructions
 
-GRAPPA is best build using cmake. From the source folder type
+GRAPPA is best built using cmake. From the source folder type
 
 ```
 mkdir -p build; cd build
-cmake .. -DGeant4_DIR={G4 directory on the system}
+cmake .. -DGeant4_DIR={G4 cmake directory on the system}
 cmake --build . --config Release --target install
 ```
 
@@ -36,6 +36,13 @@ You should provide `cmake` with the G4 installation directory containing the `Ge
 ## Run
 
 GRAPPA can either run using an interactive user interface (`UI`) or using a provided macro script.
+Before running, the G4 initialization script, provided by G4, must be sourced.
+It is located in the bin directory of the G4 installation directory and should be sourced with
+
+```
+source ${G4_base_install_dir}/bin.geant4.sh
+```
+
 ### Interactive GRAPPA
 
 Launch GRAPPA with no extra argument using
