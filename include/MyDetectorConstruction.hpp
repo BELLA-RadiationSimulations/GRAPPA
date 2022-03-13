@@ -31,7 +31,7 @@ public:
     MyDetectorConstruction(HistandNTupleManager* myanalysismanager);
     //Destructor
     virtual ~MyDetectorConstruction();
-    virtual G4VPhysicalVolume* Construct();
+    virtual G4VPhysicalVolume* Construct() override;
 
     // Sensitive Detector Construction
     void ConstructSDandField() override;

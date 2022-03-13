@@ -37,6 +37,5 @@ public:
     inline HistandNTupleManager* GetHistandNTupleManager() { return m_HistoandNtupleManager; }
 private:
     G4Accumulable<G4double> tfoil = G4Accumulable("Foil_time", 0.0, G4MergeMode::kMaximum);
-    G4double* tfoilM;
     HistandNTupleManager* m_HistoandNtupleManager;
 };

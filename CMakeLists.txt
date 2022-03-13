@@ -34,13 +34,18 @@ MESSAGE("   ==== Using ${CMAKE_CXX_COMPILER_ID} compiler ====")
 # (As taken from G4 examples)
 
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
-if(WITH_GEANT4_UIVIS)
+IF(WITH_GEANT4_UIVIS)
   find_package(Geant4 REQUIRED ui_all vis_all)
-else()
+ELSE()
   find_package(Geant4 REQUIRED)
-endif()
+ENDIF()
 IF (NOT ${Geant4_FOUND})
    MESSAGE(FATAL_ERROR "Could not locate Geant 4")
+ENDIF()
+
+IF(Geant4_hdf5_FOUND)
+    MESSAGE(STATUS "Geant4 was compiled with HDF5 support: enabling HDF5 output.")
+    target_compile_definitions(GRAPPA PUBLIC GEANT4_HAS_HDF5)
 ENDIF()
 
 # Setting compiler options
