@@ -3,8 +3,8 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 project(GRAPPA VERSION 0.1)
 
-# Instructions needed to link with Geant 4 and OpenPMD if not installed in a standard location
-set(CMAKE_SKIP_BUILD_RPATH  FALSE)
+# Instructions needed to link with Geant 4 if not installed in a standard location
+set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH "")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
@@ -17,11 +17,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Setting build type if not specified
 set(DEFAULT_BUILD_TYPE "Release")
 IF (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-  message(STATUS "GRAPPA: Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
-  set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
-      STRING "Choose the type of build." FORCE)
-  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-    "Debug" "Release")
+message(STATUS "GRAPPA: Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
+set(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
+STRING "Choose the type of build." FORCE)
+set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+"Debug" "Release")
 ENDIF()
 
 MESSAGE("   ==== Using ${CMAKE_CXX_COMPILER_ID} compiler ====")
@@ -35,17 +35,21 @@ MESSAGE("   ==== Using ${CMAKE_CXX_COMPILER_ID} compiler ====")
 
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
 IF(WITH_GEANT4_UIVIS)
-  find_package(Geant4 REQUIRED ui_all vis_all)
+find_package(Geant4 REQUIRED ui_all vis_all)
 ELSE()
-  find_package(Geant4 REQUIRED)
+find_package(Geant4 REQUIRED)
 ENDIF()
 IF (NOT ${Geant4_FOUND})
-   MESSAGE(FATAL_ERROR "Could not locate Geant 4")
+MESSAGE(FATAL_ERROR "Could not locate Geant 4")
 ENDIF()
 
+# Defining the target
+add_executable(GRAPPA src/grappa.cc)
+
 IF(Geant4_hdf5_FOUND)
-    MESSAGE(STATUS "Geant4 was compiled with HDF5 support: enabling HDF5 output.")
-    target_compile_definitions(GRAPPA PUBLIC GEANT4_HAS_HDF5)
+MESSAGE(AUTHOR_WARNING "Geant4 was compiled with HDF5 support but the 'NTUPLE' doens't work in GRAPPA if used with HDF5. Disabling HDF5.")
+#MESSAGE(STATUS "Geant4 was compiled with HDF5 support: enabling HDF5 output.")
+#target_compile_definitions(GRAPPA PUBLIC GEANT4_HAS_HDF5)
 ENDIF()
 
 # Setting compiler options
@@ -68,7 +72,6 @@ ENDIF()
 file(GLOB sources ${PROJECT_SOURCE_DIR}/src/*.cc)
 file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 
-add_executable(GRAPPA src/grappa.cc)
 
 # Add GRAPPA source files to target
 target_sources(GRAPPA PRIVATE ${sources})
@@ -84,4 +87,6 @@ target_link_libraries(GRAPPA PRIVATE ${Geant4_LIBRARIES})
 
 set_target_properties(GRAPPA PROPERTIES LINKER_LANGUAGE CXX)
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
+message(STATUS "GRAPPA will be installed in ${CMAKE_INSTALL_PREFIX}")
 install(TARGETS GRAPPA DESTINATION bin)
