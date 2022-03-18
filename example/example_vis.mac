@@ -9,7 +9,7 @@
 /run/initialize
 
 # Use this open statement to create an OpenGL view:
-/vis/open RayTracer 1280x720-0+0
+/vis/open OGL 1280x720-0+0
 #
 # Disable auto refresh and quieten vis messages whilst scene and
 # trajectories are established:
@@ -19,56 +19,50 @@
 # Draw geometry:
 /vis/drawVolume
 #
-# Specify view angle:
-/vis/viewer/set/viewpointVector -1 0 0
-/vis/viewer/set/projection p
-/vis/viewer/set/viewpointThetaPhi 60 30
-/vis/viewer/set/lightsVector -1 0 0
-#/vis/viewer/zoom 2
-#
 # Draw smooth trajectories at end of event, showing trajectory points
 # as markers 2 pixels wide:
 /vis/scene/add/trajectories
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
+
+# Create some custom filters
+
+# Filter on particle momentum
+/vis/filtering/trajectories/create/attributeFilter
+/vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
+/vis/filtering/trajectories/attributeFilter-0/addInterval 20 MeV 10 GeV
+
+# Filter on particle type (show only electrons and positrons)
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add e-
+/vis/filtering/trajectories/particleFilter-0/add e+
+
 # To superimpose all of the events from a given run:
 /vis/scene/endOfEventAction accumulate
 # Axes, scale, etc.
-/vis/scene/add/scale   # Simple scale line
-/vis/scene/add/axes    # Simple axes: x=red, y=green, z=blue.
+# Simple scale line
+/vis/scene/add/scale
+# Simple axes: x=red, y=green, z=blue.
+/vis/scene/add/axes -10 0 0 2 cm
 # To get nice view
 # Make the "World" box invisible
 /vis/geometry/set/visibility World 0 false
 
+# Specify view angle:
+/vis/viewer/set/viewpoinVector -1 0 0
+/vis/viewer/set/projection p
+/vis/viewer/set/viewpointThetaPhi 60 30
+/vis/viewer/set/lightsVector -1 0 0
+#/vis/viewer/zoom 2
+#
 #=======================================================
 # Actual particles
 
-# Set the particle source: must be done after run initialization.
-# Particle source must be chosen between e- and gamma
-/gps/particle e-
-/gps/direction 0 0 1
-/gps/verbose 0
-
-# We want to simulate a beam, so the source type and shape must be "Volume" and "Ellipsoid".
-/gps/pos/type Beam
-/gps/pos/shape Ellipsoid
-
-# Then we define the beam center and the radial and longitudinal standard deviation
-/gps/pos/centre 0 0 -5 mm
-/gps/pos/sigma_r 50 um
-
-# Angular distribution of the beam
-/gps/ang/type focused
-/gps/ang/focuspoint 0 0 0 mm
-
-# Energy distribution of the beam
-/gps/ene/type Gauss
-/gps/ene/mono 10 GeV
-/gps/ene/sigma 10 MeV
+# Particles are available in another script
 
 #=======================================================
 
 /vis/viewer/flush
 /run/beamOn 10
-#/vis/ogl/export picture.svg
+#/vis/ogl/export snapshot.pdf

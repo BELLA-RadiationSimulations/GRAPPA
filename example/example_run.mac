@@ -21,6 +21,9 @@
 # /geometry/target/rotation 3 mm
 # /geometry/target/material G4_W
 
+# Fix random seed to have repeatable runs
+# /random/setSeeds 1 2 3
+
 # Initialize run
 /run/initialize
 
@@ -68,8 +71,12 @@
 # /analysis/plot/setStyle ROOT_default
 
 # If setActivationToAll is false, all the ntuples will not be written
-# (faster simulations, but only histograms at the end). Default is true 
+# (faster simulations, but only histograms at the end). Default is false 
 /analysis/ntuple/setActivationToAll false
+/analysis/h1/setActivationToAll false
+/analysis/h1/setPlottingToAll false
+/analysis/h2/setActivationToAll false
+/analysis/h2/setPlottingToAll false
 
 # Histogram list
 # 1D
@@ -122,4 +129,17 @@
 # =/=/=/=/= End analysis section =/=/=/=/=
 
 ## Run
-/run/beamOn 200000
+/run/beamOn 100000
+
+# =/=/=/=/= Call visualization script =/=/=/=/=
+
+# Disable analysis before visualization script to avoid
+# ovverriding the past analysis. ONLY if enabled before.
+#/analysis/ntuple/setActivationToAll false
+#/analysis/h1/setActivationToAll false
+#/analysis/h1/setPlottingToAll false
+#/analysis/h2/setActivationToAll false
+#/analysis/h2/setPlottingToAll false
+
+# /control/execute example_vis.mac
+# =/=/=/=/= End visualization script =/=/=/=/=
