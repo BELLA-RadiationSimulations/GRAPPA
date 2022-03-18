@@ -17,8 +17,7 @@ GRAPPA requires:
 
 Besides, other optional requirements will enable extra features:
 - Mutithreading support: G4 built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`
-- Visualization support: In order to produce visual outputs, you must install some of the G4 provided visualization drivers (_e.g._ OpenGL, RayTracer, etc...)
-- `HDF5` libraries to produce `.h5` binary files as outputs. If `HDF5` is not available, a `.csv` file will be produced (stronlgy discouraged). G4 must be built with `-DGEANT4_USE_HDF5:BOOL=ON` for `HDF5` support.
+- Visualization support: In order to produce visual outputs, you must install some of the G4 provided visualization drivers (_e.g._ OpenGL, RayTracer, QT5, etc...)
 - For nicer plots, `Freetype` libraries should be available. G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON` for `Freetype` support
 
 ### Build instructions
@@ -32,6 +31,7 @@ cmake --build . --config Release --target install
 ```
 
 You should provide `cmake` with the G4 installation directory containing the `Geant4Config.cmake` file. Typically, it can be found in `${G4_base_install_dir}/lib/Geant4-version`.
+By default, GRAPPA is installed in the `bin` directory of the source code folder.
 
 ## Run
 
@@ -40,7 +40,7 @@ Before running, the G4 initialization script, provided by G4, must be sourced.
 It is located in the bin directory of the G4 installation directory and should be sourced with
 
 ```
-source ${G4_base_install_dir}/bin.geant4.sh
+source ${G4_base_install_dir}/bin/geant4.sh
 ```
 
 ### Interactive GRAPPA
