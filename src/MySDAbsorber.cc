@@ -7,22 +7,20 @@
 
 #include <MySDAbsorber.hpp>
 
-AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager* myanalysismanager) :G4VSensitiveDetector(name)
+AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
 }
 
 AbsorberSD::~AbsorberSD()
 {
-
 }
 
-void AbsorberSD::Initialize(G4HCofThisEvent*)
+void AbsorberSD::Initialize(G4HCofThisEvent *)
 {
-
 }
 
-G4bool AbsorberSD::ProcessHits(G4Step* step, G4TouchableHistory*)
+G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
@@ -30,18 +28,18 @@ G4bool AbsorberSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     G4ThreeVector position, momentum;
 
     // Access track information
-    G4Track* aTrack = step->GetTrack();
+    G4Track *aTrack = step->GetTrack();
 
     // Getting pre step point information and volume name
-    G4StepPoint* preStepPoint = step->GetPreStepPoint();
+    G4StepPoint *preStepPoint = step->GetPreStepPoint();
     G4String thisVolumename = aTrack->GetVolume()->GetName();
-    const G4ParticleDefinition* particle = aTrack->GetParticleDefinition();
+    const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     G4String name = particle->GetParticleName();
     G4int pID = aTrack->GetParentID();
     G4int histeneid, histoxyid, histotxtyid, ntupleid;
 
     // Pointer to current process
-    const G4VProcess* CurrentProcess = preStepPoint->GetProcessDefinedStep();
+    const G4VProcess *CurrentProcess = preStepPoint->GetProcessDefinedStep();
 
     // Boolean flags for histogram and Ntuple filling
     G4bool FillHistogram = true;
@@ -53,11 +51,16 @@ G4bool AbsorberSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     G4double MinElectronEnergy = 1 * MeV;
     G4double MinPositronEnergy = 1 * MeV;
 
+    if (!analysisManager->IsActive())
+    {
+        return false;
+    }
     if (CurrentProcess)
     {
         // Getting process name (it should match "Transportation")
-        const G4String& StepProcessName = CurrentProcess->GetProcessName();
-        if (StepProcessName == "Transportation") {
+        const G4String &StepProcessName = CurrentProcess->GetProcessName();
+        if (StepProcessName == "Transportation")
+        {
             // processing hit when entering the volume
             kineticEnergy = aTrack->GetKineticEnergy();
             position = aTrack->GetPosition();
@@ -118,23 +121,31 @@ G4bool AbsorberSD::ProcessHits(G4Step* step, G4TouchableHistory*)
                 {
                     FillNtuple = false;
                 }
-
             }
             else
             {
                 return false;
-
             }
         }
 
         if (FillHistogram)
         {
             // Filling the correct histogram
-            analysisManager->FillH1(histeneid, kineticEnergy);
-            analysisManager->FillH2(histoxyid, position.x(), position.y());
-            analysisManager->FillH2(histotxtyid, momentum.x() * pz_inv, momentum.y() * pz_inv);
+            if (analysisManager->GetH1Activation(histeneid))
+            {
+                analysisManager->FillH1(histeneid, kineticEnergy);
+            }
+            if (analysisManager->GetH2Activation(histoxyid))
+            {
+                analysisManager->FillH2(histoxyid, position.x(), position.y());
+            }
+            if (analysisManager->GetH2Activation(histotxtyid))
+            {
+                analysisManager->FillH2(histotxtyid, momentum.x() * pz_inv, momentum.y() * pz_inv);
+            }
         }
 
+        FillNtuple = (FillNtuple && analysisManager->GetNtupleActivation(ntupleid));
         if (FillNtuple)
         {
             // Filling the correct Ntuple
@@ -152,5 +163,4 @@ G4bool AbsorberSD::ProcessHits(G4Step* step, G4TouchableHistory*)
     }
 
     return false;
-
 }
