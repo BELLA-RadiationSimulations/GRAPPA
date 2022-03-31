@@ -3,10 +3,9 @@
 #
 # Set some default verbose
 /control/verbose 2
-/control/saveHistory
 /run/verbose 0
 # Initialize kernel
-/run/initialize
+#/run/initialize
 
 # Use this open statement to create an OpenGL view:
 /vis/open OGL 1280x720-0+0
@@ -31,38 +30,70 @@
 # Filter on particle momentum
 /vis/filtering/trajectories/create/attributeFilter
 /vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
-/vis/filtering/trajectories/attributeFilter-0/addInterval 20 MeV 10 GeV
+/vis/filtering/trajectories/attributeFilter-0/addInterval 5 MeV 400 MeV
 
 # Filter on particle type (show only electrons and positrons)
 /vis/filtering/trajectories/create/particleFilter
 /vis/filtering/trajectories/particleFilter-0/add e-
 /vis/filtering/trajectories/particleFilter-0/add e+
+/vis/filtering/trajectories/particleFilter-0/add gamma
 
 # To superimpose all of the events from a given run:
 /vis/scene/endOfEventAction accumulate
 # Axes, scale, etc.
 # Simple scale line
-/vis/scene/add/scale
+/vis/scene/add/scale 5 cm z 0 0 1 auto -10 0 -2 cm
 # Simple axes: x=red, y=green, z=blue.
 /vis/scene/add/axes -10 0 0 2 cm
 # To get nice view
 # Make the "World" box invisible
 /vis/geometry/set/visibility World 0 false
 
+# Remove hidden edges
+/vis/viewer/set/hiddenEdge 1
 # Specify view angle:
-/vis/viewer/set/viewpoinVector -1 0 0
-/vis/viewer/set/projection p
-/vis/viewer/set/viewpointThetaPhi 60 30
+#/vis/viewer/set/projection p
+/vis/viewer/set/targetPoint 0 0 0 cm
+/vis/viewer/set/viewpointThetaPhi 60 8
 /vis/viewer/set/lightsVector -1 0 0
-#/vis/viewer/zoom 2
-#
+/vis/viewer/zoom 2.3
+
 #=======================================================
 # Actual particles
 
-# Particles are available in another script
+# Particles are determined in outer script
+
+/gps/verbose 2
 
 #=======================================================
 
 /vis/viewer/flush
-/run/beamOn 10
-#/vis/ogl/export snapshot.pdf
+/run/beamOn 50
+/vis/ogl/export snapshot.pdf
+
+/vis/viewer/set/viewpointThetaPhi -60 8
+/vis/viewer/zoom 2.3
+/vis/viewer/flush
+/run/beamOn 50
+/vis/ogl/export snapshot_1.pdf
+
+/vis/viewer/zoom 0.3
+/vis/viewer/flush
+/run/beamOn 50
+/vis/ogl/export snapshot_large.pdf
+
+/vis/scene/removeModel Axes
+/vis/viewer/set/viewpointThetaPhi -90 0
+/vis/viewer/zoomTo 28
+/vis/viewer/flush
+/run/beamOn 50
+/vis/ogl/export snapshot_zoom.pdf
+
+/vis/viewer/set/viewpointThetaPhi -180 0
+/vis/viewer/zoomTo 15
+/vis/viewer/flush
+/run/beamOn 50
+/vis/ogl/export snapshot_front.pdf
+
+/vis/enable false
+/vis/viewer/save

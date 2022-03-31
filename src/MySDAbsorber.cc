@@ -24,7 +24,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
-    G4double kineticEnergy, time, pz_inv;
+    G4double kineticEnergy, time, pz, px, py;
     G4ThreeVector position, momentum;
 
     // Access track information
@@ -67,7 +67,9 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             momentum = aTrack->GetMomentum();
             time = aTrack->GetGlobalTime();
             aTrack->SetTrackStatus(fStopAndKill);
-            pz_inv = 1 / momentum.z();
+            pz = momentum.z();
+            px = momentum.x();
+            py = momentum.y();
         }
         else
         {
@@ -141,7 +143,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             }
             if (analysisManager->GetH2Activation(histotxtyid))
             {
-                analysisManager->FillH2(histotxtyid, momentum.x() * pz_inv, momentum.y() * pz_inv);
+                analysisManager->FillH2(histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
             }
         }
 

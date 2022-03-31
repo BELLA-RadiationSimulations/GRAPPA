@@ -1,6 +1,7 @@
 // To execute this MACRO file in root
 // 1) open root
-// 2) .L read_data.C
+// 2a) .L read_data.C
+// 2b) .L read_data.C+ (to run a compiled version of this library)
 
 // This macro file extracts data from root file.
 // At the moment it assumes the file structure from GRAPPA
@@ -19,6 +20,22 @@
 // After extraction, particles are moved such that their own absolute time
 // coincides with the highest absolute time available.
 // That time is taken as the phasespace reference time.
+
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+
+#include <Math/Vector3D.h>
+#include <Math/Vector4D.h>
+#include <TCanvas.h>
+#include <TDatabasePDG.h>
+#include <TDirectory.h>
+#include <TFile.h>
+#include <TMath.h>
+#include <TNtuple.h>
+#include <TParticlePDG.h>
+#include <TROOT.h>
 
 namespace PhysicalConstants
 {
@@ -45,7 +62,7 @@ public:
   inline std::vector<ROOT::Math::XYZVector> GetPosition() { return m_position; }
   inline std::vector<ROOT::Math::PxPyPzMVector> GetMomentum() { return m_massmomentum; }
   inline std::vector<double> t() { return m_time; }
-  TParticlePDG * GetPart() { return m_part; }
+  TParticlePDG *GetPart() { return m_part; }
   inline int NofParticles() { return m_NofParticles; }
   inline std::string GetNTupleName() { return m_ntuplename; }
   inline double Mass() { return m_part->Mass() * 1.e3; }
@@ -91,22 +108,21 @@ PhaseSpace ExtractPhasespace(std::string particlename, std::string ntuplename, s
   PxPyPzMVector mmomvec;
 
   // Pointer to file. WARNING: no error checking is performed
-  std::unique_ptr<TFile>
-      myFile(TFile::Open(filename.c_str()));
+  std::shared_ptr<TFile> myFile(TFile::Open(filename.c_str()));
   if (!myFile)
   {
-    cout << "ERROR: file " << filename << " provided does not exist or is not accessible" << endl;
-    cout << "Returning an empty phasespace" << endl;
+    std::cout << "ERROR: file " << filename << " provided does not exist or is not accessible" << std::endl;
+    std::cout << "Returning an empty phasespace" << std::endl;
     return PhaseSpace();
   }
   // Get ntuple directory
-  std::unique_ptr<TDirectory> dir((TDirectory *)myFile->Get("ntuple"));
+  std::shared_ptr<TDirectory> dir((TDirectory *)myFile->Get("ntuple"));
   // Get the specified ntuple. WARNING: no error checking is performed
-  std::unique_ptr<TNtuple> ntuple((TNtuple *)dir->Get(ntuplename.c_str()));
+  std::shared_ptr<TNtuple> ntuple((TNtuple *)dir->Get(ntuplename.c_str()));
   if (!ntuple)
   {
-    cout << "ERROR: ntuple " << ntuplename << " provided does not exist or is not accessible" << endl;
-    cout << "Returning an empty phasespace" << endl;
+    std::cout << "ERROR: ntuple " << ntuplename << " provided does not exist or is not accessible" << std::endl;
+    std::cout << "Returning an empty phasespace" << std::endl;
     return PhaseSpace();
   }
   // Assigning the branches address
@@ -122,7 +138,7 @@ PhaseSpace ExtractPhasespace(std::string particlename, std::string ntuplename, s
   PhaseSpace ps = PhaseSpace(ntuple->GetEntries());
   ps.SetNtupleName(ntuplename);
   ps.SetPart(TDatabasePDG::Instance()->GetParticle(particlename.c_str()));
-  mass_squared = std::pow(ps.Mass(), 2);
+  mass_squared = TMath::Power(ps.Mass(), 2);
   // First cycle to find reference time
   for (i = 0; ntuple->GetEntry(i) > 0; i++)
   {
@@ -152,32 +168,32 @@ void plot(std::string ntuplename, std::string filename = "Analysis.root")
   gROOT->Reset();
   gROOT->SetStyle("Plain");
 
-  std::unique_ptr<TFile> myFile(TFile::Open(filename.c_str()));
+  std::shared_ptr<TFile> myFile(TFile::Open(filename.c_str()));
 
   while (!myFile)
   {
-    cout << filename << " is an invalid file, please provide a valid file: ";
-    cin >> filename;
+    std::cout << filename << " is an invalid file, please provide a valid file: ";
+    std::cin >> filename;
     myFile.reset((TFile *)TFile::Open(filename.c_str()));
   }
 
   // Create a canvas and divide it into 2x2 pads
-  std::unique_ptr<TCanvas> c1 = std::make_unique<TCanvas>("c1", "", 20, 20, 1000, 1000);
+  std::shared_ptr<TCanvas> c1 = std::make_unique<TCanvas>("c1", "", 20, 20, 1000, 1000);
   c1->Divide(2, 2);
 
   // Get ntuple directory
-  std::unique_ptr<TDirectory> dir((TDirectory *)myFile->Get("ntuple"));
+  std::shared_ptr<TDirectory> dir((TDirectory *)myFile->Get("ntuple"));
 
-  std::unique_ptr<TNtuple> ntuple((TNtuple *)dir->Get(ntuplename.c_str()));
+  std::shared_ptr<TNtuple> ntuple((TNtuple *)dir->Get(ntuplename.c_str()));
   while (!ntuple)
   {
-    cout << "Provided name " << ntuplename << " is not valid." << endl;
-    cout << "Please provide another one: ";
-    cin >> ntuplename;
+    std::cout << "Provided name " << ntuplename << " is not valid." << std::endl;
+    std::cout << "Please provide another one: ";
+    std::cin >> ntuplename;
     ntuple.reset((TNtuple *)dir->Get(ntuplename.c_str()));
   }
 
-  cout << "Plotting Ntuple " << ntuplename << endl;
+  std::cout << "Plotting Ntuple " << ntuplename << std::endl;
   // Get ntuple
 
   // Draw Eabs histogram in the pad 1
@@ -200,10 +216,4 @@ void plot(std::string ntuplename, std::string filename = "Analysis.root")
   gPad->SetLogy(1);
   gPad->SetLogx(1);
   ntuple->Draw("Pz");
-}
-
-void read_data()
-{
-  gROOT->Reset();
-  PhaseSpace ps = ExtractPhasespace("FinalElectron", "Analysis_merged.root");
 }

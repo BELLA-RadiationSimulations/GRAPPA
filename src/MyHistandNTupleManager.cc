@@ -47,8 +47,8 @@ void HistandNTupleManager::Book()
     analysisManager->SetDefaultFileType("hdf5");
 #else
     analysisManager->SetDefaultFileType("root");
-    // analysisManager->SetNtupleMerging(true);
     // Note: merging ntuples is available only with Root output
+    // analysisManager->SetNtupleMerging(true);
 #endif
     analysisManager->SetFileName(fFileName);
 

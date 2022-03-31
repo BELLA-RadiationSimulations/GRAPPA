@@ -44,7 +44,7 @@ x86-*/
 CMakeSettings.json
 
 # Eventually, a run folder
-run/
+# run/
 
 # Other strange files
 .DS_Store
