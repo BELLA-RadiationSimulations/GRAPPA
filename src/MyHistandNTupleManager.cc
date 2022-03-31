@@ -193,11 +193,10 @@ void NTupleManager::Book()
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
 
     analysisManager->SetNtupleDirectoryName("ntuple");
-
     // Creation on ntuples
 
     // NTuple 0: Phase space of particles generated at source
-    primaryinitialid = analysisManager->CreateNtuple("InitialParticles", "Initial primary particle phase space");
+    primaryinitialid = analysisManager->CreateNtuple("InitialPrimary", "Initial primary particle phase space");
     analysisManager->SetNtupleActivation(primaryinitialid, false);
     analysisManager->CreateNtupleDColumn(primaryinitialid, "X");
     analysisManager->CreateNtupleDColumn(primaryinitialid, "Y");
@@ -254,4 +253,5 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleDColumn(gammaid, "Pz");
     analysisManager->CreateNtupleDColumn(gammaid, "t");
     analysisManager->FinishNtuple(gammaid);
+
 }

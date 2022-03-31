@@ -98,7 +98,7 @@ void PhaseSpace::SetNtupleName(std::string ntuplename)
   m_ntuplename = ntuplename;
 }
 
-PhaseSpace ExtractPhasespace(std::string particlename, std::string ntuplename, std::string filename = "Analysis.root")
+PhaseSpace ExtractPhasespace(std::string particlename, std::string ntuplename, std::string filename = "Ntuple.root")
 {
   using namespace ROOT::Math;
 
@@ -163,7 +163,7 @@ PhaseSpace ExtractPhasespace(std::string particlename, std::string ntuplename, s
   return ps;
 }
 
-void plot(std::string ntuplename, std::string filename = "Analysis.root")
+void plot(std::string ntuplename, std::string filename = "Ntuple.root")
 {
   gROOT->Reset();
   gROOT->SetStyle("Plain");

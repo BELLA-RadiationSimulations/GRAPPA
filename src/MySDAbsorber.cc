@@ -67,7 +67,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             momentum = aTrack->GetMomentum();
             time = aTrack->GetGlobalTime();
             aTrack->SetTrackStatus(fStopAndKill);
-            pz = momentum.z();
+            pz = std::abs(momentum.z());
             px = momentum.x();
             py = momentum.y();
         }
