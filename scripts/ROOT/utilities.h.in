@@ -15,6 +15,9 @@ namespace PhysicalConstants
   constexpr double c_m_s = 299792458.;
   constexpr double c_mm_ns = c_m_s * 1.e3 / 1.e9;
   constexpr double c_mu_fs = c_m_s * 1.e6 / 1.e15;
+  constexpr double e_C = 1.60217662e-19;
+  constexpr double e_pC = 1.60217662e-7;
+  constexpr double m_e_kg = 9.10938e-31;
 }
 
 class ReferenceVariable
