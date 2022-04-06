@@ -43,7 +43,8 @@ void HistandNTupleManager::Book()
     // Introduce an analysis manager
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(0);
-#if GEANT4_HAS_HDF5
+    
+#if GRAPPA_USE_HDF5
     analysisManager->SetDefaultFileType("hdf5");
 #else
     analysisManager->SetDefaultFileType("root");
