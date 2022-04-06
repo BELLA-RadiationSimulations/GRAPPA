@@ -7,7 +7,7 @@
 
 #include <MyHistandNTupleManager.hpp>
 
-HistandNTupleManager::HistandNTupleManager() : fFileName("Analysis")
+HistandNTupleManager::HistandNTupleManager() : fFileName("Data_output")
 {
     m_HistoManager = new HistoManager();
     m_NtupleManager = new NTupleManager();
@@ -43,7 +43,7 @@ void HistandNTupleManager::Book()
     // Introduce an analysis manager
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(0);
-#if defined(GEANT4_HAS_HDF5)
+#if GEANT4_HAS_HDF5
     analysisManager->SetDefaultFileType("hdf5");
 #else
     analysisManager->SetDefaultFileType("root");
@@ -198,59 +198,59 @@ void NTupleManager::Book()
     // NTuple 0: Phase space of particles generated at source
     primaryinitialid = analysisManager->CreateNtuple("InitialPrimary", "Initial primary particle phase space");
     analysisManager->SetNtupleActivation(primaryinitialid, false);
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "X");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "Y");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "Z");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "Px");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "Py");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "Pz");
+    analysisManager->CreateNtupleDColumn(primaryinitialid, "x");
+    analysisManager->CreateNtupleDColumn(primaryinitialid, "y");
+    analysisManager->CreateNtupleDColumn(primaryinitialid, "z");
+    analysisManager->CreateNtupleDColumn(primaryinitialid, "px");
+    analysisManager->CreateNtupleDColumn(primaryinitialid, "py");
+    analysisManager->CreateNtupleDColumn(primaryinitialid, "pz");
     analysisManager->FinishNtuple(primaryinitialid);
 
     // NTuple 1: Phase space of final primaries
     primaryid = analysisManager->CreateNtuple("FinalPrimary", "Final primary particles phase space");
     analysisManager->SetNtupleActivation(primaryid, false);
-    analysisManager->CreateNtupleDColumn(primaryid, "X");
-    analysisManager->CreateNtupleDColumn(primaryid, "Y");
-    analysisManager->CreateNtupleDColumn(primaryid, "Z");
-    analysisManager->CreateNtupleDColumn(primaryid, "Px");
-    analysisManager->CreateNtupleDColumn(primaryid, "Py");
-    analysisManager->CreateNtupleDColumn(primaryid, "Pz");
+    analysisManager->CreateNtupleDColumn(primaryid, "x");
+    analysisManager->CreateNtupleDColumn(primaryid, "y");
+    analysisManager->CreateNtupleDColumn(primaryid, "z");
+    analysisManager->CreateNtupleDColumn(primaryid, "px");
+    analysisManager->CreateNtupleDColumn(primaryid, "py");
+    analysisManager->CreateNtupleDColumn(primaryid, "pz");
     analysisManager->CreateNtupleDColumn(primaryid, "t");
     analysisManager->FinishNtuple(primaryid);
 
     // NTuple 2: Phase space of final positrons
     posiid = analysisManager->CreateNtuple("FinalPositron", "Final secondary positron phase space");
     analysisManager->SetNtupleActivation(posiid, false);
-    analysisManager->CreateNtupleDColumn(posiid, "X");
-    analysisManager->CreateNtupleDColumn(posiid, "Y");
-    analysisManager->CreateNtupleDColumn(posiid, "Z");
-    analysisManager->CreateNtupleDColumn(posiid, "Px");
-    analysisManager->CreateNtupleDColumn(posiid, "Py");
-    analysisManager->CreateNtupleDColumn(posiid, "Pz");
+    analysisManager->CreateNtupleDColumn(posiid, "x");
+    analysisManager->CreateNtupleDColumn(posiid, "y");
+    analysisManager->CreateNtupleDColumn(posiid, "z");
+    analysisManager->CreateNtupleDColumn(posiid, "px");
+    analysisManager->CreateNtupleDColumn(posiid, "py");
+    analysisManager->CreateNtupleDColumn(posiid, "pz");
     analysisManager->CreateNtupleDColumn(posiid, "t");
     analysisManager->FinishNtuple(posiid);
 
     // NTuple 3: Phase space of final electrons
     electronid = analysisManager->CreateNtuple("FinalElectron", "Final secondary electron phase space");
     analysisManager->SetNtupleActivation(electronid, false);
-    analysisManager->CreateNtupleDColumn(electronid, "X");
-    analysisManager->CreateNtupleDColumn(electronid, "Y");
-    analysisManager->CreateNtupleDColumn(electronid, "Z");
-    analysisManager->CreateNtupleDColumn(electronid, "Px");
-    analysisManager->CreateNtupleDColumn(electronid, "Py");
-    analysisManager->CreateNtupleDColumn(electronid, "Pz");
+    analysisManager->CreateNtupleDColumn(electronid, "x");
+    analysisManager->CreateNtupleDColumn(electronid, "y");
+    analysisManager->CreateNtupleDColumn(electronid, "z");
+    analysisManager->CreateNtupleDColumn(electronid, "px");
+    analysisManager->CreateNtupleDColumn(electronid, "py");
+    analysisManager->CreateNtupleDColumn(electronid, "pz");
     analysisManager->CreateNtupleDColumn(electronid, "t");
     analysisManager->FinishNtuple(electronid);
 
     // NTuple 4: Phase space of final photons
     gammaid = analysisManager->CreateNtuple("FinalPhoton", "Final secondary photon phase space");
     analysisManager->SetNtupleActivation(gammaid, false);
-    analysisManager->CreateNtupleDColumn(gammaid, "X");
-    analysisManager->CreateNtupleDColumn(gammaid, "Y");
-    analysisManager->CreateNtupleDColumn(gammaid, "Z");
-    analysisManager->CreateNtupleDColumn(gammaid, "Px");
-    analysisManager->CreateNtupleDColumn(gammaid, "Py");
-    analysisManager->CreateNtupleDColumn(gammaid, "Pz");
+    analysisManager->CreateNtupleDColumn(gammaid, "x");
+    analysisManager->CreateNtupleDColumn(gammaid, "y");
+    analysisManager->CreateNtupleDColumn(gammaid, "z");
+    analysisManager->CreateNtupleDColumn(gammaid, "px");
+    analysisManager->CreateNtupleDColumn(gammaid, "py");
+    analysisManager->CreateNtupleDColumn(gammaid, "pz");
     analysisManager->CreateNtupleDColumn(gammaid, "t");
     analysisManager->FinishNtuple(gammaid);
 
