@@ -21,6 +21,7 @@
 // coincides with the highest absolute time available.
 // That time is taken as the phasespace reference time.
 
+#cmakedefine UTILITIES_PATH "@UTILITIES_PATH@"
 #include <iostream>
 #include <memory>
 #include <string>
@@ -38,6 +39,7 @@
 #include <TNtuple.h>
 #include <TParticlePDG.h>
 #include <TROOT.h>
+#include UTILITIES_PATH
 
 void WriteSametimeParticles()
 {
