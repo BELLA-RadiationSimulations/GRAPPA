@@ -1,0 +1,202 @@
+#ifndef UTILITIES_C
+#define UTILITIES_C
+
+#include <chrono>
+#include <iostream>
+#include <memory>
+
+#include <Math/Vector3D.h>
+#include <TFile.h>
+#include <TMath.h>
+#include <TNtuple.h>
+
+namespace PhysicalConstants
+{
+  constexpr double c_m_s = 299792458.;
+  constexpr double c_mm_ns = c_m_s * 1.e3 / 1.e9;
+  constexpr double c_mu_fs = c_m_s * 1.e6 / 1.e15;
+}
+
+class ReferenceVariable
+{
+
+public:
+  ReferenceVariable(){};
+  ~ReferenceVariable(){};
+  void AddEntry(double entry);
+  void ComputeStatistics();
+  inline double Cutoff() { return this->cutoff; }
+  inline double Mean() { return this->mean; }
+  inline double Max() { return this->Mean() + this->Cutoff(); }
+  inline double Min() { return this->Mean() - this->Cutoff(); }
+  inline double MinusOneSigma() { return this->Mean() - this->Std(); }
+  inline double MinusTwoSigma() { return this->Mean() - 2. * this->Std(); }
+  inline double MinusThreeSigma() { return this->Mean() - 3. * this->Std(); }
+  inline int Nentries() { return this->nentries; }
+  inline double OneSigma() { return this->Mean() + this->Std(); }
+  void Reset();
+  inline double Std() { return this->std; }
+  inline double TwoSigma() { return this->Mean() + 2. * this->Std(); }
+  inline double ThreeSigma() { return this->Mean() + 3. * this->Std(); }
+  inline double Var() { return this->var; }
+  void Write();
+
+private:
+  double cutoff = 0;
+  double mean = 0;
+  double mean_accumulator = 0;
+  int nentries = 0;
+  double std = 0;
+  double var;
+  double var_accumulator = 0;
+};
+
+void ReferenceVariable::AddEntry(double entry)
+{
+  this->nentries += 1;
+  this->mean_accumulator += entry;
+  this->var_accumulator += entry * entry;
+}
+
+void ReferenceVariable::ComputeStatistics()
+{
+  if (this->nentries == 0)
+  {
+    this->cutoff = 0;
+    this->mean = 0;
+    this->std = 0;
+    this->var = 0;
+  }
+  else
+  {
+    this->mean = this->mean_accumulator / this->nentries;
+    this->var = this->var_accumulator / this->nentries - this->mean * this->mean;
+    this->std = TMath::Sqrt(this->var);
+    this->cutoff = 5 * this->std;
+  }
+}
+
+void ReferenceVariable::Reset()
+{
+  this->cutoff = 0;
+  this->mean = 0;
+  this->mean_accumulator = 0;
+  this->nentries = 0;
+  this->std = 0;
+  this->var = 0;
+  this->var_accumulator = 0;
+}
+
+void ReferenceVariable::Write()
+{
+  std::cout << " Mean = " << this->Mean() << std::endl;
+  std::cout << " Variance = " << this->Var() << std::endl;
+  std::cout << " Standard deviation = " << this->Std() << std::endl;
+  std::cout << " Cutoff = " << this->Cutoff() << std::endl;
+  std::cout << " Nentries = " << this->Nentries() << std::endl;
+}
+
+bool AcceptParticle(ROOT::Math::RhoZPhiVectorF momentum, double t, ReferenceVariable tref)
+{
+  constexpr double pi_4 = TMath::PiOver4();
+  bool accept = true;
+  accept = accept && (TMath::Abs(t - tref.Mean()) < tref.Cutoff());
+  accept = accept && (momentum.Theta() < pi_4);
+  return accept;
+}
+
+bool FilterVariable(double variable, ReferenceVariable reference, double cutoff = 3)
+{
+  return (TMath::Abs(variable - reference.Mean()) < (cutoff * reference.Std()));
+}
+
+bool FilterPosition(double x, double y, double z, ReferenceVariable referencex,
+                    ReferenceVariable referencey, ReferenceVariable referencez, double cutoff = 3)
+{
+  bool accept = true;
+  accept = accept && (TMath::Abs(x - referencex.Mean()) < (cutoff * referencex.Std()));
+  accept = accept && (TMath::Abs(y - referencey.Mean()) < (cutoff * referencey.Std()));
+  accept = accept && (TMath::Abs(z - referencez.Mean()) < (cutoff * referencez.Std()));
+  return accept;
+}
+
+ReferenceVariable GetReferenceTime(std::shared_ptr<TNtuple> ntuple)
+{
+  Long64_t nentries;
+  int i;
+  long double mean = 0, std = 0;
+  double t;
+  ReferenceVariable tref;
+  auto start = std::chrono::high_resolution_clock::now();
+
+  ntuple->SetBranchAddress("t", &t);
+  TBranch *b_time = ntuple->GetBranch("t");
+  nentries = ntuple->GetEntries();
+
+  b_time->SetAddress(&t);
+
+  for (i = 0; i < nentries; i++)
+  {
+    b_time->GetEntry(i);
+    tref.AddEntry(t);
+  }
+
+  tref.ComputeStatistics();
+
+  auto stop = std::chrono::high_resolution_clock::now();
+  auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
+
+  std::cout << "Time used to find time for " << ntuple->GetName()
+            << " is " << duration.count() * 1.e-3 << " s" << std::endl;
+
+  ntuple->ResetBranchAddresses();
+  return tref;
+}
+
+ROOT::Math::XYZVectorF BackPropagateParticle(ROOT::Math::XYZVectorF position, ROOT::Math::RhoZPhiVectorF momentum, float m2, float deltat)
+{
+  float gamma_inv = 1.f / std::sqrt(momentum.Mag2() + m2);
+  float px = momentum.x();
+  float py = momentum.y();
+  float pz = momentum.z();
+  float x = position.x();
+  float y = position.y();
+  float z = position.z();
+  float betax = px * gamma_inv;
+  float betay = py * gamma_inv;
+  float betaz = pz * gamma_inv;
+  float cdeltat = static_cast<float>(PhysicalConstants::c_mm_ns * deltat);
+
+  return ROOT::Math::XYZVectorF(x + betax * cdeltat, y + betay * cdeltat, z + betaz * cdeltat);
+}
+
+std::shared_ptr<TFile> OpenFile(std::string filename = "Ntuple.root", Option_t *option = "READ")
+{
+  std::shared_ptr<TFile> myFile;
+  myFile.reset(TFile::Open(filename.c_str(), option));
+  if (!myFile)
+  {
+    std::cout << "ERROR: file " << filename << " provided does not exist or is not accessible" << std::endl;
+    return nullptr;
+  }
+
+  if (myFile->IsZombie())
+  {
+    std::cout << "ERROR: file " << filename << " results as zombie" << std::endl;
+    return nullptr;
+  }
+
+  return myFile;
+}
+
+std::shared_ptr<TNtuple> GetNtuple(std::shared_ptr<TFile> myFile_in, std::string ntuplename)
+{
+  // Pointer to file. WARNING: no error checking is performed
+  std::shared_ptr<TNtuple> ntuple;
+
+  // Get the specified ntuple. WARNING: no error checking is performed
+  ntuple.reset((TNtuple *)((TDirectory *)myFile_in->Get("ntuple"))->Get(ntuplename.c_str()));
+  return ntuple;
+}
+
+#endif

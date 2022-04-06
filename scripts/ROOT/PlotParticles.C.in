@@ -1,0 +1,127 @@
+#include <iostream>
+#include <memory>
+#include <string>
+
+#include <Math/Vector3D.h>
+#include <TCanvas.h>
+#include <TColor.h>
+#include <TDatabasePDG.h>
+#include <TFile.h>
+#include <TH2.h>
+#include <TMath.h>
+#include <TNtuple.h>
+#include <TParticlePDG.h>
+#include <TROOT.h>
+#include <TStyle.h>
+
+void PlotParticles()
+{
+  using namespace ROOT::Math;
+  gROOT->Reset();
+  gStyle->SetPalette(kBird);
+  std::string filename = "Backpropagated.root";
+  std::string positreename = "PositronSameTime";
+  std::string eletreename = "ElectronSameTime";
+  std::string primtreename = "Primary";
+  double prefactor_time = 1;
+  double prefactor_pos = 2;
+  float x, y, z;
+  float t, mass, mass_squared, charge, ref_time;
+  int nprimaries, nentries;
+  int i;
+  std::shared_ptr<XYZVectorF> position;
+  std::shared_ptr<RhoZPhiVectorF> momentum;
+  TBranch *b_pos, *b_mom, *b_time, *b_mass, *b_charge;
+  ReferenceVariable xref, yref, zref, tref;
+
+  std::cout << "Called function PlotParticles " << std::endl;
+  auto myFile = OpenFile(filename);
+
+  std::shared_ptr<TTree> positrons((TTree *)myFile->Get(positreename.c_str()));
+  std::shared_ptr<TTree> electrons((TTree *)myFile->Get(eletreename.c_str()));
+  std::shared_ptr<TTree> primaries((TTree *)myFile->Get(primtreename.c_str()));
+
+  nprimaries = primaries->GetEntries();
+
+  // Plotting positrons
+
+  nentries = positrons->GetEntries();
+
+  b_pos = positrons->GetBranch("X");
+  b_mom = positrons->GetBranch("P");
+  b_time = positrons->GetBranch("t");
+  b_mass = positrons->GetBranch("m");
+  b_charge = positrons->GetBranch("q");
+  b_pos->SetAddress(&position);
+  b_mom->SetAddress(&momentum);
+  b_time->SetAddress(&t);
+  b_mass->SetAddress(&mass);
+  b_charge->SetAddress(&charge);
+
+  for (i = 0; i < nentries; i++)
+  {
+    b_pos->GetEntry(i);
+    b_time->GetEntry(i);
+    xref.AddEntry(position->X());
+    yref.AddEntry(position->Y());
+    zref.AddEntry(position->Z());
+    tref.AddEntry(t);
+  }
+  xref.ComputeStatistics();
+  yref.ComputeStatistics();
+  zref.ComputeStatistics();
+  tref.ComputeStatistics();
+
+  TH1 *htheta = new TH1D("theta", "theta distribution", 100, 0, 0.1);
+  TH1 *hene = new TH1D("Energy", "energy distribution", 100, 0, 1000);
+  TH2 *xyspace = new TH2D("xy", "X-Y space", 300, xref.MinusOneSigma(), xref.OneSigma(),
+                          300, yref.MinusOneSigma(), yref.OneSigma());
+  TH2 *zxspace = new TH2D("zx", "Z-X space", 300, zref.MinusOneSigma(), zref.OneSigma(),
+                          300, xref.MinusOneSigma(), xref.OneSigma());
+
+  // Fetching particle mass (MeV)
+  b_mass->GetEntry(0);
+  mass_squared = TMath::Power(mass, 2);
+
+  for (i = 0; i < nentries; i++)
+  {
+    b_pos->GetEntry(i);
+    b_mom->GetEntry(i);
+    b_time->GetEntry(i);
+    x = position->X();
+    y = position->Y();
+    z = position->Z();
+    if (!FilterPosition(x, y, z, xref, yref, zref, 1.5))
+    {
+      continue;
+    }
+    if (!FilterVariable(t, tref))
+    {
+      continue;
+    }
+    htheta->Fill(momentum->Theta());
+    hene->Fill(TMath::Sqrt(momentum->Mag2() + mass_squared));
+    xyspace->Fill(x, y);
+    zxspace->Fill(z, x);
+  }
+
+  TCanvas *c1 = new TCanvas("Positrons", "Positrons", 20, 20, 1000, 1000);
+  c1->Divide(2, 2);
+  c1->cd(1);
+  c1->SetLogz(1);
+  xyspace->SetMinimum(200);
+  xyspace->DrawCopy("COLZ2");
+  c1->cd(2);
+  c1->SetLogz(1);
+  zxspace->SetMinimum(400);
+  zxspace->DrawCopy("COLZ2");
+  c1->cd(3);
+  htheta->DrawCopy();
+  c1->cd(4);
+  c1->SetLogx(1);
+  c1->SetLogy(1);
+  hene->DrawCopy();
+
+  positrons->ResetBranchAddresses();
+  std::cout << "End function PlotParticles " << std::endl;
+}
