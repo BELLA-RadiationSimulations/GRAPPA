@@ -96,6 +96,12 @@ void ReferenceVariable::Write()
   std::cout << " Nentries = " << this->Nentries() << std::endl;
 }
 
+// Return true if particle is accepted to be written in the final file.
+// The selection criteria are loose, nonetheless the filter some particles
+// of clear no inerest of completely out of statistics.
+// The final exit angle should be theta < pi/4 and
+// the arrival time should be within 5 sigmas of the average arrival time,
+// to avoid late produced particles.
 bool AcceptParticle(ROOT::Math::RhoZPhiVectorF momentum, double t, ReferenceVariable tref)
 {
   constexpr double pi_4 = TMath::PiOver4();

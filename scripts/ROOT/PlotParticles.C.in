@@ -16,6 +16,19 @@
 #include <TStyle.h>
 #include UTILITIES_PATH
 
+// Easily customizable function that creates a canvas with four plots.
+// All the plots are histograms extracted from the final particle distribution.
+// Additional filtering or analysis can be added.
+//
+// Bear in mind the structure of the backpropagated particle trees
+// Tree structure
+// treename
+//       |-> X Branch containing Nparts XYZVectorF elements (Cartesian particle positions in mm)
+//       |-> P Branch containing Nparts RhoZPhiVectorF elements (Cylindrical particle momenta in MeV and Rad)
+//       |-> t Branch containing Nparts float elements (Time used to shift particles from the reference time)
+//       |-> m 1 entry (Particle mass in MeV)
+//       |-> q 1 entry (Particle charge in units of e)
+//       |-> t_ref 1 entry (Absolute reference time in ns)
 void PlotParticles()
 {
   using namespace ROOT::Math;
