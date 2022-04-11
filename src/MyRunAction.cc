@@ -7,12 +7,13 @@
 
 #include <MyRunAction.hpp>
 
-MyRunAction::MyRunAction(HistandNTupleManager *myanalysismanager)
+MyRunAction::MyRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager)
     : G4UserRunAction()
 {
     // Associate the histrogram and ntuple manager
     m_HistoandNtupleManager = myanalysismanager;
     m_HistoandNtupleManager->Book();
+    m_partsfromfile = !useGPS;
 }
 
 MyRunAction::~MyRunAction()
@@ -28,15 +29,9 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
 
     // Checking if particles are read from file and issuing a warning if beamon requests more
     // particles than available
-    const MyActionInitialization *myactinitpointer =
-        static_cast<const MyActionInitialization *>(runmanager->GetUserActionInitialization());
     const MyPrimaryGeneratorAction *myprimarygenerationpointer =
         static_cast<const MyPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
     // Note: if condition necessary since there is no action object for master when in MT mode
-    if (myactinitpointer)
-    {
-        m_partsfromfile = myactinitpointer->GetIfParticlesFromFile();
-    }
 
     m_Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
     if (myprimarygenerationpointer)

@@ -21,7 +21,7 @@ MyActionInitialization::~MyActionInitialization()
 
 void MyActionInitialization::BuildForMaster() const
 {
-    MyRunAction *runAction = new MyRunAction(m_HistandNTupleManager);
+    MyRunAction *runAction = new MyRunAction(m_useGPS, m_HistandNTupleManager);
     SetUserAction(runAction);
 }
 
@@ -31,7 +31,7 @@ void MyActionInitialization::Build() const
         new MyPrimaryGeneratorAction(m_useGPS, m_filename);
     SetUserAction(primarygeneratoraction);
 
-    MyRunAction *runAction = new MyRunAction(m_HistandNTupleManager);
+    MyRunAction *runAction = new MyRunAction(m_useGPS, m_HistandNTupleManager);
     SetUserAction(runAction);
 
     MyTrackingAction *trackingAction = new MyTrackingAction(m_HistandNTupleManager);

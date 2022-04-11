@@ -25,7 +25,7 @@ class G4Run;
 class MyRunAction : public G4UserRunAction
 {
 public:
-    MyRunAction(HistandNTupleManager *myanalysismanager);
+    MyRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager);
     virtual ~MyRunAction();
 
     virtual void BeginOfRunAction(const G4Run *) override;
@@ -35,6 +35,6 @@ public:
 
 private:
     HistandNTupleManager *m_HistoandNtupleManager;
-    G4bool m_partsfromfile;
+    G4bool m_partsfromfile = false;
     G4int m_Numberofeventsthisrun = 0;
 };

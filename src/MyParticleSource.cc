@@ -15,7 +15,7 @@ ParticleSource::~ParticleSource()
 {
 }
 
-void ParticleSource::SetPart(G4ParticleDefinition * part)
+void ParticleSource::SetPart(G4ParticleDefinition *part)
 {
     m_part = part;
     m_particle_mass = m_part->GetPDGMass();
@@ -73,8 +73,8 @@ void ParticleSourceGun::LoadNextParticle(int eventNumber)
 
     m_NextPosition = particle.first;
     m_NextMomentum = particle.second;
-    energy = std::hypot(m_NextMomentum.mag2(), m_particle_mass_squared);
-    momentumdirection = m_NextMomentum/m_NextMomentum.mag();
+    energy = std::sqrt(m_NextMomentum.mag2() + m_particle_mass_squared);
+    momentumdirection = m_NextMomentum / m_NextMomentum.mag();
     m_Gun->SetParticlePosition(m_NextPosition);
     m_Gun->SetParticleEnergy(energy);
     m_Gun->SetParticleMomentumDirection(momentumdirection);
