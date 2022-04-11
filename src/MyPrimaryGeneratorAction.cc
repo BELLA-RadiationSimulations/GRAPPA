@@ -7,22 +7,30 @@
 
 #include <MyPrimaryGeneratorAction.hpp>
 
-using CLHEP::MeV;
 using CLHEP::GeV;
+using CLHEP::MeV;
 using CLHEP::mm;
 
-MyPrimaryGeneratorAction::MyPrimaryGeneratorAction()
+MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(bool useGPS, G4String filename)
 {
-    m_PSource = std::make_shared<ParticleSource>();
-    
+    if (useGPS)
+    {
+        m_PSource = std::make_shared<ParticleSourceGPS>();
+    }
+    else
+    {
+        m_PSource = std::make_shared<ParticleSourceGun>(filename);
+    }
 }
 
 MyPrimaryGeneratorAction::~MyPrimaryGeneratorAction()
 {
-
 }
 
-void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
+void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 {
+    int eventID = anEvent->GetEventID();
+
+    m_PSource->LoadNextParticle(eventID);
     m_PSource->GetGun()->GeneratePrimaryVertex(anEvent);
 }

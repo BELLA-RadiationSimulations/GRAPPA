@@ -10,21 +10,19 @@
 #include <G4VUserPrimaryGeneratorAction.hh>
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <G4Event.hh>
-#include <G4LogicalVolume.hh>
-#include <G4Box.hh>
-#include <G4LogicalVolumeStore.hh>
 
 #include <MyParticleSource.hpp>
-
 
 class MyPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-    MyPrimaryGeneratorAction();
+    MyPrimaryGeneratorAction(bool useGPS, G4String filename);
     virtual ~MyPrimaryGeneratorAction();
 
     // method from the base class
-    virtual void GeneratePrimaries(G4Event* anEvent);
+    virtual void GeneratePrimaries(G4Event *anEvent);
+
+    inline std::shared_ptr<ParticleSource> GetSource() const { return m_PSource; };
 
 private:
     std::shared_ptr<ParticleSource> m_PSource;
