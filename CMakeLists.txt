@@ -90,7 +90,7 @@ ENDIF()
 
 # Adding files to sources and headers
 FILE(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cc)
-FILE(GLOB HEADERS ${PROJECT_SOURCE_DIR}/include/*.hh)
+FILE(GLOB HEADERS ${PROJECT_SOURCE_DIR}/include/*.hpp)
 
 # Add GRAPPA source files to target
 TARGET_SOURCES(GRAPPA PRIVATE ${SOURCES})
