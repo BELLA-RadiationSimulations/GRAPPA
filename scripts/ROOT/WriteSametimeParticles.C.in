@@ -131,12 +131,12 @@ void WriteSametimeParticles()
 
   std::cout << "Now backpropagating positrons" << std::endl;
 
-  originalntupleposi->SetBranchAddress("X", &x);
-  originalntupleposi->SetBranchAddress("Y", &y);
-  originalntupleposi->SetBranchAddress("Z", &z);
-  originalntupleposi->SetBranchAddress("Px", &px);
-  originalntupleposi->SetBranchAddress("Py", &py);
-  originalntupleposi->SetBranchAddress("Pz", &pz);
+  originalntupleposi->SetBranchAddress("x", &x);
+  originalntupleposi->SetBranchAddress("y", &y);
+  originalntupleposi->SetBranchAddress("z", &z);
+  originalntupleposi->SetBranchAddress("px", &px);
+  originalntupleposi->SetBranchAddress("py", &py);
+  originalntupleposi->SetBranchAddress("pz", &pz);
   originalntupleposi->SetBranchAddress("t", &t);
 
   finalntupleposi->Branch("X", &backposition);
@@ -194,12 +194,12 @@ void WriteSametimeParticles()
 
   std::cout << "Now backpropagating electrons" << std::endl;
 
-  originalntupleele->SetBranchAddress("X", &x);
-  originalntupleele->SetBranchAddress("Y", &y);
-  originalntupleele->SetBranchAddress("Z", &z);
-  originalntupleele->SetBranchAddress("Px", &px);
-  originalntupleele->SetBranchAddress("Py", &py);
-  originalntupleele->SetBranchAddress("Pz", &pz);
+  originalntupleele->SetBranchAddress("x", &x);
+  originalntupleele->SetBranchAddress("y", &y);
+  originalntupleele->SetBranchAddress("z", &z);
+  originalntupleele->SetBranchAddress("px", &px);
+  originalntupleele->SetBranchAddress("py", &py);
+  originalntupleele->SetBranchAddress("pz", &pz);
   originalntupleele->SetBranchAddress("t", &t);
 
   finalntupleele->Branch("X", &backposition);
@@ -258,12 +258,12 @@ void WriteSametimeParticles()
 
   std::cout << "Now extracting primaries" << std::endl;
 
-  originalntupleinitial->SetBranchAddress("X", &x);
-  originalntupleinitial->SetBranchAddress("Y", &y);
-  originalntupleinitial->SetBranchAddress("Z", &z);
-  originalntupleinitial->SetBranchAddress("Px", &px);
-  originalntupleinitial->SetBranchAddress("Py", &py);
-  originalntupleinitial->SetBranchAddress("Pz", &pz);
+  originalntupleinitial->SetBranchAddress("x", &x);
+  originalntupleinitial->SetBranchAddress("y", &y);
+  originalntupleinitial->SetBranchAddress("z", &z);
+  originalntupleinitial->SetBranchAddress("px", &px);
+  originalntupleinitial->SetBranchAddress("py", &py);
+  originalntupleinitial->SetBranchAddress("pz", &pz);
 
   finalntupleprimary->Branch("X", &position);
   finalntupleprimary->Branch("P", &momentum);

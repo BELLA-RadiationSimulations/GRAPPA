@@ -41,7 +41,7 @@ void PlotParticles()
   double prefactor_time = 1;
   double prefactor_pos = 2;
   float x, y, z;
-  float t, mass, mass_squared, charge, ref_time;
+  float t, mass, mass_squared, charge, ref_time, energy, theta;
   int nprimaries, nentries;
   int i;
   std::shared_ptr<XYZVectorF> position;
@@ -87,11 +87,12 @@ void PlotParticles()
   zref.ComputeStatistics();
   tref.ComputeStatistics();
 
-  TH1 *htheta = new TH1D("theta", "theta distribution", 100, 0, 0.1);
-  TH1 *hene = new TH1D("Energy", "energy distribution", 100, 0, 1000);
-  TH2 *xyspace = new TH2D("xy", "X-Y space", 300, xref.MinusOneSigma(), xref.OneSigma(),
+  TH1 *htheta = new TH1D("theta", "Theta distribution;#theta [mrad];dN/d#theta", 100, 0, 100);
+  TH1 *hene = new TH1D("Energy", "Energy distribution;E [MeV]; dN/dE", 100, 0, 700);
+  TH2 *henetheta = new TH2D("Etheta", "Energy - angle;E [MeV]; #theta [mrad]; dN/dEd#theta", 100, 0, 800, 100, 0, 100);
+  TH2 *xyspace = new TH2D("xy", "X-Y space; x[mm]; y[mm]", 300, xref.MinusOneSigma(), xref.OneSigma(),
                           300, yref.MinusOneSigma(), yref.OneSigma());
-  TH2 *zxspace = new TH2D("zx", "Z-X space", 300, zref.MinusOneSigma(), zref.OneSigma(),
+  TH2 *zxspace = new TH2D("zx", "Z-X space; z[mm]; x[mm]", 300, zref.MinusOneSigma(), zref.OneSigma(),
                           300, xref.MinusOneSigma(), xref.OneSigma());
 
   // Fetching particle mass (MeV)
@@ -114,8 +115,11 @@ void PlotParticles()
     {
       continue;
     }
-    htheta->Fill(momentum->Theta());
-    hene->Fill(TMath::Sqrt(momentum->Mag2() + mass_squared));
+    energy = TMath::Sqrt(momentum->Mag2() + mass_squared);
+    theta = momentum->Theta() * 1.e3;
+    htheta->Fill(theta);
+    hene->Fill(energy);
+    henetheta->Fill(energy, theta);
     xyspace->Fill(x, y);
     zxspace->Fill(z, x);
   }
@@ -137,6 +141,9 @@ void PlotParticles()
   c1->SetLogy(1);
   hene->DrawCopy();
 
+  TCanvas *c2 = new TCanvas("Ediv", "Energy - divergence", 20, 20, 1000, 1000);
+  c2->cd(1);
+  henetheta->DrawCopy("SURF2");
   positrons->ResetBranchAddresses();
   std::cout << "End function PlotParticles " << std::endl;
 }
