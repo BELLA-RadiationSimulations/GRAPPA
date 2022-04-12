@@ -525,6 +525,7 @@
 /analysis/h1/setXaxisLog 1 true
 /analysis/h1/setXaxisLog 2 true
 /analysis/h1/setXaxisLog 3 true
+/analysis/h1/setXaxisLog 4 true
 
 /analysis/h2/set 0 50 -3 3 um none linear 50 -3 3 um none linear #x-y
 /analysis/h2/set 1 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
