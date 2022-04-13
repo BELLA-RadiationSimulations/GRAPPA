@@ -1,7 +1,7 @@
 #Setting CMAKE options
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16 FATAL_ERROR)
 
-PROJECT(GRAPPA VERSION 0.1)
+PROJECT(GRAPPA VERSION 0.2)
 
 # Instructions needed to link with Geant 4 if not installed in a standard location
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -14,9 +14,8 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
-# CMAKE_INSTALL_PREFIX is forced here, maybe we can allow user to specify
-SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR})
+# CMAKE_INSTALL_PREFIX is set here
+SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR} CACHE STRING "Installation prefix for GRAPPA")
 MESSAGE(STATUS "GRAPPA will be installed in ${CMAKE_INSTALL_PREFIX}")
 
 # Setting build type if not specified
@@ -24,7 +23,7 @@ SET(DEFAULT_BUILD_TYPE "Release")
 IF (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     MESSAGE(STATUS "GRAPPA: Setting build type to '${DEFAULT_BUILD_TYPE}' as none was specified.")
     SET(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
-        STRING "Choose the type of build." FORCE)
+        STRING "Choose the type of build.")
     SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
         "Debug" "Release")
 ENDIF()

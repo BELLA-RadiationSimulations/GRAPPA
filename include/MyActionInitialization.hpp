@@ -8,13 +8,13 @@
 #pragma once
 
 #include <G4Threading.hh>
+
 #include <G4UIcmdWithABool.hh>
 #include <G4UIcmdWithAString.hh>
 #include <G4UIdirectory.hh>
 #include <G4UIMessenger.hh>
 #include <G4VUserActionInitialization.hh>
 
-#include <MyActionInitialization.hpp>
 #include <MyDetectorConstruction.hpp>
 #include <MyPrimaryGeneratorAction.hpp>
 #include <MyTrackingAction.hpp>
