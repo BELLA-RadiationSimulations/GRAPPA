@@ -24,7 +24,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
-    G4double kineticEnergy, time, pz, px, py;
+    G4double kineticEnergy, time, pz, px, py, theta_mrad;
     G4ThreeVector position, momentum;
 
     // Access track information
@@ -46,10 +46,17 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4bool FillNtuple = true;
 
     // Energy filters for particles
-    G4double MinPrimaryEnergy = 4 * MeV;
-    G4double MinPhotonEnergy = 4 * MeV;
-    G4double MinElectronEnergy = 1 * MeV;
-    G4double MinPositronEnergy = 1 * MeV;
+    constexpr G4double MinPrimaryEnergy = 4 * MeV;
+    constexpr G4double MinPhotonEnergy = 4 * MeV;
+    constexpr G4double MinElectronEnergy = 1 * MeV;
+    constexpr G4double MinPositronEnergy = 1 * MeV;
+
+    // Divergence filters for positrons
+    constexpr G4double theta1 = 1 * mrad;
+    constexpr G4double theta2 = 5 * mrad;
+    constexpr G4double theta3 = 10 * mrad;
+    constexpr G4double theta4 = 20 * mrad;
+    constexpr G4double theta5 = 50 * mrad;
 
     if (!analysisManager->IsActive())
     {
@@ -70,17 +77,20 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             pz = std::abs(momentum.z());
             px = momentum.x();
             py = momentum.y();
+            theta_mrad = momentum.theta() * 1.e3;
         }
         else
         {
             return false;
         }
 
+        HistoManager *histomanager = m_HistoandNtupleManager->GetHistoManager();
+
         if (pID == 0)
         {
-            histeneid = m_HistoandNtupleManager->GetHistoManager()->GetPrimaryEneId();
-            histoxyid = m_HistoandNtupleManager->GetHistoManager()->GetPrimaryxyId();
-            histotxtyid = m_HistoandNtupleManager->GetHistoManager()->GetPrimarytxtyId();
+            histeneid = histomanager->GetPrimaryEneId();
+            histoxyid = histomanager->GetPrimaryxyId();
+            histotxtyid = histomanager->GetPrimarytxtyId();
             ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryId();
             if (kineticEnergy < MinPrimaryEnergy)
             {
@@ -92,20 +102,65 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
             if (name == "e+")
             {
-                histeneid = m_HistoandNtupleManager->GetHistoManager()->GetPositronEneId();
-                histoxyid = m_HistoandNtupleManager->GetHistoManager()->GetPositronxyId();
-                histotxtyid = m_HistoandNtupleManager->GetHistoManager()->GetPositrontxtyId();
+                G4int pcut1, pcut2, pcut3, pcut4, pcut5;
+                histeneid = histomanager->GetPositronEneId();
+                histoxyid = histomanager->GetPositronxyId();
+                histotxtyid = histomanager->GetPositrontxtyId();
+                pcut1 = histomanager->GetPositronEnergyCut1();
+                pcut2 = histomanager->GetPositronEnergyCut2();
+                pcut3 = histomanager->GetPositronEnergyCut3();
+                pcut4 = histomanager->GetPositronEnergyCut4();
+                pcut5 = histomanager->GetPositronEnergyCut5();
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
                 if (kineticEnergy < MinPositronEnergy)
                 {
                     FillNtuple = false;
                 }
+                // Filling divergence cuts here since they are only analyzing positrons
+                if (FillHistogram)
+                {
+                    if (analysisManager->GetH1Activation(pcut1))
+                    {
+                        if (theta_mrad <= theta1)
+                        {
+                            analysisManager->FillH1(pcut1, kineticEnergy);
+                        }
+                    }
+                    if (analysisManager->GetH1Activation(pcut2))
+                    {
+                        if (theta_mrad <= theta2)
+                        {
+                            analysisManager->FillH1(pcut2, kineticEnergy);
+                        }
+                    }
+                    if (analysisManager->GetH1Activation(pcut3))
+                    {
+                        if (theta_mrad <= theta3)
+                        {
+                            analysisManager->FillH1(pcut3, kineticEnergy);
+                        }
+                    }
+                    if (analysisManager->GetH1Activation(pcut4))
+                    {
+                        if (theta_mrad <= theta4)
+                        {
+                            analysisManager->FillH1(pcut4, kineticEnergy);
+                        }
+                    }
+                    if (analysisManager->GetH1Activation(pcut5))
+                    {
+                        if (theta_mrad <= theta5)
+                        {
+                            analysisManager->FillH1(pcut5, kineticEnergy);
+                        }
+                    }
+                }
             }
             else if (name == "gamma")
             {
-                histeneid = m_HistoandNtupleManager->GetHistoManager()->GetGammaEneId();
-                histoxyid = m_HistoandNtupleManager->GetHistoManager()->GetGammaxyId();
-                histotxtyid = m_HistoandNtupleManager->GetHistoManager()->GetGammatxtyId();
+                histeneid = histomanager->GetGammaEneId();
+                histoxyid = histomanager->GetGammaxyId();
+                histotxtyid = histomanager->GetGammatxtyId();
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
                 if (kineticEnergy < MinPhotonEnergy)
                 {
@@ -115,9 +170,9 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             else if (name == "e-")
             {
 
-                histeneid = m_HistoandNtupleManager->GetHistoManager()->GetElectronEneId();
-                histoxyid = m_HistoandNtupleManager->GetHistoManager()->GetElectronxyId();
-                histotxtyid = m_HistoandNtupleManager->GetHistoManager()->GetElectrontxtyId();
+                histeneid = histomanager->GetElectronEneId();
+                histoxyid = histomanager->GetElectronxyId();
+                histotxtyid = histomanager->GetElectrontxtyId();
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetElectronId();
                 if (kineticEnergy < MinElectronEnergy)
                 {

@@ -85,6 +85,11 @@
 # - 2 Final Energy of electrons
 # - 3 Final Energy of photons
 # - 4 Initial Energy of primaries
+# - 5 Positron Energy if theta < 1 mrad
+# - 6 Positron Energy if theta < 5 mrad
+# - 7 Positron Energy if theta < 10 mrad
+# - 8 Positron Energy if theta < 20 mrad
+# - 9 Positron Energy if theta < 50 mrad
 #
 # 2D
 # - 0 Initial primary transverse distribution
@@ -112,11 +117,21 @@
 /analysis/h1/set 1 200 10 5000 MeV none log
 /analysis/h1/set 2 200 10 5000 MeV none log
 /analysis/h1/set 3 200 10 5000 MeV none log
+/analysis/h1/set 5 200 10 5000 MeV none log
+/analysis/h1/set 6 200 10 5000 MeV none log
+/analysis/h1/set 7 200 10 5000 MeV none log
+/analysis/h1/set 8 200 10 5000 MeV none log
+/analysis/h1/set 9 200 10 5000 MeV none log
 
 /analysis/h1/setXaxisLog 0 true
 /analysis/h1/setXaxisLog 1 true
 /analysis/h1/setXaxisLog 2 true
 /analysis/h1/setXaxisLog 3 true
+/analysis/h1/setXaxisLog 5 true
+/analysis/h1/setXaxisLog 6 true
+/analysis/h1/setXaxisLog 7 true
+/analysis/h1/setXaxisLog 8 true
+/analysis/h1/setXaxisLog 9 true
 
 /analysis/h2/set 0 50 -20 20 um none linear 50 -20 20 um none linear #x-y
 /analysis/h2/set 1 50 -2.5 2.5 mrad none linear 50 -2.5 2.5 mrad none linear #x-y

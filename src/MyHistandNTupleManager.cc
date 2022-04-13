@@ -43,7 +43,7 @@ void HistandNTupleManager::Book()
     // Introduce an analysis manager
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(0);
-    
+
 #if GRAPPA_USE_HDF5
     analysisManager->SetDefaultFileType("hdf5");
 #else
@@ -96,6 +96,29 @@ void HistoManager::Book()
     // HistogramId = 4
     initialprimaryeneid = analysisManager->CreateH1("InitialPrimaryEnergy", "Initial Energy of primaries", 50, 9.9 * GeV, 10.1 * GeV, "GeV");
     analysisManager->SetH1Activation(initialprimaryeneid, false);
+
+    // Some 1D histograms to analyze particles after a cut in divergence (i.e. collimator)
+
+    // HistogramId = 5
+    positronenergycut1 =
+        analysisManager->CreateH1("PositronEnergyCut1", "Positron energy (#theta < 1 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(positronenergycut1, false);
+    // HistogramId = 6
+    positronenergycut2 =
+        analysisManager->CreateH1("PositronEnergyCut2", "Positron energy (#theta < 5 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(positronenergycut2, false);
+    // HistogramId = 7
+    positronenergycut3 =
+        analysisManager->CreateH1("PositronEnergyCut3", "Positron energy (#theta < 10 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(positronenergycut3, false);
+    // HistogramId = 8
+    positronenergycut4 =
+        analysisManager->CreateH1("PositronEnergyCut4", "Positron energy (#theta < 20 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(positronenergycut4, false);
+    // HistogramId = 9
+    positronenergycut5 =
+        analysisManager->CreateH1("PositronEnergyCut5", "Positron energy (#theta < 50 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(positronenergycut5, false);
 
     // 2D
     // HistogramId = 0
@@ -254,5 +277,4 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleDColumn(gammaid, "pz");
     analysisManager->CreateNtupleDColumn(gammaid, "t");
     analysisManager->FinishNtuple(gammaid);
-
 }

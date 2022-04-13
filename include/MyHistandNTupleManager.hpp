@@ -33,6 +33,11 @@ public:
     inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
     inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
     inline int GetPrimaryInitialypyId() { return initialprimaryypyid; }
+    inline int GetPositronEnergyCut1() { return positronenergycut1; }
+    inline int GetPositronEnergyCut2() { return positronenergycut2; }
+    inline int GetPositronEnergyCut3() { return positronenergycut3; }
+    inline int GetPositronEnergyCut4() { return positronenergycut4; }
+    inline int GetPositronEnergyCut5() { return positronenergycut5; }
     void Book();
 
 private:
@@ -73,6 +78,14 @@ private:
     G4int finalpositrontxtyid;
     // Final gamma transverse angle
     G4int finalgammatxtyid;
+
+    // Some histograms with divergence cuts
+    G4int positronenergycut1;
+    G4int positronenergycut2;
+    G4int positronenergycut3;
+    G4int positronenergycut4;
+    G4int positronenergycut5;
+
 };
 
 
