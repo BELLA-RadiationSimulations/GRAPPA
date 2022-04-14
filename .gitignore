@@ -46,6 +46,9 @@ CMakeSettings.json
 # Eventually, a run folder
 # run/
 
+# Ipython notebooks
+.ipynb_checkpoints
+ 
 # Other strange files
 .DS_Store
 
