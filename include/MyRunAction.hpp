@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <filesystem>
 #include <globals.hh>
 #include <G4Run.hh>
 #include <G4RunManager.hh>

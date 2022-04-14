@@ -85,11 +85,19 @@
 # - 2 Final Energy of electrons
 # - 3 Final Energy of photons
 # - 4 Initial Energy of primaries
-# - 5 Positron Energy if theta < 1 mrad
-# - 6 Positron Energy if theta < 5 mrad
-# - 7 Positron Energy if theta < 10 mrad
-# - 8 Positron Energy if theta < 20 mrad
-# - 9 Positron Energy if theta < 50 mrad
+# - 5 Final theta of primaries
+# - 6 Final theta of electrons
+# - 7 Final theta of positrons
+# - 8 Final theta of photons
+# - 9 Positron Energy if theta < 1 mrad
+# - 10 Positron Energy if theta < 5 mrad
+# - 11 Positron Energy if theta < 10 mrad
+# - 12 Positron Energy if theta < 20 mrad
+# - 13 Positron Energy if theta < 50 mrad
+# - 14 Final phi of primaries
+# - 15 Final phi of electrons
+# - 16 Final phi of positrons
+# - 17 Final phi of photons
 #
 # 2D
 # - 0 Initial primary transverse distribution

@@ -12,7 +12,7 @@
 #include <G4UIcmdWithABool.hh>
 #include <G4UIcmdWithAString.hh>
 #include <G4UIdirectory.hh>
-#include <G4UIMessenger.hh>
+#include <G4UImessenger.hh>
 #include <G4VUserActionInitialization.hh>
 
 #include <MyDetectorConstruction.hpp>

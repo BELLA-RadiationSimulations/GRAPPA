@@ -33,11 +33,19 @@ public:
     inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
     inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
     inline int GetPrimaryInitialypyId() { return initialprimaryypyid; }
-    inline int GetPositronEnergyCut1() { return positronenergycut1; }
-    inline int GetPositronEnergyCut2() { return positronenergycut2; }
-    inline int GetPositronEnergyCut3() { return positronenergycut3; }
-    inline int GetPositronEnergyCut4() { return positronenergycut4; }
-    inline int GetPositronEnergyCut5() { return positronenergycut5; }
+    inline int GetPositronEnergyCut1Id() { return positronenergycut1; }
+    inline int GetPositronEnergyCut2Id() { return positronenergycut2; }
+    inline int GetPositronEnergyCut3Id() { return positronenergycut3; }
+    inline int GetPositronEnergyCut4Id() { return positronenergycut4; }
+    inline int GetPositronEnergyCut5Id() { return positronenergycut5; }
+    inline int GetPrimaryThetaId() { return primarytheta; }
+    inline int GetElectronThetaId() { return electrontheta; }
+    inline int GetPositronThetaId() { return positrontheta; }
+    inline int GetGammaThetaId() { return gammatheta; }
+    inline int GetPrimaryPhiId() { return primaryphi; }
+    inline int GetElectronPhiId() { return electronphi; }
+    inline int GetPositronPhiId() { return positronphi; }
+    inline int GetGammaPhiId() { return gammaphi; }
     void Book();
 
 private:
@@ -53,7 +61,22 @@ private:
     G4int initialprimaryxpxid;
     // Initial primary y-p_y
     G4int initialprimaryypyid;
-
+    // Final primary theta distribution
+    G4int primarytheta;
+    // Final electron theta distribution
+    G4int electrontheta;
+    // Final positron theta distribution
+    G4int positrontheta;
+    // Final gamma theta distribution
+    G4int gammatheta;
+    // Final primary phi distribution
+    G4int primaryphi;
+    // Final electron phi distribution
+    G4int electronphi;
+    // Final positron phi distribution
+    G4int positronphi;
+    // Final gamma phi distribution
+    G4int gammaphi;
     // Final primary energy
     G4int primaryeneid;
     // Final positron energy

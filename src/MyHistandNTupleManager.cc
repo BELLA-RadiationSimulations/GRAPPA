@@ -97,28 +97,64 @@ void HistoManager::Book()
     initialprimaryeneid = analysisManager->CreateH1("InitialPrimaryEnergy", "Initial Energy of primaries", 50, 9.9 * GeV, 10.1 * GeV, "GeV");
     analysisManager->SetH1Activation(initialprimaryeneid, false);
 
+    // Final theta distributions
+    // HistogramId = 5
+    primarytheta =
+        analysisManager->CreateH1("PrimaryTheta", "Final #theta of primaries", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
+    analysisManager->SetH1Activation(primarytheta, false);
+    // HistogramId = 6
+    electrontheta =
+        analysisManager->CreateH1("ElectronTheta", "Final #theta of electrons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
+    analysisManager->SetH1Activation(electrontheta, false);
+    // HistogramId = 7
+    positrontheta =
+        analysisManager->CreateH1("PositronTheta", "Final #theta of positrons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
+    analysisManager->SetH1Activation(positrontheta, false);
+    // HistogramId = 8
+    gammatheta =
+        analysisManager->CreateH1("GammaTheta", "Final #theta of photons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
+    analysisManager->SetH1Activation(gammatheta, false);
+
     // Some 1D histograms to analyze particles after a cut in divergence (i.e. collimator)
 
-    // HistogramId = 5
+    // HistogramId = 9
     positronenergycut1 =
         analysisManager->CreateH1("PositronEnergyCut1", "Positron energy (#theta < 1 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut1, false);
-    // HistogramId = 6
+    // HistogramId = 10
     positronenergycut2 =
         analysisManager->CreateH1("PositronEnergyCut2", "Positron energy (#theta < 5 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut2, false);
-    // HistogramId = 7
+    // HistogramId = 11
     positronenergycut3 =
         analysisManager->CreateH1("PositronEnergyCut3", "Positron energy (#theta < 10 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut3, false);
-    // HistogramId = 8
+    // HistogramId = 12
     positronenergycut4 =
         analysisManager->CreateH1("PositronEnergyCut4", "Positron energy (#theta < 20 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut4, false);
-    // HistogramId = 9
+    // HistogramId = 13
     positronenergycut5 =
         analysisManager->CreateH1("PositronEnergyCut5", "Positron energy (#theta < 50 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut5, false);
+
+    // Final phi distributions
+    // HistogramId = 14
+    primaryphi =
+        analysisManager->CreateH1("PrimaryPhi", "Final #phi of primaries", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
+    analysisManager->SetH1Activation(primaryphi, false);
+    // HistogramId = 15
+    electronphi =
+        analysisManager->CreateH1("ElectronPhi", "Final #phi of electrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
+    analysisManager->SetH1Activation(electronphi, false);
+    // HistogramId = 16
+    positronphi =
+        analysisManager->CreateH1("PositronPhi", "Final #phi of positrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
+    analysisManager->SetH1Activation(positronphi, false);
+    // HistogramId = 17
+    gammaphi =
+        analysisManager->CreateH1("GammaPhi", "Final #phi of photons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
+    analysisManager->SetH1Activation(gammaphi, false);
 
     // 2D
     // HistogramId = 0
