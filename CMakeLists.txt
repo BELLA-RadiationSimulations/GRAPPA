@@ -1,7 +1,7 @@
 #Setting CMAKE options
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16 FATAL_ERROR)
 
-PROJECT(GRAPPA VERSION 0.2)
+PROJECT(GRAPPA VERSION 0.2.0)
 
 # Instructions needed to link with Geant 4 if not installed in a standard location
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -25,7 +25,7 @@ IF (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     SET(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
         STRING "Choose the type of build.")
     SET_PROPERTY(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
-        "Debug" "Release")
+        "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 ENDIF()
 
 # Setting use of HDF5
