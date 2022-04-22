@@ -5,6 +5,7 @@
 #include <iostream>
 #include <memory>
 
+#include <Math/Point3D.h>
 #include <Math/Vector3D.h>
 #include <TFile.h>
 #include <TMath.h>
@@ -37,6 +38,7 @@ public:
   inline double MinusThreeSigma() { return this->Mean() - 3. * this->Std(); }
   inline int Nentries() { return this->nentries; }
   inline double OneSigma() { return this->Mean() + this->Std(); }
+  void Print() { this->Write(); };
   void Reset();
   inline double Std() { return this->std; }
   inline double TwoSigma() { return this->Mean() + 2. * this->Std(); }
@@ -162,7 +164,7 @@ ReferenceVariable GetReferenceTime(std::shared_ptr<TNtuple> ntuple)
   return tref;
 }
 
-ROOT::Math::XYZVectorF BackPropagateParticle(ROOT::Math::XYZVectorF position, ROOT::Math::RhoZPhiVectorF momentum, float m2, float deltat)
+ROOT::Math::XYZPointF BackPropagateParticle(ROOT::Math::XYZPointF position, ROOT::Math::RhoZPhiVectorF momentum, float m2, float deltat)
 {
   float gamma_inv = 1.f / std::sqrt(momentum.Mag2() + m2);
   float px = momentum.x();
@@ -176,7 +178,7 @@ ROOT::Math::XYZVectorF BackPropagateParticle(ROOT::Math::XYZVectorF position, RO
   float betaz = pz * gamma_inv;
   float cdeltat = static_cast<float>(PhysicalConstants::c_mm_ns * deltat);
 
-  return ROOT::Math::XYZVectorF(x + betax * cdeltat, y + betay * cdeltat, z + betaz * cdeltat);
+  return ROOT::Math::XYZPointF(x + betax * cdeltat, y + betay * cdeltat, z + betaz * cdeltat);
 }
 
 std::shared_ptr<TFile> OpenFile(std::string filename = "Ntuple.root", Option_t *option = "READ")

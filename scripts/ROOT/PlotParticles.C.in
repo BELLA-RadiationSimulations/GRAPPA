@@ -1,3 +1,8 @@
+// To execute this MACRO file in root
+// 1) open root
+// 2a) .x PlotParticles.C
+// 2b) .x PlotParticles.C+ (to run a compiled version of this library)
+
 #cmakedefine UTILITIES_PATH "@UTILITIES_PATH@"
 #include <iostream>
 #include <memory>
@@ -23,7 +28,7 @@
 // Bear in mind the structure of the backpropagated particle trees
 // Tree structure
 // treename
-//       |-> X Branch containing Nparts XYZVectorF elements (Cartesian particle positions in mm)
+//       |-> X Branch containing Nparts XYZPointF elements (Cartesian particle positions in mm)
 //       |-> P Branch containing Nparts RhoZPhiVectorF elements (Cylindrical particle momenta in MeV and Rad)
 //       |-> t Branch containing Nparts float elements (Time used to shift particles from the reference time)
 //       |-> m 1 entry (Particle mass in MeV)
@@ -44,7 +49,7 @@ void PlotParticles()
   float t, mass, mass_squared, charge, ref_time, energy, theta;
   int nprimaries, nentries;
   int i;
-  std::shared_ptr<XYZVectorF> position;
+  std::shared_ptr<XYZPointF> position;
   std::shared_ptr<RhoZPhiVectorF> momentum;
   TBranch *b_pos, *b_mom, *b_time, *b_mass, *b_charge;
   ReferenceVariable xref, yref, zref, tref;
