@@ -34,9 +34,6 @@ cmake --build . --config Release --target install
 You should provide `cmake` with the G4 installation directory containing the `Geant4Config.cmake` file. Typically, it can be found in `${G4_base_install_dir}/lib/Geant4-version`.
 By default, GRAPPA is installed in the `bin` directory of the source code folder.
 
-**Optional**:
-- `-DGRAPPA_USE_HDF5=ON` compiles GRAPPA with HDF5 support and generate `*.h5` output files. You must provide a G4 installation compiled with HDF5 support (`-DGEANT4_USE_HDF5=ON`).
-
 ## Run
 
 GRAPPA can either run using an interactive user interface (`UI`) or using a provided macro script.
@@ -74,6 +71,3 @@ You can copy them in your output folder and execute them in `ROOT` as
 ```
 For more insights and to learn how to customize the scripts, visit the
 [ROOT manual](https://root.cern/manual/).
-
-|:warning: **Warning**: no utility is provided for the HDF5 output files.|
-| --- |

@@ -44,13 +44,9 @@ void HistandNTupleManager::Book()
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(0);
 
-#if GRAPPA_USE_HDF5
-    analysisManager->SetDefaultFileType("hdf5");
-#else
     analysisManager->SetDefaultFileType("root");
     // Note: merging ntuples is available only with Root output
     // analysisManager->SetNtupleMerging(true);
-#endif
     analysisManager->SetFileName(fFileName);
 
     // This option enables the manual activation and deactivation of
