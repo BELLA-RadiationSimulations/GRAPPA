@@ -28,9 +28,6 @@ IF (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 ENDIF()
 
-# Setting use of HDF5
-SET(GRAPPA_USE_HDF5 OFF CACHE BOOL "GRAPPA output files are generated with HDF5.")
-
 MESSAGE("   ==== Using ${CMAKE_CXX_COMPILER_ID} compiler ====")
 
 # Find Geant4 (remember to source geant4.sh first)
@@ -52,24 +49,6 @@ ENDIF()
 
 # Defining the target
 ADD_EXECUTABLE(GRAPPA src/grappa.cc)
-
-IF (GRAPPA_USE_HDF5)
-    IF (Geant4_hdf5_FOUND)
-        MESSAGE(STATUS "GRAPPA is compiled with support to HDF5 output.")
-        SET(GRAPPA_HAS_HDF5 TRUE)
-    ELSE()
-        MESSAGE(WARNING "No version of Geant4 compiled with HDF5 support is found. GRAPPA will be compiled without HDF5 support")
-        SET(GRAPPA_HAS_HDF5 FALSE)
-    ENDIF()
-ELSE()
-    SET(GRAPPA_HAS_HDF5 FALSE)
-ENDIF()
-
-IF (GRAPPA_HAS_HDF5)
-    TARGET_COMPILE_DEFINITIONS(GRAPPA PRIVATE GRAPPA_USE_HDF5=1)
-ELSE()
-    TARGET_COMPILE_DEFINITIONS(GRAPPA PRIVATE GRAPPA_USE_HDF5=0)
-ENDIF()
 
 # Setting compiler options
 IF (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
