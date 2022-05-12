@@ -18,7 +18,7 @@
 # /geometry/target/size 10 mm
 # /geometry/target/center 0 0 0 mm
 /geometry/target/thickness 3 mm
-# /geometry/target/rotation 3 mm
+# /geometry/target/rotation 45 deg
 # /geometry/target/material G4_W
 
 # Fix random seed to have repeatable runs
