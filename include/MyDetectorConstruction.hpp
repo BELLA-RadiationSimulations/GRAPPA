@@ -49,7 +49,8 @@ private:
     G4double foil_y = 5 * cm;
     G4double foil_z = 1 * cm;
     G4ThreeVector foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
-    G4double foil_angle_y = 0 * deg;
+    // Foil angle in radians
+    G4double foil_angle_y = 0 * rad;
     G4double absorber_thickness = 0.02 * w_radius;
     G4String w_name = "World", f_name = "High-Z_foil", a_name = "Absorber";
     G4String w_material_name = "G4_Galactic", f_material_name = "G4_W", a_material_name = "G4_Galactic";
