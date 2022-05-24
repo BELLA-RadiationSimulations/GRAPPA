@@ -111,8 +111,8 @@ bool AcceptParticle(ROOT::Math::RhoZPhiVectorF momentum, double t, ReferenceVari
 {
   constexpr double pi_4 = TMath::PiOver4();
   bool accept = true;
-  // accept = accept && (TMath::Abs(t - tref.Mean()) < tref.Cutoff());
-  // accept = accept && (momentum.Theta() < pi_4);
+  accept = accept && (TMath::Abs(t - tref.Mean()) < tref.Cutoff());
+  accept = accept && (momentum.Theta() < pi_4);
   return accept;
 }
 
