@@ -151,13 +151,13 @@ public:
     inline int GetPositronId() { return posiid; }
     inline int GetElectronId() { return electronid; }
     inline int GetGammaId() { return gammaid; }
-    inline int GetPionsId() { return pionsid; }
-    inline int GetMuonsId() { return muonsid; }
+    inline int GetPionId() { return pionid; }
+    inline int GetMuonId() { return muonid; }
     void Book();
 
 private:
     G4int primaryinitialid, primaryid, posiid, electronid,
-        gammaid, pionsid, muonsid;
+        gammaid, pionid, muonid;
 };
 
 class HistandNTupleManager

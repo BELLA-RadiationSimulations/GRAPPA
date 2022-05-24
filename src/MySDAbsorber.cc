@@ -37,11 +37,11 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     const G4String name = particle->GetParticleName();
     // Check if particle is in the particle list
-    if (m_ParticleList.find(name) == m_ParticleList.end())
+    G4int pID = aTrack->GetParentID();
+    if ((m_ParticleList.find(name) == m_ParticleList.end()) && (pID != 0))
     {
         return false;
     }
-    G4int pID = aTrack->GetParentID();
     G4int histeneid, histoxyid, histotxtyid, histthetaid, histphiid, ntupleid;
 
     // Pointer to current process
@@ -230,13 +230,13 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         if (FillNtuple)
         {
             // Filling the correct Ntuple
-            analysisManager->FillNtupleDColumn(ntupleid, 0, position.x());
-            analysisManager->FillNtupleDColumn(ntupleid, 1, position.y());
-            analysisManager->FillNtupleDColumn(ntupleid, 2, position.z());
-            analysisManager->FillNtupleDColumn(ntupleid, 3, momentum.x());
-            analysisManager->FillNtupleDColumn(ntupleid, 4, momentum.y());
-            analysisManager->FillNtupleDColumn(ntupleid, 5, momentum.z());
-            analysisManager->FillNtupleDColumn(ntupleid, 6, time);
+            analysisManager->FillNtupleFColumn(ntupleid, 0, position.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 1, position.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 2, position.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 3, momentum.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 6, time);
             analysisManager->AddNtupleRow(ntupleid);
         }
 
@@ -275,12 +275,12 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4String thisVolumename = aTrack->GetVolume()->GetName();
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     const G4String name = particle->GetParticleName();
+    G4int pID = aTrack->GetParentID();
     // Check if particle is in the particle list
     if (m_ParticleList.find(name) == m_ParticleList.end())
     {
         return false;
     }
-    G4int pID = aTrack->GetParentID();
     G4int histeneid, histoxyid, histotxtyid, histthetaid, histphiid, ntupleid;
 
     // Pointer to current process
@@ -332,22 +332,22 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             // Pions are collected in a single ntuple
             if (name == "pi+" || name == "pi-" || name == "pi0")
             {
-                histeneid = histomanager->GetPositronEneId();
-                histoxyid = histomanager->GetPositronxyId();
-                histotxtyid = histomanager->GetPositrontxtyId();
-                histthetaid = histomanager->GetPositronThetaId();
-                histphiid = histomanager->GetPositronPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
+                histeneid = histomanager->GetPionEneId();
+                histoxyid = histomanager->GetPionxyId();
+                histotxtyid = histomanager->GetPiontxtyId();
+                histthetaid = histomanager->GetPionThetaId();
+                histphiid = histomanager->GetPionPhiId();
+                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
             }
             // Muons are collected in a single ntuple
             else if (name == "mu+" || name == "mu-")
             {
-                histeneid = histomanager->GetPositronEneId();
-                histoxyid = histomanager->GetPositronxyId();
-                histotxtyid = histomanager->GetPositrontxtyId();
-                histthetaid = histomanager->GetPositronThetaId();
-                histphiid = histomanager->GetPositronPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
+                histeneid = histomanager->GetMuonEneId();
+                histoxyid = histomanager->GetMuonxyId();
+                histotxtyid = histomanager->GetMuontxtyId();
+                histthetaid = histomanager->GetMuonThetaId();
+                histphiid = histomanager->GetMuonPhiId();
+                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetMuonId();
             }
             else
             {
@@ -384,13 +384,13 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         if (FillNtuple)
         {
             // Filling the correct Ntuple
-            analysisManager->FillNtupleDColumn(ntupleid, 0, position.x());
-            analysisManager->FillNtupleDColumn(ntupleid, 1, position.y());
-            analysisManager->FillNtupleDColumn(ntupleid, 2, position.z());
-            analysisManager->FillNtupleDColumn(ntupleid, 3, momentum.x());
-            analysisManager->FillNtupleDColumn(ntupleid, 4, momentum.y());
-            analysisManager->FillNtupleDColumn(ntupleid, 5, momentum.z());
-            analysisManager->FillNtupleDColumn(ntupleid, 6, time);
+            analysisManager->FillNtupleFColumn(ntupleid, 0, position.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 1, position.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 2, position.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 3, momentum.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 6, time);
             analysisManager->AddNtupleRow(ntupleid);
         }
 
