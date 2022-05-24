@@ -111,8 +111,8 @@ bool AcceptParticle(ROOT::Math::RhoZPhiVectorF momentum, double t, ReferenceVari
 {
   constexpr double pi_4 = TMath::PiOver4();
   bool accept = true;
-  accept = accept && (TMath::Abs(t - tref.Mean()) < tref.Cutoff());
-  accept = accept && (momentum.Theta() < pi_4);
+  // accept = accept && (TMath::Abs(t - tref.Mean()) < tref.Cutoff());
+  // accept = accept && (momentum.Theta() < pi_4);
   return accept;
 }
 
@@ -136,7 +136,7 @@ ReferenceVariable GetReferenceTime(std::shared_ptr<TNtuple> ntuple)
   Long64_t nentries;
   int i;
   long double mean = 0, std = 0;
-  double t;
+  float t;
   ReferenceVariable tref;
   auto start = std::chrono::high_resolution_clock::now();
 

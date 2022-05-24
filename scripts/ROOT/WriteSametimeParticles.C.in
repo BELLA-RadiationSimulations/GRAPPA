@@ -70,7 +70,7 @@ void WriteSametimeParticles()
 
   ReferenceVariable reference_time_ele, reference_time_posi;
   TParticlePDG *positron, *electron, *photon, *primary;
-  double x, y, z, px, py, pz, t;
+  float x, y, z, px, py, pz, t;
   float xback, yback, zback;
   XYZPointF position, backposition;
   RhoZPhiVectorF momentum;
