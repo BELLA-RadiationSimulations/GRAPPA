@@ -94,21 +94,22 @@
 #
 # 2D
 # - 0 Initial primary transverse distribution
-# - 1 Initial primary angle distribution
-# - 2 Initial X phase space of primaries
-# - 3 Initial Y phase space of primaries
-# - 4 Final primary transverse distribution
-# - 5 Final electron transverse distribution
-# - 6 Final positron transverse distribution
-# - 7 Final photon transverse distribution
-# - 8 Final pions transverse distribution
-# - 9 Final muons transverse distribution
-# - 10 Final primary angle distribution
-# - 11 Final electron angle distribution
-# - 12 Final positron angle distribution
-# - 13 Final photon angle distribution
-# - 14 Final pions angle distribution
-# - 15 Final muons angle distribution
+# - 1 Initial primary longitudinal distribution
+# - 2 Initial primary angle distribution
+# - 3 Initial X phase space of primaries
+# - 4 Initial Y phase space of primaries
+# - 5 Final primary transverse distribution
+# - 6 Final electron transverse distribution
+# - 7 Final positron transverse distribution
+# - 8 Final photon transverse distribution
+# - 9 Final pions transverse distribution
+# - 10 Final muons transverse distribution
+# - 11 Final primary angle distribution
+# - 12 Final electron angle distribution
+# - 13 Final positron angle distribution
+# - 14 Final photon angle distribution
+# - 15 Final pions angle distribution
+# - 16 Final muons angle distribution
 
 # Personalization of histograms
 # /analysis/h1/set id nbins valMin valMax valUnit (optional) valFcn (optional) valBinScheme (optional)

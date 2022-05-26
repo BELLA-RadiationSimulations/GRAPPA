@@ -39,6 +39,7 @@ void MyTrackingAction::PreUserTrackingAction(const G4Track *track)
         G4double kineticenergy = track->GetKineticEnergy();
 
         G4int histoxyid = histoman->GetPrimaryInitialxyId();
+        G4int histozxid = histoman->GetPrimaryInitialzxId();
         G4int histoEid = histoman->GetPrimaryInitialEneId();
         G4int histotxtyid = histoman->GetPrimaryInitialtxtyId();
         G4int histoxpxid = histoman->GetPrimaryInitialxpxId();
@@ -63,6 +64,10 @@ void MyTrackingAction::PreUserTrackingAction(const G4Track *track)
         if (analysisManager->GetH2Activation(histoxyid))
         {
             analysisManager->FillH2(histoxyid, x, y);
+        }
+        if (analysisManager->GetH2Activation(histozxid))
+        {
+            analysisManager->FillH2(histozxid, z, x);
         }
         if (analysisManager->GetH2Activation(histotxtyid))
         {

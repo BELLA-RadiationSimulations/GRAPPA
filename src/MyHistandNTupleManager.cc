@@ -180,80 +180,85 @@ void HistoManager::Book()
     initialprimaryxyid = analysisManager->CreateH2("InitialPrimaryXY", "Initial primary transverse distribution", 15, -100 * um, 100 * um,
                                                    15, -100 * um, 100 * um, "um", "um");
     analysisManager->SetH2Activation(initialprimaryxyid, false);
-    // Initial primary angular distribution
     // HistogramId = 1
+    // Initial primary longitudinal distribution
+    initialprimaryzxid = analysisManager->CreateH2("InitialPrimaryZX", "Initial primary longitudinal distribution", 15, -100 * um, 100 * um,
+                                                   15, -100 * um, 100 * um, "um", "um");
+    analysisManager->SetH2Activation(initialprimaryzxid, false);
+    // Initial primary angular distribution
+    // HistogramId = 2
     initialprimarytxtyid = analysisManager->CreateH2("InitialPrimaryangles", "Initial primary angle distribution", 10, -20 * mrad, 20 * mrad,
                                                      10, -20 * mrad, 20 * mrad, "mrad", "mrad");
     analysisManager->SetH2Activation(initialprimarytxtyid, false);
     // Initial primary trasverse x-phasespace
-    // HistogramId = 2
+    // HistogramId = 3
     initialprimaryxpxid = analysisManager->CreateH2("InitialPrimaryXPhaseSpace", "Initial X phase space of primaries", 20, -20 * um, 20 * um,
                                                     20, -20 * MeV, 20 * MeV, "um", "MeV");
     analysisManager->SetH2Activation(initialprimaryxpxid, false);
     // Initial primary trasverse y-phasespace
-    // HistogramId = 3
+    // HistogramId = 4
     initialprimaryypyid = analysisManager->CreateH2("InitialPrimaryYPhaseSpace", "Initial Y phase space of primaries", 20, -20 * um, 20 * um,
                                                     20, -20 * MeV, 20 * MeV, "um", "MeV");
     analysisManager->SetH2Activation(initialprimaryypyid, false);
 
     // Final primary transverse distribution
-    // HistogramId = 4
+    // HistogramId = 5
     finalprimaryxyid = analysisManager->CreateH2("FinalPrimaryXY", "Final primary transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                  40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalprimaryxyid, false);
     // Final electron transverse distribution
-    // HistogramId = 5
+    // HistogramId = 6
     finalelectronxyid = analysisManager->CreateH2("FinalElectronXY", "Final electron transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                   40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalelectronxyid, false);
     // Final positron transverse distribution
-    // HistogramId = 6
+    // HistogramId = 7
     finalpositronxyid = analysisManager->CreateH2("FinalPositronXY", "Final positron transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                   40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalpositronxyid, false);
     // Final gamma transverse distribution
-    // HistogramId = 7
+    // HistogramId = 8
     finalgammaxyid = analysisManager->CreateH2("FinalGammaXY", "Final photon transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalgammaxyid, false);
     // Final pion transverse distribution
-    // HistogramId = 8
+    // HistogramId = 9
     finalpionxyid = analysisManager->CreateH2("FinalPionXY", "Final pion transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalpionxyid, false);
     // Final muon transverse distribution
-    // HistogramId = 9
+    // HistogramId = 10
     finalmuonxyid = analysisManager->CreateH2("FinalMuonXY", "Final muon transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalmuonxyid, false);
 
     // Final primary angle distribution
-    // HistogramId = 10
+    // HistogramId = 11
     finalprimarytxtyid = analysisManager->CreateH2("FinalPrimaryAngles", "Final primary angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                    40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalprimarytxtyid, false);
     // Final electron angle distribution
-    // HistogramId = 11
+    // HistogramId = 12
     finalelectrontxtyid = analysisManager->CreateH2("FinalElectronAngles", "Final electron angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                     40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalelectrontxtyid, false);
     // Final positron angle distribution
-    // HistogramId = 12
+    // HistogramId = 13
     finalpositrontxtyid = analysisManager->CreateH2("FinalPositronAngles", "Final positron angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                     40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalpositrontxtyid, false);
     // Final gamma angle distribution
-    // HistogramId = 13
+    // HistogramId = 14
     finalgammatxtyid = analysisManager->CreateH2("FinalGammaAngles", "Final photon angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                  40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalgammatxtyid, false);
     // Final gamma angle distribution
-    // HistogramId = 14
+    // HistogramId = 15
     finalpiontxtyid = analysisManager->CreateH2("FinalPionAngles", "Final pion angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                  40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalpiontxtyid, false);
     // Final gamma angle distribution
-    // HistogramId = 15
+    // HistogramId = 16
     finalmuontxtyid = analysisManager->CreateH2("FinalMuonAngles", "Final muon angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                  40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalmuontxtyid, false);
@@ -264,6 +269,7 @@ void HistoManager::Book()
     analysisManager->SetH1Plotting(gammaeneid, false);
     analysisManager->SetH1Plotting(initialprimaryeneid, false);
     analysisManager->SetH2Plotting(initialprimaryxyid, false);
+    analysisManager->SetH2Plotting(initialprimaryzxid, false);
     analysisManager->SetH2Plotting(initialprimarytxtyid, false);
     analysisManager->SetH2Plotting(initialprimaryxpxid, false);
     analysisManager->SetH2Plotting(initialprimaryypyid, false);

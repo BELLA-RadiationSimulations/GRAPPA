@@ -35,6 +35,7 @@ public:
     inline int GetPiontxtyId() { return finalpiontxtyid; }
     inline int GetMuontxtyId() { return finalmuontxtyid; }
     inline int GetPrimaryInitialxyId() { return initialprimaryxyid; }
+    inline int GetPrimaryInitialzxId() { return initialprimaryzxid; }
     inline int GetPrimaryInitialEneId() { return initialprimaryeneid; }
     inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
     inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
@@ -65,6 +66,8 @@ private:
     G4int initialprimaryeneid;
     // Initial primary xy
     G4int initialprimaryxyid;
+    // Initial primary zx
+    G4int initialprimaryzxid;
     // Initial primary theta_x-theta_y
     G4int initialprimarytxtyid;
     // Initial primary x-p_x
