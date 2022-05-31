@@ -44,13 +44,9 @@ void HistandNTupleManager::Book()
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     analysisManager->SetVerboseLevel(0);
 
-#if GRAPPA_USE_HDF5
-    analysisManager->SetDefaultFileType("hdf5");
-#else
     analysisManager->SetDefaultFileType("root");
     // Note: merging ntuples is available only with Root output
     // analysisManager->SetNtupleMerging(true);
-#endif
     analysisManager->SetFileName(fFileName);
 
     // This option enables the manual activation and deactivation of
@@ -94,67 +90,89 @@ void HistoManager::Book()
     gammaeneid = analysisManager->CreateH1("FinalGammaEnergy", "Final Energy of photons", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(gammaeneid, false);
     // HistogramId = 4
+    pioneneid = analysisManager->CreateH1("FinalPionEnergy", "Final Energy of pions", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(pioneneid, false);
+    // HistogramId = 5
+    muoneneid = analysisManager->CreateH1("FinalMuonEnergy", "Final Energy of muons", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
+    analysisManager->SetH1Activation(muoneneid, false);
+    // HistogramId = 6
     initialprimaryeneid = analysisManager->CreateH1("InitialPrimaryEnergy", "Initial Energy of primaries", 50, 9.9 * GeV, 10.1 * GeV, "GeV");
     analysisManager->SetH1Activation(initialprimaryeneid, false);
 
     // Final theta distributions
-    // HistogramId = 5
+    // HistogramId = 7
     primarytheta =
         analysisManager->CreateH1("PrimaryTheta", "Final #theta of primaries", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
     analysisManager->SetH1Activation(primarytheta, false);
-    // HistogramId = 6
+    // HistogramId = 8
     electrontheta =
         analysisManager->CreateH1("ElectronTheta", "Final #theta of electrons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
     analysisManager->SetH1Activation(electrontheta, false);
-    // HistogramId = 7
+    // HistogramId = 9
     positrontheta =
         analysisManager->CreateH1("PositronTheta", "Final #theta of positrons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
     analysisManager->SetH1Activation(positrontheta, false);
-    // HistogramId = 8
+    // HistogramId = 10
     gammatheta =
         analysisManager->CreateH1("GammaTheta", "Final #theta of photons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
     analysisManager->SetH1Activation(gammatheta, false);
+    // HistogramId = 11
+    piontheta =
+        analysisManager->CreateH1("PionTheta", "Final #theta of pions", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
+    analysisManager->SetH1Activation(piontheta, false);
+    // HistogramId = 12
+    muontheta =
+        analysisManager->CreateH1("MuonTheta", "Final #theta of muons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
+    analysisManager->SetH1Activation(muontheta, false);
 
     // Some 1D histograms to analyze particles after a cut in divergence (i.e. collimator)
 
-    // HistogramId = 9
+    // HistogramId = 13
     positronenergycut1 =
         analysisManager->CreateH1("PositronEnergyCut1", "Positron energy (#theta < 1 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut1, false);
-    // HistogramId = 10
+    // HistogramId = 14
     positronenergycut2 =
         analysisManager->CreateH1("PositronEnergyCut2", "Positron energy (#theta < 5 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut2, false);
-    // HistogramId = 11
+    // HistogramId = 15
     positronenergycut3 =
         analysisManager->CreateH1("PositronEnergyCut3", "Positron energy (#theta < 10 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut3, false);
-    // HistogramId = 12
+    // HistogramId = 16
     positronenergycut4 =
         analysisManager->CreateH1("PositronEnergyCut4", "Positron energy (#theta < 20 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut4, false);
-    // HistogramId = 13
+    // HistogramId = 17
     positronenergycut5 =
         analysisManager->CreateH1("PositronEnergyCut5", "Positron energy (#theta < 50 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
     analysisManager->SetH1Activation(positronenergycut5, false);
 
     // Final phi distributions
-    // HistogramId = 14
+    // HistogramId = 18
     primaryphi =
         analysisManager->CreateH1("PrimaryPhi", "Final #phi of primaries", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(primaryphi, false);
-    // HistogramId = 15
+    // HistogramId = 19
     electronphi =
         analysisManager->CreateH1("ElectronPhi", "Final #phi of electrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(electronphi, false);
-    // HistogramId = 16
+    // HistogramId = 20
     positronphi =
         analysisManager->CreateH1("PositronPhi", "Final #phi of positrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(positronphi, false);
-    // HistogramId = 17
+    // HistogramId = 21
     gammaphi =
         analysisManager->CreateH1("GammaPhi", "Final #phi of photons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(gammaphi, false);
+    // HistogramId = 22
+    pionphi =
+        analysisManager->CreateH1("PionPhi", "Final #phi of pions", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
+    analysisManager->SetH1Activation(pionphi, false);
+    // HistogramId = 23
+    muonphi =
+        analysisManager->CreateH1("MuonPhi", "Final #phi of muons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
+    analysisManager->SetH1Activation(muonphi, false);
 
     // 2D
     // HistogramId = 0
@@ -162,63 +180,88 @@ void HistoManager::Book()
     initialprimaryxyid = analysisManager->CreateH2("InitialPrimaryXY", "Initial primary transverse distribution", 15, -100 * um, 100 * um,
                                                    15, -100 * um, 100 * um, "um", "um");
     analysisManager->SetH2Activation(initialprimaryxyid, false);
-    // Initial primary angular distribution
     // HistogramId = 1
+    // Initial primary longitudinal distribution
+    initialprimaryzxid = analysisManager->CreateH2("InitialPrimaryZX", "Initial primary longitudinal distribution", 15, -100 * um, 100 * um,
+                                                   15, -100 * um, 100 * um, "um", "um");
+    analysisManager->SetH2Activation(initialprimaryzxid, false);
+    // Initial primary angular distribution
+    // HistogramId = 2
     initialprimarytxtyid = analysisManager->CreateH2("InitialPrimaryangles", "Initial primary angle distribution", 10, -20 * mrad, 20 * mrad,
                                                      10, -20 * mrad, 20 * mrad, "mrad", "mrad");
     analysisManager->SetH2Activation(initialprimarytxtyid, false);
     // Initial primary trasverse x-phasespace
-    // HistogramId = 2
+    // HistogramId = 3
     initialprimaryxpxid = analysisManager->CreateH2("InitialPrimaryXPhaseSpace", "Initial X phase space of primaries", 20, -20 * um, 20 * um,
                                                     20, -20 * MeV, 20 * MeV, "um", "MeV");
     analysisManager->SetH2Activation(initialprimaryxpxid, false);
     // Initial primary trasverse y-phasespace
-    // HistogramId = 3
+    // HistogramId = 4
     initialprimaryypyid = analysisManager->CreateH2("InitialPrimaryYPhaseSpace", "Initial Y phase space of primaries", 20, -20 * um, 20 * um,
                                                     20, -20 * MeV, 20 * MeV, "um", "MeV");
     analysisManager->SetH2Activation(initialprimaryypyid, false);
 
     // Final primary transverse distribution
-    // HistogramId = 4
+    // HistogramId = 5
     finalprimaryxyid = analysisManager->CreateH2("FinalPrimaryXY", "Final primary transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                  40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalprimaryxyid, false);
     // Final electron transverse distribution
-    // HistogramId = 5
+    // HistogramId = 6
     finalelectronxyid = analysisManager->CreateH2("FinalElectronXY", "Final electron transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                   40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalelectronxyid, false);
     // Final positron transverse distribution
-    // HistogramId = 6
+    // HistogramId = 7
     finalpositronxyid = analysisManager->CreateH2("FinalPositronXY", "Final positron transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                   40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalpositronxyid, false);
     // Final gamma transverse distribution
-    // HistogramId = 7
+    // HistogramId = 8
     finalgammaxyid = analysisManager->CreateH2("FinalGammaXY", "Final photon transverse distribution", 40, -1.5 * mm, 1.5 * mm,
                                                40, -1.5 * mm, 1.5 * mm, "mm", "mm");
     analysisManager->SetH2Activation(finalgammaxyid, false);
+    // Final pion transverse distribution
+    // HistogramId = 9
+    finalpionxyid = analysisManager->CreateH2("FinalPionXY", "Final pion transverse distribution", 40, -1.5 * mm, 1.5 * mm,
+                                               40, -1.5 * mm, 1.5 * mm, "mm", "mm");
+    analysisManager->SetH2Activation(finalpionxyid, false);
+    // Final muon transverse distribution
+    // HistogramId = 10
+    finalmuonxyid = analysisManager->CreateH2("FinalMuonXY", "Final muon transverse distribution", 40, -1.5 * mm, 1.5 * mm,
+                                               40, -1.5 * mm, 1.5 * mm, "mm", "mm");
+    analysisManager->SetH2Activation(finalmuonxyid, false);
 
     // Final primary angle distribution
-    // HistogramId = 8
+    // HistogramId = 11
     finalprimarytxtyid = analysisManager->CreateH2("FinalPrimaryAngles", "Final primary angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                    40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalprimarytxtyid, false);
     // Final electron angle distribution
-    // HistogramId = 9
+    // HistogramId = 12
     finalelectrontxtyid = analysisManager->CreateH2("FinalElectronAngles", "Final electron angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                     40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalelectrontxtyid, false);
     // Final positron angle distribution
-    // HistogramId = 10
+    // HistogramId = 13
     finalpositrontxtyid = analysisManager->CreateH2("FinalPositronAngles", "Final positron angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                     40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalpositrontxtyid, false);
     // Final gamma angle distribution
-    // HistogramId = 11
+    // HistogramId = 14
     finalgammatxtyid = analysisManager->CreateH2("FinalGammaAngles", "Final photon angle distribution", 40, -1.5 * rad, 1.5 * rad,
                                                  40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalgammatxtyid, false);
+    // Final gamma angle distribution
+    // HistogramId = 15
+    finalpiontxtyid = analysisManager->CreateH2("FinalPionAngles", "Final pion angle distribution", 40, -1.5 * rad, 1.5 * rad,
+                                                 40, -1.5 * rad, 1.5 * rad, "rad", "rad");
+    analysisManager->SetH2Activation(finalpiontxtyid, false);
+    // Final gamma angle distribution
+    // HistogramId = 16
+    finalmuontxtyid = analysisManager->CreateH2("FinalMuonAngles", "Final muon angle distribution", 40, -1.5 * rad, 1.5 * rad,
+                                                 40, -1.5 * rad, 1.5 * rad, "rad", "rad");
+    analysisManager->SetH2Activation(finalmuontxtyid, false);
 
     analysisManager->SetH1Plotting(primaryeneid, false);
     analysisManager->SetH1Plotting(posieneid, false);
@@ -226,6 +269,7 @@ void HistoManager::Book()
     analysisManager->SetH1Plotting(gammaeneid, false);
     analysisManager->SetH1Plotting(initialprimaryeneid, false);
     analysisManager->SetH2Plotting(initialprimaryxyid, false);
+    analysisManager->SetH2Plotting(initialprimaryzxid, false);
     analysisManager->SetH2Plotting(initialprimarytxtyid, false);
     analysisManager->SetH2Plotting(initialprimaryxpxid, false);
     analysisManager->SetH2Plotting(initialprimaryypyid, false);
@@ -258,59 +302,83 @@ void NTupleManager::Book()
     // NTuple 0: Phase space of particles generated at source
     primaryinitialid = analysisManager->CreateNtuple("InitialPrimary", "Initial primary particle phase space");
     analysisManager->SetNtupleActivation(primaryinitialid, false);
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "x");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "y");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "z");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "px");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "py");
-    analysisManager->CreateNtupleDColumn(primaryinitialid, "pz");
+    analysisManager->CreateNtupleFColumn(primaryinitialid, "x");
+    analysisManager->CreateNtupleFColumn(primaryinitialid, "y");
+    analysisManager->CreateNtupleFColumn(primaryinitialid, "z");
+    analysisManager->CreateNtupleFColumn(primaryinitialid, "px");
+    analysisManager->CreateNtupleFColumn(primaryinitialid, "py");
+    analysisManager->CreateNtupleFColumn(primaryinitialid, "pz");
     analysisManager->FinishNtuple(primaryinitialid);
 
     // NTuple 1: Phase space of final primaries
     primaryid = analysisManager->CreateNtuple("FinalPrimary", "Final primary particles phase space");
     analysisManager->SetNtupleActivation(primaryid, false);
-    analysisManager->CreateNtupleDColumn(primaryid, "x");
-    analysisManager->CreateNtupleDColumn(primaryid, "y");
-    analysisManager->CreateNtupleDColumn(primaryid, "z");
-    analysisManager->CreateNtupleDColumn(primaryid, "px");
-    analysisManager->CreateNtupleDColumn(primaryid, "py");
-    analysisManager->CreateNtupleDColumn(primaryid, "pz");
-    analysisManager->CreateNtupleDColumn(primaryid, "t");
+    analysisManager->CreateNtupleFColumn(primaryid, "x");
+    analysisManager->CreateNtupleFColumn(primaryid, "y");
+    analysisManager->CreateNtupleFColumn(primaryid, "z");
+    analysisManager->CreateNtupleFColumn(primaryid, "px");
+    analysisManager->CreateNtupleFColumn(primaryid, "py");
+    analysisManager->CreateNtupleFColumn(primaryid, "pz");
+    analysisManager->CreateNtupleFColumn(primaryid, "t");
     analysisManager->FinishNtuple(primaryid);
 
     // NTuple 2: Phase space of final positrons
-    posiid = analysisManager->CreateNtuple("FinalPositron", "Final secondary positron phase space");
+    posiid = analysisManager->CreateNtuple("FinalPositron", "Final positron phase space");
     analysisManager->SetNtupleActivation(posiid, false);
-    analysisManager->CreateNtupleDColumn(posiid, "x");
-    analysisManager->CreateNtupleDColumn(posiid, "y");
-    analysisManager->CreateNtupleDColumn(posiid, "z");
-    analysisManager->CreateNtupleDColumn(posiid, "px");
-    analysisManager->CreateNtupleDColumn(posiid, "py");
-    analysisManager->CreateNtupleDColumn(posiid, "pz");
-    analysisManager->CreateNtupleDColumn(posiid, "t");
+    analysisManager->CreateNtupleFColumn(posiid, "x");
+    analysisManager->CreateNtupleFColumn(posiid, "y");
+    analysisManager->CreateNtupleFColumn(posiid, "z");
+    analysisManager->CreateNtupleFColumn(posiid, "px");
+    analysisManager->CreateNtupleFColumn(posiid, "py");
+    analysisManager->CreateNtupleFColumn(posiid, "pz");
+    analysisManager->CreateNtupleFColumn(posiid, "t");
     analysisManager->FinishNtuple(posiid);
 
     // NTuple 3: Phase space of final electrons
-    electronid = analysisManager->CreateNtuple("FinalElectron", "Final secondary electron phase space");
+    electronid = analysisManager->CreateNtuple("FinalElectron", "Final electron phase space");
     analysisManager->SetNtupleActivation(electronid, false);
-    analysisManager->CreateNtupleDColumn(electronid, "x");
-    analysisManager->CreateNtupleDColumn(electronid, "y");
-    analysisManager->CreateNtupleDColumn(electronid, "z");
-    analysisManager->CreateNtupleDColumn(electronid, "px");
-    analysisManager->CreateNtupleDColumn(electronid, "py");
-    analysisManager->CreateNtupleDColumn(electronid, "pz");
-    analysisManager->CreateNtupleDColumn(electronid, "t");
+    analysisManager->CreateNtupleFColumn(electronid, "x");
+    analysisManager->CreateNtupleFColumn(electronid, "y");
+    analysisManager->CreateNtupleFColumn(electronid, "z");
+    analysisManager->CreateNtupleFColumn(electronid, "px");
+    analysisManager->CreateNtupleFColumn(electronid, "py");
+    analysisManager->CreateNtupleFColumn(electronid, "pz");
+    analysisManager->CreateNtupleFColumn(electronid, "t");
     analysisManager->FinishNtuple(electronid);
 
     // NTuple 4: Phase space of final photons
-    gammaid = analysisManager->CreateNtuple("FinalPhoton", "Final secondary photon phase space");
+    gammaid = analysisManager->CreateNtuple("FinalPhoton", "Final photon phase space");
     analysisManager->SetNtupleActivation(gammaid, false);
-    analysisManager->CreateNtupleDColumn(gammaid, "x");
-    analysisManager->CreateNtupleDColumn(gammaid, "y");
-    analysisManager->CreateNtupleDColumn(gammaid, "z");
-    analysisManager->CreateNtupleDColumn(gammaid, "px");
-    analysisManager->CreateNtupleDColumn(gammaid, "py");
-    analysisManager->CreateNtupleDColumn(gammaid, "pz");
-    analysisManager->CreateNtupleDColumn(gammaid, "t");
+    analysisManager->CreateNtupleFColumn(gammaid, "x");
+    analysisManager->CreateNtupleFColumn(gammaid, "y");
+    analysisManager->CreateNtupleFColumn(gammaid, "z");
+    analysisManager->CreateNtupleFColumn(gammaid, "px");
+    analysisManager->CreateNtupleFColumn(gammaid, "py");
+    analysisManager->CreateNtupleFColumn(gammaid, "pz");
+    analysisManager->CreateNtupleFColumn(gammaid, "t");
     analysisManager->FinishNtuple(gammaid);
+
+    // NTuple 5: Phase space of final pions
+    pionid = analysisManager->CreateNtuple("FinalPions", "Final pions phase space");
+    analysisManager->SetNtupleActivation(pionid, false);
+    analysisManager->CreateNtupleFColumn(pionid, "x");
+    analysisManager->CreateNtupleFColumn(pionid, "y");
+    analysisManager->CreateNtupleFColumn(pionid, "z");
+    analysisManager->CreateNtupleFColumn(pionid, "px");
+    analysisManager->CreateNtupleFColumn(pionid, "py");
+    analysisManager->CreateNtupleFColumn(pionid, "pz");
+    analysisManager->CreateNtupleFColumn(pionid, "t");
+    analysisManager->FinishNtuple(pionid);
+
+    // NTuple 4: Phase space of final photons
+    muonid = analysisManager->CreateNtuple("FinalMuon", "Final muons phase space");
+    analysisManager->SetNtupleActivation(muonid, false);
+    analysisManager->CreateNtupleFColumn(muonid, "x");
+    analysisManager->CreateNtupleFColumn(muonid, "y");
+    analysisManager->CreateNtupleFColumn(muonid, "z");
+    analysisManager->CreateNtupleFColumn(muonid, "px");
+    analysisManager->CreateNtupleFColumn(muonid, "py");
+    analysisManager->CreateNtupleFColumn(muonid, "pz");
+    analysisManager->CreateNtupleFColumn(muonid, "t");
+    analysisManager->FinishNtuple(muonid);
 }

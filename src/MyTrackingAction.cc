@@ -34,11 +34,12 @@ void MyTrackingAction::PreUserTrackingAction(const G4Track *track)
     {
         G4ThreeVector vertex = track->GetPosition();
         G4ThreeVector momentum = track->GetMomentum();
-        G4double x = vertex.x(), y = vertex.y(), z = vertex.z();
-        G4double px = momentum.x(), py = momentum.y(), pz = momentum.z();
+        G4float x = vertex.x(), y = vertex.y(), z = vertex.z();
+        G4float px = momentum.x(), py = momentum.y(), pz = momentum.z();
         G4double kineticenergy = track->GetKineticEnergy();
 
         G4int histoxyid = histoman->GetPrimaryInitialxyId();
+        G4int histozxid = histoman->GetPrimaryInitialzxId();
         G4int histoEid = histoman->GetPrimaryInitialEneId();
         G4int histotxtyid = histoman->GetPrimaryInitialtxtyId();
         G4int histoxpxid = histoman->GetPrimaryInitialxpxId();
@@ -50,12 +51,12 @@ void MyTrackingAction::PreUserTrackingAction(const G4Track *track)
         isntupleactive = analysisManager->GetNtupleActivation(ntupleid);
         if (isntupleactive)
         {
-            analysisManager->FillNtupleDColumn(ntupleid, 0, x);
-            analysisManager->FillNtupleDColumn(ntupleid, 1, y);
-            analysisManager->FillNtupleDColumn(ntupleid, 2, z);
-            analysisManager->FillNtupleDColumn(ntupleid, 3, px);
-            analysisManager->FillNtupleDColumn(ntupleid, 4, py);
-            analysisManager->FillNtupleDColumn(ntupleid, 5, pz);
+            analysisManager->FillNtupleFColumn(ntupleid, 0, x);
+            analysisManager->FillNtupleFColumn(ntupleid, 1, y);
+            analysisManager->FillNtupleFColumn(ntupleid, 2, z);
+            analysisManager->FillNtupleFColumn(ntupleid, 3, px);
+            analysisManager->FillNtupleFColumn(ntupleid, 4, py);
+            analysisManager->FillNtupleFColumn(ntupleid, 5, pz);
             analysisManager->AddNtupleRow(ntupleid);
         }
 
@@ -63,6 +64,10 @@ void MyTrackingAction::PreUserTrackingAction(const G4Track *track)
         if (analysisManager->GetH2Activation(histoxyid))
         {
             analysisManager->FillH2(histoxyid, x, y);
+        }
+        if (analysisManager->GetH2Activation(histozxid))
+        {
+            analysisManager->FillH2(histozxid, z, x);
         }
         if (analysisManager->GetH2Activation(histotxtyid))
         {

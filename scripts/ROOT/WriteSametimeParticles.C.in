@@ -49,7 +49,7 @@
 // The structure of the backpropagated particle trees is the following
 // Tree structure
 // treename
-//       |-> X Branch containing Nparts XYZVectorF elements (Cartesian particle positions in mm)
+//       |-> X Branch containing Nparts XYZPointF elements (Cartesian particle positions in mm)
 //       |-> P Branch containing Nparts RhoZPhiVectorF elements (Cylindrical particle momenta in MeV and Rad)
 //       |-> t Branch containing Nparts float elements (Time used to shift particles from the reference time)
 //       |-> m 1 entry (Particle mass in MeV)
@@ -70,9 +70,9 @@ void WriteSametimeParticles()
 
   ReferenceVariable reference_time_ele, reference_time_posi;
   TParticlePDG *positron, *electron, *photon, *primary;
-  double x, y, z, px, py, pz, t;
+  float x, y, z, px, py, pz, t;
   float xback, yback, zback;
-  XYZVectorF position, backposition;
+  XYZPointF position, backposition;
   RhoZPhiVectorF momentum;
   float deltat, charge, mass, mass_squared, tref;
   int i, nentries, kept_particles, rejected_particles;

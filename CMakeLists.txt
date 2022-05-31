@@ -1,7 +1,7 @@
 #Setting CMAKE options
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16 FATAL_ERROR)
 
-PROJECT(GRAPPA VERSION 0.2.0)
+PROJECT(GRAPPA VERSION 0.2.1)
 
 # Instructions needed to link with Geant 4 if not installed in a standard location
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -28,9 +28,6 @@ IF (NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
         "Debug" "Release" "RelWithDebInfo" "MinSizeRel")
 ENDIF()
 
-# Setting use of HDF5
-SET(GRAPPA_USE_HDF5 OFF CACHE BOOL "GRAPPA output files are generated with HDF5.")
-
 MESSAGE("   ==== Using ${CMAKE_CXX_COMPILER_ID} compiler ====")
 
 # Find Geant4 (remember to source geant4.sh first)
@@ -53,33 +50,8 @@ ENDIF()
 # Defining the target
 ADD_EXECUTABLE(GRAPPA src/grappa.cc)
 
-IF (GRAPPA_USE_HDF5)
-    IF (Geant4_hdf5_FOUND)
-        MESSAGE(STATUS "GRAPPA is compiled with support to HDF5 output.")
-        SET(GRAPPA_HAS_HDF5 TRUE)
-    ELSE()
-        MESSAGE(WARNING "No version of Geant4 compiled with HDF5 support is found. GRAPPA will be compiled without HDF5 support")
-        SET(GRAPPA_HAS_HDF5 FALSE)
-    ENDIF()
-ELSE()
-    SET(GRAPPA_HAS_HDF5 FALSE)
-ENDIF()
-
-IF (GRAPPA_HAS_HDF5)
-    TARGET_COMPILE_DEFINITIONS(GRAPPA PRIVATE GRAPPA_USE_HDF5=1)
-ELSE()
-    TARGET_COMPILE_DEFINITIONS(GRAPPA PRIVATE GRAPPA_USE_HDF5=0)
-ENDIF()
-
 # Setting compiler options
-IF (CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-    ADD_COMPILE_OPTIONS(-Wall)
-    IF (CMAKE_BUILD_TYPE MATCHES "Debug")
-        ADD_COMPILE_OPTIONS(-O0 -g3 -lbacktrace -ggdb3)
-    ELSEIF (CMAKE_BUILD_TYPE MATCHES "Release")
-        ADD_COMPILE_OPTIONS(-O3 -march=native)
-    ENDIF()
-ELSEIF (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+IF (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     IF (CMAKE_BUILD_TYPE MATCHES "Debug")
         ADD_COMPILE_OPTIONS(/Od /Zi)
     ELSEIF (CMAKE_BUILD_TYPE MATCHES "Release")

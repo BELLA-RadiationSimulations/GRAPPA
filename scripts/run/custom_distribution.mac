@@ -18,7 +18,7 @@
 /geometry/target/size 3 cm
 # /geometry/target/center 0 0 0 mm
 /geometry/target/thickness 1.42 cm
-# /geometry/target/rotation 3 mm
+# /geometry/target/rotation 45 deg
 /geometry/target/material G4_Ti
 
 # Fix random seed to have repeatable runs
@@ -491,34 +491,45 @@
 # - 1 Final Energy of positrons
 # - 2 Final Energy of electrons
 # - 3 Final Energy of photons
-# - 4 Initial Energy of primaries
-# - 5 Final theta of primaries
-# - 6 Final theta of electrons
-# - 7 Final theta of positrons
-# - 8 Final theta of photons
-# - 9 Positron Energy if theta < 1 mrad
-# - 10 Positron Energy if theta < 5 mrad
-# - 11 Positron Energy if theta < 10 mrad
-# - 12 Positron Energy if theta < 20 mrad
-# - 13 Positron Energy if theta < 50 mrad
-# - 14 Final phi of primaries
-# - 15 Final phi of electrons
-# - 16 Final phi of positrons
-# - 17 Final phi of photons
+# - 4 Final Energy of pions
+# - 5 Final Energy of muons
+# - 6 Initial Energy of primaries
+# - 7 Final theta of primaries
+# - 8 Final theta of electrons
+# - 9 Final theta of positrons
+# - 10 Final theta of photons
+# - 11 Final theta of pions
+# - 12 Final theta of muons
+# - 13 Positron Energy if theta < 1 mrad
+# - 14 Positron Energy if theta < 5 mrad
+# - 15 Positron Energy if theta < 10 mrad
+# - 16 Positron Energy if theta < 20 mrad
+# - 17 Positron Energy if theta < 50 mrad
+# - 18 Final phi of primaries
+# - 19 Final phi of electrons
+# - 20 Final phi of positrons
+# - 21 Final phi of photons
+# - 22 Final phi of pions
+# - 23 Final phi of muons
 #
 # 2D
 # - 0 Initial primary transverse distribution
-# - 1 Initial primary angle distribution
-# - 2 Initial X phase space of primaries
-# - 3 Initial Y phase space of primaries
-# - 4 Final primary transverse distribution
-# - 5 Final electron transverse distribution
-# - 6 Final positron transverse distribution
-# - 7 Final photon transverse distribution
-# - 8 Final primary angle distribution
-# - 9 Final electron angle distribution
-# - 10 Final positron angle distribution
-# - 11 Final photon angle distribution
+# - 1 Initial primary longitudinal distribution
+# - 2 Initial primary angle distribution
+# - 3 Initial X phase space of primaries
+# - 4 Initial Y phase space of primaries
+# - 5 Final primary transverse distribution
+# - 6 Final electron transverse distribution
+# - 7 Final positron transverse distribution
+# - 8 Final photon transverse distribution
+# - 9 Final pions transverse distribution
+# - 10 Final muons transverse distribution
+# - 11 Final primary angle distribution
+# - 12 Final electron angle distribution
+# - 13 Final positron angle distribution
+# - 14 Final photon angle distribution
+# - 15 Final pions angle distribution
+# - 16 Final muons angle distribution
 
 # Personalization of histograms
 # /analysis/h1/set id nbins valMin valMax valUnit (optional) valFcn (optional) valBinScheme (optional)
@@ -528,40 +539,52 @@
 # /analysis/h1/setXaxisLog id true/false
 # /analysis/h1/setYaxisLog id true/false
 
-/analysis/h1/set 0 200 10 600 MeV none log
-/analysis/h1/set 1 200 10 500 MeV none log
-/analysis/h1/set 2 200 10 500 MeV none log
-/analysis/h1/set 3 200 10 200 MeV none log
-/analysis/h1/set 4 200 10 600 MeV none log
-/analysis/h1/set 5 200 10 500 MeV none log
-/analysis/h1/set 6 200 10 500 MeV none log
-/analysis/h1/set 7 200 10 500 MeV none log
-/analysis/h1/set 8 200 10 500 MeV none log
-/analysis/h1/set 9 200 10 500 MeV none log
+/analysis/h1/set 0 200 10 1000 MeV none linear
+/analysis/h1/set 1 200 10 1000 MeV none linear
+/analysis/h1/set 2 200 10 1000 MeV none linear
+/analysis/h1/set 3 200 1 100 MeV none linear
+/analysis/h1/set 4 200 1 1000 MeV none linear
+/analysis/h1/set 5 200 1 1000 MeV none linear
+/analysis/h1/set 6 200 10 1000 MeV none linear
+/analysis/h1/set 7 200 0. 50 mrad none linear
+/analysis/h1/set 8 200 0. 50 mrad none linear
+/analysis/h1/set 9 200 0 50 mrad none linear
+/analysis/h1/set 10 200 0. 50 mrad none linear
+/analysis/h1/set 11 200 0. 50 mrad none linear
+/analysis/h1/set 12 200 0. 50 mrad none linear
+/analysis/h1/set 13 1000 1 400 MeV none linear
+/analysis/h1/set 14 1000 1 400 MeV none linear
+/analysis/h1/set 15 1000 1 400 MeV none linear
+/analysis/h1/set 16 1000 1 400 MeV none linear
+/analysis/h1/set 17 1000 1 400 MeV none linear
 
 /analysis/h1/setXaxisLog 0 true
 /analysis/h1/setXaxisLog 1 true
 /analysis/h1/setXaxisLog 2 true
 /analysis/h1/setXaxisLog 3 true
-/analysis/h1/setXaxisLog 4 true
-/analysis/h1/setXaxisLog 5 true
-/analysis/h1/setXaxisLog 6 true
-/analysis/h1/setXaxisLog 7 true
-/analysis/h1/setXaxisLog 8 true
 /analysis/h1/setXaxisLog 9 true
+/analysis/h1/setXaxisLog 10 true
+/analysis/h1/setXaxisLog 11 true
+/analysis/h1/setXaxisLog 12 true
+/analysis/h1/setXaxisLog 13 true
 
 /analysis/h2/set 0 50 -3 3 um none linear 50 -3 3 um none linear #x-y
-/analysis/h2/set 1 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
-/analysis/h2/set 2 50 -3 3 um none linear 50 -10 10 MeV none linear #x-y
+/analysis/h2/set 1 50 4995 5005 um none linear 50 -3 3 um none linear #x-y
+/analysis/h2/set 2 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
 /analysis/h2/set 3 50 -3 3 um none linear 50 -10 10 MeV none linear #x-y
-/analysis/h2/set 4 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
+/analysis/h2/set 4 50 -3 3 um none linear 50 -10 10 MeV none linear #x-y
 /analysis/h2/set 5 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
 /analysis/h2/set 6 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
 /analysis/h2/set 7 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
-/analysis/h2/set 8 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
-/analysis/h2/set 9 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
-/analysis/h2/set 10 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
-/analysis/h2/set 11 100 -1.5 1.5 rad none linear 100 -1.5 1.5 rad none linear #x-y
+/analysis/h2/set 8 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
+/analysis/h2/set 9 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
+/analysis/h2/set 10 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
+/analysis/h2/set 11 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
+/analysis/h2/set 12 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
+/analysis/h2/set 13 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
+/analysis/h2/set 14 100 -1.5 1.5 rad none linear 100 -1.5 1.5 rad none linear #x-y
+/analysis/h2/set 15 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
+/analysis/h2/set 16 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
 
 # =/=/=/=/= End analysis section =/=/=/=/=
 
