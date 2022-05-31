@@ -136,7 +136,7 @@ ReferenceVariable GetReferenceTime(std::shared_ptr<TNtuple> ntuple)
   Long64_t nentries;
   int i;
   long double mean = 0, std = 0;
-  double t;
+  float t;
   ReferenceVariable tref;
   auto start = std::chrono::high_resolution_clock::now();
 

@@ -7,6 +7,7 @@
 
 #include <MySDAbsorber.hpp>
 
+// Primaries, electrons, positrons and photons absorbing layer
 AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
@@ -34,8 +35,13 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4StepPoint *preStepPoint = step->GetPreStepPoint();
     G4String thisVolumename = aTrack->GetVolume()->GetName();
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
-    G4String name = particle->GetParticleName();
+    const G4String name = particle->GetParticleName();
+    // Check if particle is in the particle list
     G4int pID = aTrack->GetParentID();
+    if ((m_ParticleList.find(name) == m_ParticleList.end()) && (pID != 0))
+    {
+        return false;
+    }
     G4int histeneid, histoxyid, histotxtyid, histthetaid, histphiid, ntupleid;
 
     // Pointer to current process
@@ -224,13 +230,167 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         if (FillNtuple)
         {
             // Filling the correct Ntuple
-            analysisManager->FillNtupleDColumn(ntupleid, 0, position.x());
-            analysisManager->FillNtupleDColumn(ntupleid, 1, position.y());
-            analysisManager->FillNtupleDColumn(ntupleid, 2, position.z());
-            analysisManager->FillNtupleDColumn(ntupleid, 3, momentum.x());
-            analysisManager->FillNtupleDColumn(ntupleid, 4, momentum.y());
-            analysisManager->FillNtupleDColumn(ntupleid, 5, momentum.z());
-            analysisManager->FillNtupleDColumn(ntupleid, 6, time);
+            analysisManager->FillNtupleFColumn(ntupleid, 0, position.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 1, position.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 2, position.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 3, momentum.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 6, time);
+            analysisManager->AddNtupleRow(ntupleid);
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+// Pions and muons absorbing layer
+PiandMuAbsorberSD::PiandMuAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
+{
+    m_HistoandNtupleManager = myanalysismanager;
+}
+
+PiandMuAbsorberSD::~PiandMuAbsorberSD()
+{
+}
+
+void PiandMuAbsorberSD::Initialize(G4HCofThisEvent *)
+{
+}
+
+G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
+{
+    // Analysis manager for histograms
+    auto analysisManager = G4AnalysisManager::Instance();
+    G4double kineticEnergy, time, pz, px, py, theta_mrad, phi;
+    G4ThreeVector position, momentum;
+
+    // Access track information
+    G4Track *aTrack = step->GetTrack();
+
+    // Getting pre step point information and volume name
+    G4StepPoint *preStepPoint = step->GetPreStepPoint();
+    G4String thisVolumename = aTrack->GetVolume()->GetName();
+    const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
+    const G4String name = particle->GetParticleName();
+    G4int pID = aTrack->GetParentID();
+    // Check if particle is in the particle list
+    if (m_ParticleList.find(name) == m_ParticleList.end())
+    {
+        return false;
+    }
+    G4int histeneid, histoxyid, histotxtyid, histthetaid, histphiid, ntupleid;
+
+    // Pointer to current process
+    const G4VProcess *CurrentProcess = preStepPoint->GetProcessDefinedStep();
+
+    // Boolean flags for histogram and Ntuple filling
+    G4bool FillHistogram = true;
+    G4bool FillNtuple = true;
+    constexpr G4double pi = CLHEP::pi;
+
+    if (!analysisManager->IsActive())
+    {
+        return false;
+    }
+    if (CurrentProcess)
+    {
+        // Getting process name (it should match "Transportation")
+        const G4String &StepProcessName = CurrentProcess->GetProcessName();
+        if (StepProcessName == "Transportation")
+        {
+            // processing hit when entering the volume
+            kineticEnergy = aTrack->GetKineticEnergy();
+            position = aTrack->GetPosition();
+            momentum = aTrack->GetMomentum();
+            time = aTrack->GetGlobalTime();
+            aTrack->SetTrackStatus(fStopAndKill);
+            pz = std::abs(momentum.z());
+            px = momentum.x();
+            py = momentum.y();
+            theta_mrad = pi - momentum.theta();
+            phi = momentum.phi();
+        }
+        else
+        {
+            return false;
+        }
+
+        HistoManager *histomanager = m_HistoandNtupleManager->GetHistoManager();
+
+        if (pID == 0)
+        {
+            // This is forced. There shouldn't in fact be any primary pions or muons in
+            // the simulation, so every particle that gets to here should have a pID != 0
+            // In the future, we may consider doing something else here.
+            return false;
+        }
+        else
+        {
+            // Pions are collected in a single ntuple
+            if (name == "pi+" || name == "pi-" || name == "pi0")
+            {
+                histeneid = histomanager->GetPionEneId();
+                histoxyid = histomanager->GetPionxyId();
+                histotxtyid = histomanager->GetPiontxtyId();
+                histthetaid = histomanager->GetPionThetaId();
+                histphiid = histomanager->GetPionPhiId();
+                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
+            }
+            // Muons are collected in a single ntuple
+            else if (name == "mu+" || name == "mu-")
+            {
+                histeneid = histomanager->GetMuonEneId();
+                histoxyid = histomanager->GetMuonxyId();
+                histotxtyid = histomanager->GetMuontxtyId();
+                histthetaid = histomanager->GetMuonThetaId();
+                histphiid = histomanager->GetMuonPhiId();
+                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetMuonId();
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        if (FillHistogram)
+        {
+            // Filling the correct histogram
+            if (analysisManager->GetH1Activation(histeneid))
+            {
+                analysisManager->FillH1(histeneid, kineticEnergy);
+            }
+            if (analysisManager->GetH1Activation(histthetaid))
+            {
+                analysisManager->FillH1(histthetaid, theta_mrad);
+            }
+            if (analysisManager->GetH1Activation(histphiid))
+            {
+                analysisManager->FillH1(histphiid, phi);
+            }
+            if (analysisManager->GetH2Activation(histoxyid))
+            {
+                analysisManager->FillH2(histoxyid, position.x(), position.y());
+            }
+            if (analysisManager->GetH2Activation(histotxtyid))
+            {
+                analysisManager->FillH2(histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
+            }
+        }
+
+        FillNtuple = (FillNtuple && analysisManager->GetNtupleActivation(ntupleid));
+        if (FillNtuple)
+        {
+            // Filling the correct Ntuple
+            analysisManager->FillNtupleFColumn(ntupleid, 0, position.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 1, position.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 2, position.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 3, momentum.x());
+            analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
+            analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 6, time);
             analysisManager->AddNtupleRow(ntupleid);
         }
 

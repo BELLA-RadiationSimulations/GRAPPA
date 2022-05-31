@@ -20,15 +20,22 @@ public:
     inline int GetPositronEneId() { return posieneid; }
     inline int GetElectronEneId() { return electroneneid; }
     inline int GetGammaEneId() { return gammaeneid; }
+    inline int GetPionEneId() {return pioneneid;}
+    inline int GetMuonEneId() {return muoneneid;}
     inline int GetPrimaryxyId() { return finalprimaryxyid; }
     inline int GetPositronxyId() { return finalpositronxyid; }
     inline int GetElectronxyId() { return finalelectronxyid; }
-    inline int GetGammaxyId() { return finalgammatxtyid; }
+    inline int GetGammaxyId() { return finalgammaxyid; }
+    inline int GetPionxyId() { return finalpionxyid; }
+    inline int GetMuonxyId() { return finalmuonxyid; }
     inline int GetPrimarytxtyId() { return finalprimarytxtyid; }
     inline int GetPositrontxtyId() { return finalpositrontxtyid; }
     inline int GetElectrontxtyId() { return finalelectrontxtyid; }
-    inline int GetGammatxtyId() { return finalgammaxyid; }
+    inline int GetGammatxtyId() { return finalgammatxtyid; }
+    inline int GetPiontxtyId() { return finalpiontxtyid; }
+    inline int GetMuontxtyId() { return finalmuontxtyid; }
     inline int GetPrimaryInitialxyId() { return initialprimaryxyid; }
+    inline int GetPrimaryInitialzxId() { return initialprimaryzxid; }
     inline int GetPrimaryInitialEneId() { return initialprimaryeneid; }
     inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
     inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
@@ -42,10 +49,14 @@ public:
     inline int GetElectronThetaId() { return electrontheta; }
     inline int GetPositronThetaId() { return positrontheta; }
     inline int GetGammaThetaId() { return gammatheta; }
+    inline int GetPionThetaId() {return piontheta;}
+    inline int GetMuonThetaId() {return muontheta;}
     inline int GetPrimaryPhiId() { return primaryphi; }
     inline int GetElectronPhiId() { return electronphi; }
     inline int GetPositronPhiId() { return positronphi; }
     inline int GetGammaPhiId() { return gammaphi; }
+    inline int GetPionPhiId() {return pionphi;}
+    inline int GetMuonPhiId() {return muonphi;}
     void Book();
 
 private:
@@ -55,6 +66,8 @@ private:
     G4int initialprimaryeneid;
     // Initial primary xy
     G4int initialprimaryxyid;
+    // Initial primary zx
+    G4int initialprimaryzxid;
     // Initial primary theta_x-theta_y
     G4int initialprimarytxtyid;
     // Initial primary x-p_x
@@ -69,6 +82,10 @@ private:
     G4int positrontheta;
     // Final gamma theta distribution
     G4int gammatheta;
+    // Final pions theta distribution
+    G4int piontheta;
+    // Final muons theta distribution
+    G4int muontheta;
     // Final primary phi distribution
     G4int primaryphi;
     // Final electron phi distribution
@@ -77,6 +94,10 @@ private:
     G4int positronphi;
     // Final gamma phi distribution
     G4int gammaphi;
+    // Final pions phi distribution
+    G4int pionphi;
+    // Final muon phi distribution
+    G4int muonphi;
     // Final primary energy
     G4int primaryeneid;
     // Final positron energy
@@ -85,6 +106,10 @@ private:
     G4int electroneneid;
     // Final gamma energy
     G4int gammaeneid;
+    // Final pions energy
+    G4int pioneneid;
+    // Final muons energy
+    G4int muoneneid;
     // Final primary transverse distribution
     G4int finalprimaryxyid;
     // Final electron transverse distribution
@@ -93,6 +118,10 @@ private:
     G4int finalpositronxyid;
     // Final gamma transverse distribution
     G4int finalgammaxyid;
+    // Final pions transverse distribution
+    G4int finalpionxyid;
+    // Final muons transverse distribution
+    G4int finalmuonxyid;
     // Final primary transverse angle
     G4int finalprimarytxtyid;
     // Final electron transverse angle
@@ -101,6 +130,10 @@ private:
     G4int finalpositrontxtyid;
     // Final gamma transverse angle
     G4int finalgammatxtyid;
+    // Final pions transverse angle
+    G4int finalpiontxtyid;
+    // Final muons transverse angle
+    G4int finalmuontxtyid;
 
     // Some histograms with divergence cuts
     G4int positronenergycut1;
@@ -108,9 +141,7 @@ private:
     G4int positronenergycut3;
     G4int positronenergycut4;
     G4int positronenergycut5;
-
 };
-
 
 class NTupleManager
 {
@@ -123,10 +154,13 @@ public:
     inline int GetPositronId() { return posiid; }
     inline int GetElectronId() { return electronid; }
     inline int GetGammaId() { return gammaid; }
+    inline int GetPionId() { return pionid; }
+    inline int GetMuonId() { return muonid; }
     void Book();
 
 private:
-    G4int primaryinitialid, primaryid, posiid, electronid, gammaid;
+    G4int primaryinitialid, primaryid, posiid, electronid,
+        gammaid, pionid, muonid;
 };
 
 class HistandNTupleManager
@@ -139,17 +173,18 @@ public:
     void OpenFile();
     void Book();
 
-    HistoManager* GetHistoManager() {
+    HistoManager *GetHistoManager()
+    {
         return m_HistoManager;
     }
 
-    NTupleManager* GetNTupleManager() {
+    NTupleManager *GetNTupleManager()
+    {
         return m_NtupleManager;
     }
 
 private:
-
     G4String fFileName;
-    HistoManager* m_HistoManager;
-    NTupleManager* m_NtupleManager;
+    HistoManager *m_HistoManager;
+    NTupleManager *m_NtupleManager;
 };
