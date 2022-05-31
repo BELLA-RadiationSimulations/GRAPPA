@@ -1,7 +1,7 @@
 #Setting CMAKE options
 CMAKE_MINIMUM_REQUIRED(VERSION 3.16 FATAL_ERROR)
 
-PROJECT(GRAPPA VERSION 0.2.0)
+PROJECT(GRAPPA VERSION 0.2.1)
 
 # Instructions needed to link with Geant 4 if not installed in a standard location
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
