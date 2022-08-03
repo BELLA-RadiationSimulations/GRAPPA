@@ -264,7 +264,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
-    G4double kineticEnergy, time, pz, px, py, theta_mrad, phi;
+    G4double kineticEnergy, time, pz, px, py, theta_mrad, phi, charge;
     G4ThreeVector position, momentum;
 
     // Access track information
@@ -305,6 +305,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             kineticEnergy = aTrack->GetKineticEnergy();
             position = aTrack->GetPosition();
             momentum = aTrack->GetMomentum();
+            charge = particle->GetPDGCharge();
             time = aTrack->GetGlobalTime();
             aTrack->SetTrackStatus(fStopAndKill);
             pz = std::abs(momentum.z());
@@ -330,7 +331,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         else
         {
             // Pions are collected in a single ntuple
-            if (name == "pi+" || name == "pi-" || name == "pi0")
+            if (name == "pi+" || name == "pi-")
             {
                 histeneid = histomanager->GetPionEneId();
                 histoxyid = histomanager->GetPionxyId();
@@ -391,6 +392,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
             analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
+            analysisManager->FillNtupleFColumn(ntupleid, 7, charge);
             analysisManager->AddNtupleRow(ntupleid);
         }
 
