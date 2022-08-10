@@ -368,9 +368,10 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(pionid, "py");
     analysisManager->CreateNtupleFColumn(pionid, "pz");
     analysisManager->CreateNtupleFColumn(pionid, "t");
+    analysisManager->CreateNtupleFColumn(pionid, "q");
     analysisManager->FinishNtuple(pionid);
 
-    // NTuple 4: Phase space of final photons
+    // NTuple 6: Phase space of final photons
     muonid = analysisManager->CreateNtuple("FinalMuon", "Final muons phase space");
     analysisManager->SetNtupleActivation(muonid, false);
     analysisManager->CreateNtupleFColumn(muonid, "x");
@@ -380,5 +381,6 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(muonid, "py");
     analysisManager->CreateNtupleFColumn(muonid, "pz");
     analysisManager->CreateNtupleFColumn(muonid, "t");
+    analysisManager->CreateNtupleFColumn(muonid, "q");
     analysisManager->FinishNtuple(muonid);
 }
