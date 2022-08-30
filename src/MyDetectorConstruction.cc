@@ -109,7 +109,7 @@ G4VPhysicalVolume *MyDetectorConstruction::ConstructWorldandTarget()
     // ================================================ //
     // Last, we create an absorbing layer that coincides with the world
     // that makes us detect particles
-    
+
     // First absorber is for e+, e- and gamma
     //
     G4double a_dimensions = w_radius;
@@ -119,10 +119,10 @@ G4VPhysicalVolume *MyDetectorConstruction::ConstructWorldandTarget()
         new G4Sphere(std_a_name,                                          // its name
                      a_dimensions - absorber_thickness, a_dimensions, // its inner and outer radii
                      0., 360 * deg,                                   // its phi initial and final angles
-                     0., 360 * deg);                                  // its theta initial and final angles
+                     0., 180 * deg);                                  // its theta initial and final angles
 
     // Creation of the logical volume (with the shape of the sphere)
-    m_StandardLogicAbsorber =
+    m_LogicAbsorber =
         new G4LogicalVolume(StdsolidAbsorber, // its solid
                             a_material,    // its material
                             std_a_name);       // its name
@@ -130,7 +130,7 @@ G4VPhysicalVolume *MyDetectorConstruction::ConstructWorldandTarget()
     // Creation of the physical volume associated with the logical volume
     new G4PVPlacement(0,               // no rotation
                       G4ThreeVector(), // at (0,0,0)
-                      m_StandardLogicAbsorber,   // its logical volume
+                      m_LogicAbsorber,   // its logical volume
                       std_a_name,          // its name
                       logicWorld,      // its mother  volume
                       false,           // no boolean operation
@@ -138,46 +138,32 @@ G4VPhysicalVolume *MyDetectorConstruction::ConstructWorldandTarget()
                       checkOverlaps);  // overlaps checking
 
     // Second absorber is for pi and mu
-    //
-    // Reducing dimension of Pions and Muons absorber so that it doens't overlap with the other one
-    a_dimensions = a_dimensions - absorber_thickness;
-    G4Sphere *PMsolidAbsorber =
-        new G4Sphere(pm_a_name,                                          // its name
-                     a_dimensions - absorber_thickness, a_dimensions, // its inner and outer radii
-                     0., 360 * deg,                                   // its phi initial and final angles
-                     0., 360 * deg);                                  // its theta initial and final angles
 
-    // Creation of the logical volume (with the shape of the sphere)
-    m_PiandMuLogicAbsorber =
-        new G4LogicalVolume(PMsolidAbsorber, // its solid
-                            a_material,    // its material
-                            pm_a_name);       // its name
-
-    // Creation of the physical volume associated with the logical volume
-    new G4PVPlacement(0,               // no rotation
-                      G4ThreeVector(), // at (0,0,0)
-                      m_PiandMuLogicAbsorber,   // its logical volume
-                      pm_a_name,          // its name
-                      logicWorld,      // its mother  volume
-                      false,           // no boolean operation
-                      0,               // copy number
-                      checkOverlaps);  // overlaps checking
+    // // Creation of the physical volume associated with the logical volume
+    // new G4PVPlacement(0,               // no rotation
+    //                   G4ThreeVector(), // at (0,0,0)
+    //                   m_PiandMuLogicAbsorber,   // its logical volume
+    //                   pm_a_name,          // its name
+    //                   logicWorld,      // its mother  volume
+    //                   false,           // no boolean operation
+    //                   0,               // copy number
+    //                   checkOverlaps);  // overlaps checking
 
     // ================================================ //
     // Set Visualization attributes
 
-    G4VisAttributes *worldVisAtt = new G4VisAttributes(true); // Setting world visible
-    worldVisAtt->SetForceWireframe();
-    worldVisAtt->SetLineWidth(0.05 * mm);
-    G4VisAttributes *targetVisAtt = new G4VisAttributes(G4Colour(204 / 255., 204 / 255., 255 / 255., 0.2));
+    G4VisAttributes *worldVisAtt = new G4VisAttributes(false); // Setting world visible
+    // worldVisAtt->SetForceWireframe();
+    // worldVisAtt->SetLineWidth(0.05 * mm);
     // Setting target visible, with a blueish color
+    G4VisAttributes *targetVisAtt = new G4VisAttributes(G4Colour(204 / 255., 204 / 255., 255 / 255., 0.2));
     targetVisAtt->SetForceSolid();
-    G4VisAttributes *absorberVisAtt = new G4VisAttributes(false); // Setting absorbing layer not visible
+    // Setting absorber lightly visible with a white color
+    G4VisAttributes *absorberVisAtt = new G4VisAttributes(G4Colour(1., 1., 1., 0.1));
 
     logicWorld->SetVisAttributes(worldVisAtt);
     logicfoil->SetVisAttributes(targetVisAtt);
-    m_StandardLogicAbsorber->SetVisAttributes(absorberVisAtt);
-    m_PiandMuLogicAbsorber->SetVisAttributes(absorberVisAtt);
+    m_LogicAbsorber->SetVisAttributes(absorberVisAtt);
 
     // Return root volume
     return physWorld;
@@ -188,15 +174,15 @@ void MyDetectorConstruction::ConstructSDandField()
     // ================================================ //
     // Link and activate Sensitive Detectors
 
-    auto sdManager = G4SDManager::GetSDMpointer();
-    G4String SDname;
+    G4SDManager * SDMpointer = G4SDManager::GetSDMpointer();
 
     m_StandardAbsorber = new AbsorberSD("/StandardAbsorber", m_HistoandNtupleManager);
-    sdManager->AddNewDetector(m_StandardAbsorber);
-    m_StandardLogicAbsorber->SetSensitiveDetector(m_StandardAbsorber);
     m_PiandMuAbsorber = new PiandMuAbsorberSD("/PiandMuAbsorber", m_HistoandNtupleManager);
-    sdManager->AddNewDetector(m_PiandMuAbsorber);
-    m_PiandMuLogicAbsorber->SetSensitiveDetector(m_PiandMuAbsorber);
+
+    SDMpointer->AddNewDetector(m_StandardAbsorber);
+    SDMpointer->AddNewDetector(m_PiandMuAbsorber);
+    SetSensitiveDetector(std_a_name, m_PiandMuAbsorber);
+    SetSensitiveDetector(std_a_name, m_StandardAbsorber);
 }
 
 void MyDetectorConstruction::DefineCommands()

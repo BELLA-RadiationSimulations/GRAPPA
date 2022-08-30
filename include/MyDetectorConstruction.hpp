@@ -44,23 +44,21 @@ private:
     void ReinitializeGeometry();
 
     // Some useful data about the world and the detectors
-    G4double w_radius = 50 * cm;
+    G4double w_radius = 100 * cm;
     G4double foil_x = 5 * cm;
     G4double foil_y = 5 * cm;
     G4double foil_z = 1 * cm;
     G4ThreeVector foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
     // Foil angle in radians
     G4double foil_angle_y = 0 * rad;
-    const G4double absorber_thickness = 0.01 * mm;
+    const G4double absorber_thickness = 1 * mm;
     G4String w_name = "World", f_name = "High-Z_foil",
-    std_a_name = "StandardAbsorber", pm_a_name = "PiandMuAbsorber";
+    std_a_name = "Absorber";
     G4String w_material_name = "G4_Galactic", f_material_name = "G4_W", a_material_name = "G4_Galactic";
     // Pointer to the physical world
     G4VPhysicalVolume* physWorld;
-    // Pointer to the logical absorber for e+, e- and gamma
-    G4LogicalVolume* m_StandardLogicAbsorber;
-    // Pointer to the logical absorber for pi and mu
-    G4LogicalVolume* m_PiandMuLogicAbsorber;
+    // Pointer to the logical absorber for sensitive detectors
+    G4LogicalVolume* m_LogicAbsorber;
     // Pointer to the customized analysis manager
     HistandNTupleManager* m_HistoandNtupleManager;
     // Pointer to the Standard SD

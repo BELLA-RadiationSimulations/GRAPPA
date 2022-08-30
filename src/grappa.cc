@@ -94,9 +94,10 @@ int main(int argc, char* argv[])
     timer->Stop();
 
     // Final cleanup
-    // Must delete: run manager, visualization manager, ui manager
+    // Must delete: run manager, visualization manager, analysis manager
     delete runManager;
     delete visManager;
+    delete myanalysismanager;
 
     G4cout << "    User elapsed time   => " << timer->GetUserElapsed() / 3600 << " h   = "
         << timer->GetUserElapsed() / 60 << " min   = " << timer->GetUserElapsed() << " s." << G4endl;
