@@ -50,6 +50,7 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
             }
         }
     }
+    G4AnalysisManager::Instance()->Reset();
     //   Open the analysis file
     m_HistoandNtupleManager->OpenFile();
 }

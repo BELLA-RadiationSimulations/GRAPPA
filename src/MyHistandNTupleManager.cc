@@ -371,7 +371,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(pionid, "q");
     analysisManager->FinishNtuple(pionid);
 
-    // NTuple 6: Phase space of final photons
+    // NTuple 6: Phase space of final muons
     muonid = analysisManager->CreateNtuple("FinalMuon", "Final muons phase space");
     analysisManager->SetNtupleActivation(muonid, false);
     analysisManager->CreateNtupleFColumn(muonid, "x");

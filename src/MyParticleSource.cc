@@ -33,6 +33,7 @@ ParticleSourceGPS::ParticleSourceGPS() : ParticleSource()
 
 ParticleSourceGPS::~ParticleSourceGPS()
 {
+    m_part = nullptr;
 }
 
 ParticleSourceGun::ParticleSourceGun(G4String filename) : ParticleSource()
@@ -60,6 +61,7 @@ ParticleSourceGun::ParticleSourceGun(G4String filename) : ParticleSource()
 
 ParticleSourceGun::~ParticleSourceGun()
 {
+    m_part = nullptr;
 }
 
 void ParticleSourceGun::LoadNextParticle(int eventNumber)
