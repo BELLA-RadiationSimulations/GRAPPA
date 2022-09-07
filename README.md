@@ -99,9 +99,7 @@ everything after a `#` as comments.
 GRAPPA can shoot particle either from a [General Particle Source](https://geant4-userdoc.web.cern.ch/UsersGuides/ForApplicationDeveloper/html/GettingStarted/generalParticleSource.html?highlight=gps) (that is the default behavior),
 where the beam statistics must be specified,
 or from a file of pre-generated list positions and momenta.
-
-> Choice between GPS and particles from file must be made BEFORE the run initialization
-
+Choice between GPS and particles from file must be made BEFORE the run initialization
 An example of GPS settings is
 ```
 # =/=/=/=/= Particle source section =/=/=/=/=
@@ -146,6 +144,11 @@ The command to extract particles from a given ASCII file is
 # Define particle type (default is electrons)
 /gun/particle gamma
 ```
+The structure of an ascii file is:
+
+
+| x [mm] | y [mm] | z [mm] | px [MeV] | py [MeV] | pz [MeV] |
+---
 
 ### Target geometry
 
