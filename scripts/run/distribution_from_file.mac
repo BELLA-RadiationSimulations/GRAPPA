@@ -26,8 +26,8 @@
 
 # Select particles from file
 
-/particleSource/ParticlesFromFile true
-/particleSource/FileName InitialPhaseSpace.dat
+/particle_source/ParticlesFromFile true
+/particle_source/FileName InitialPhaseSpace.dat
 
 # Initialize run
 /run/initialize

@@ -51,16 +51,16 @@ void MyActionInitialization::ParticlesFileName(G4String filename)
 MyActionInitializationMessenger::MyActionInitializationMessenger(MyActionInitialization *myactionpointer)
 {
     m_myactionpointer = myactionpointer;
-    m_CMDDirectory = std::make_shared<G4UIdirectory>("/particleSource/");
+    m_CMDDirectory = std::make_shared<G4UIdirectory>("/particle_source/");
     m_CMDDirectory->SetGuidance("Set of commands to pick the particle source");
 
-    m_CMDifpartsfromfile = std::make_shared<G4UIcmdWithABool>("/particleSource/ParticlesFromFile", this);
+    m_CMDifpartsfromfile = std::make_shared<G4UIcmdWithABool>("/particle_source/ParticlesFromFile", this);
     m_CMDifpartsfromfile->SetGuidance(" If true, particles will be read from a binary files and generated using a particle Gun ");
     m_CMDifpartsfromfile->SetParameterName("ParticlesFromFile", false, true);
     m_CMDifpartsfromfile->SetDefaultValue(false);
     m_CMDifpartsfromfile->AvailableForStates(G4State_PreInit);
 
-    m_CMDpartsfilename = std::make_shared<G4UIcmdWithAString>("/particleSource/FileName", this);
+    m_CMDpartsfilename = std::make_shared<G4UIcmdWithAString>("/particle_source/FileName", this);
     m_CMDpartsfilename->SetGuidance(" Binary file containing the particles to be simulated. ");
     m_CMDpartsfilename->SetParameterName("FileName", false, true);
     m_CMDpartsfilename->SetDefaultValue("InitialPhaseSpace");
