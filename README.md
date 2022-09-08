@@ -1,5 +1,7 @@
 # GRAPPA (Geant4 RApid Pair Production Application)
 
+![Beam on target](media/GRAPPA_setup_transparent_background.png)
+
 # Overview
  GRAPPA is a Geant4 application that simulates the interaction of an incoming particle beam
  (typically electron or photons) with an High-Z material foil.
@@ -146,9 +148,9 @@ The command to extract particles from a given ASCII file is
 ```
 The structure of an ascii file is:
 
-
 | x [mm] | y [mm] | z [mm] | px [MeV] | py [MeV] | pz [MeV] |
----
+
+(separated by spaces or tabs).
 
 ### Target geometry
 
