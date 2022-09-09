@@ -500,17 +500,12 @@
 # - 10 Final theta of photons
 # - 11 Final theta of pions
 # - 12 Final theta of muons
-# - 13 Positron Energy if theta < 1 mrad
-# - 14 Positron Energy if theta < 5 mrad
-# - 15 Positron Energy if theta < 10 mrad
-# - 16 Positron Energy if theta < 20 mrad
-# - 17 Positron Energy if theta < 50 mrad
-# - 18 Final phi of primaries
-# - 19 Final phi of electrons
-# - 20 Final phi of positrons
-# - 21 Final phi of photons
-# - 22 Final phi of pions
-# - 23 Final phi of muons
+# - 13 Final phi of primaries
+# - 14 Final phi of electrons
+# - 15 Final phi of positrons
+# - 16 Final phi of photons
+# - 17 Final phi of pions
+# - 18 Final phi of muons
 #
 # 2D
 # - 0 Initial primary transverse distribution
@@ -552,11 +547,6 @@
 /analysis/h1/set 10 200 0. 50 mrad none linear
 /analysis/h1/set 11 200 0. 50 mrad none linear
 /analysis/h1/set 12 200 0. 50 mrad none linear
-/analysis/h1/set 13 1000 1 400 MeV none linear
-/analysis/h1/set 14 1000 1 400 MeV none linear
-/analysis/h1/set 15 1000 1 400 MeV none linear
-/analysis/h1/set 16 1000 1 400 MeV none linear
-/analysis/h1/set 17 1000 1 400 MeV none linear
 
 /analysis/h1/setXaxisLog 0 true
 /analysis/h1/setXaxisLog 1 true

@@ -45,7 +45,6 @@ int main(int argc, char* argv[])
 
     runManager->SetVerboseLevel(0);
 
-
     // Constructing the custom analysis manager used to create histograms
     // and ntuples in the Sensitive Detectors.
     HistandNTupleManager* myanalysismanager = new HistandNTupleManager();
@@ -99,6 +98,8 @@ int main(int argc, char* argv[])
     delete visManager;
     delete myanalysismanager;
 
+    G4cout << "===================================================================" << G4endl;
+    G4cout << " Simulation timing: " << G4endl;
     G4cout << "    User elapsed time   => " << timer->GetUserElapsed() / 3600 << " h   = "
         << timer->GetUserElapsed() / 60 << " min   = " << timer->GetUserElapsed() << " s." << G4endl;
     G4cout << "    Real elapsed time   => " << timer->GetRealElapsed() / 3600 << " h   = "

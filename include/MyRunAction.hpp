@@ -12,6 +12,7 @@
 #include <G4RunManager.hh>
 #include <G4SystemOfUnits.hh>
 #include <G4Threading.hh>
+#include <G4Timer.hh>
 #include <G4UnitsTable.hh>
 #include <G4UserRunAction.hh>
 
@@ -36,4 +37,5 @@ private:
     HistandNTupleManager *m_HistoandNtupleManager;
     G4bool m_partsfromfile = false;
     G4int m_Numberofeventsthisrun = 0;
+    std::shared_ptr<G4Timer> m_timer;
 };

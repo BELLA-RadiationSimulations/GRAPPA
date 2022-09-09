@@ -224,17 +224,12 @@ The complete list of generated histogram is the following:
 # - 10 Final theta of photons
 # - 11 Final theta of pions
 # - 12 Final theta of muons
-# - 13 Positron Energy if theta < 1 mrad
-# - 14 Positron Energy if theta < 5 mrad
-# - 15 Positron Energy if theta < 10 mrad
-# - 16 Positron Energy if theta < 20 mrad
-# - 17 Positron Energy if theta < 50 mrad
-# - 18 Final phi of primaries
-# - 19 Final phi of electrons
-# - 20 Final phi of positrons
-# - 21 Final phi of photons
-# - 22 Final phi of pions
-# - 23 Final phi of muons
+# - 13 Final phi of primaries
+# - 14 Final phi of electrons
+# - 15 Final phi of positrons
+# - 16 Final phi of photons
+# - 17 Final phi of pions
+# - 18 Final phi of muons
 #
 # 2D
 # - 0 Initial primary transverse distribution
