@@ -125,51 +125,28 @@ void HistoManager::Book()
         analysisManager->CreateH1("MuonTheta", "Final #theta of muons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
     analysisManager->SetH1Activation(muontheta, false);
 
-    // Some 1D histograms to analyze particles after a cut in divergence (i.e. collimator)
-
-    // HistogramId = 13
-    positronenergycut1 =
-        analysisManager->CreateH1("PositronEnergyCut1", "Positron energy (#theta < 1 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut1, false);
-    // HistogramId = 14
-    positronenergycut2 =
-        analysisManager->CreateH1("PositronEnergyCut2", "Positron energy (#theta < 5 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut2, false);
-    // HistogramId = 15
-    positronenergycut3 =
-        analysisManager->CreateH1("PositronEnergyCut3", "Positron energy (#theta < 10 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut3, false);
-    // HistogramId = 16
-    positronenergycut4 =
-        analysisManager->CreateH1("PositronEnergyCut4", "Positron energy (#theta < 20 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut4, false);
-    // HistogramId = 17
-    positronenergycut5 =
-        analysisManager->CreateH1("PositronEnergyCut5", "Positron energy (#theta < 50 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut5, false);
-
     // Final phi distributions
-    // HistogramId = 18
+    // HistogramId = 13
     primaryphi =
         analysisManager->CreateH1("PrimaryPhi", "Final #phi of primaries", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(primaryphi, false);
-    // HistogramId = 19
+    // HistogramId = 14
     electronphi =
         analysisManager->CreateH1("ElectronPhi", "Final #phi of electrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(electronphi, false);
-    // HistogramId = 20
+    // HistogramId = 15
     positronphi =
         analysisManager->CreateH1("PositronPhi", "Final #phi of positrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(positronphi, false);
-    // HistogramId = 21
+    // HistogramId = 16
     gammaphi =
         analysisManager->CreateH1("GammaPhi", "Final #phi of photons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(gammaphi, false);
-    // HistogramId = 22
+    // HistogramId = 17
     pionphi =
         analysisManager->CreateH1("PionPhi", "Final #phi of pions", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(pionphi, false);
-    // HistogramId = 23
+    // HistogramId = 18
     muonphi =
         analysisManager->CreateH1("MuonPhi", "Final #phi of muons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(muonphi, false);
@@ -263,24 +240,6 @@ void HistoManager::Book()
                                                  40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalmuontxtyid, false);
 
-    analysisManager->SetH1Plotting(primaryeneid, false);
-    analysisManager->SetH1Plotting(posieneid, false);
-    analysisManager->SetH1Plotting(electroneneid, false);
-    analysisManager->SetH1Plotting(gammaeneid, false);
-    analysisManager->SetH1Plotting(initialprimaryeneid, false);
-    analysisManager->SetH2Plotting(initialprimaryxyid, false);
-    analysisManager->SetH2Plotting(initialprimaryzxid, false);
-    analysisManager->SetH2Plotting(initialprimarytxtyid, false);
-    analysisManager->SetH2Plotting(initialprimaryxpxid, false);
-    analysisManager->SetH2Plotting(initialprimaryypyid, false);
-    analysisManager->SetH2Plotting(finalprimaryxyid, false);
-    analysisManager->SetH2Plotting(finalelectronxyid, false);
-    analysisManager->SetH2Plotting(finalpositronxyid, false);
-    analysisManager->SetH2Plotting(finalgammaxyid, false);
-    analysisManager->SetH2Plotting(finalprimarytxtyid, false);
-    analysisManager->SetH2Plotting(finalelectrontxtyid, false);
-    analysisManager->SetH2Plotting(finalpositrontxtyid, false);
-    analysisManager->SetH2Plotting(finalgammatxtyid, false);
 }
 
 NTupleManager::NTupleManager()

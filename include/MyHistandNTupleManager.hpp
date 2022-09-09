@@ -40,11 +40,6 @@ public:
     inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
     inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
     inline int GetPrimaryInitialypyId() { return initialprimaryypyid; }
-    inline int GetPositronEnergyCut1Id() { return positronenergycut1; }
-    inline int GetPositronEnergyCut2Id() { return positronenergycut2; }
-    inline int GetPositronEnergyCut3Id() { return positronenergycut3; }
-    inline int GetPositronEnergyCut4Id() { return positronenergycut4; }
-    inline int GetPositronEnergyCut5Id() { return positronenergycut5; }
     inline int GetPrimaryThetaId() { return primarytheta; }
     inline int GetElectronThetaId() { return electrontheta; }
     inline int GetPositronThetaId() { return positrontheta; }
@@ -135,12 +130,6 @@ private:
     // Final muons transverse angle
     G4int finalmuontxtyid;
 
-    // Some histograms with divergence cuts
-    G4int positronenergycut1;
-    G4int positronenergycut2;
-    G4int positronenergycut3;
-    G4int positronenergycut4;
-    G4int positronenergycut5;
 };
 
 class NTupleManager
