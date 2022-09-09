@@ -7,14 +7,27 @@
 
 #pragma once
 
-#include <set>
+#include <algorithm>
+#include <vector>
 
+#include <G4ParticleTable.hh>
 #include <G4VPhysicalVolume.hh>
 #include <G4VProcess.hh>
 #include <G4VSensitiveDetector.hh>
 #include <G4SDManager.hh>
 
 #include <MyHistandNTupleManager.hpp>
+
+//
+//  Here we use the Particle Data Group (PDG) convention
+//  for particle numbering. Each particle has a unique integer ID.
+//  Name: e-, id: 11
+//  Name: e+, id: -11
+//  Name: gamma, id: 22
+//  Name: mu-, id: 13
+//  Name: mu+, id: -13
+//  Name: pi+, id: 211
+//  Name: pi-, id: -211
 
 // Class that defines the behaviour of the absorbing layer around the world.
 // We treat it as a Sensitive Detector in order to be able to count and manage the
@@ -31,7 +44,10 @@ public:
 private:
     HistandNTupleManager *m_HistoandNtupleManager;
     // Set containing the particles included in this absorber
-    std::set<G4String> m_ParticleList = {"e+", "e-", "gamma"};
+    std::vector<G4int> m_ParticleList;
+    G4int m_electronID;
+    G4int m_positronID;
+    G4int m_gammaID;
 };
 
 // Class that defines the behaviour of the absorbing layer around the world.
@@ -49,5 +65,9 @@ public:
 private:
     HistandNTupleManager *m_HistoandNtupleManager;
     // Set containing the particles included in this absorber
-    std::set<G4String> m_ParticleList = {"pi+", "pi-", "pi0", "mu+", "mu-"};
+    std::vector<G4int> m_ParticleList;
+    G4int m_muonminusID;
+    G4int m_muonplusID;
+    G4int m_pionminusID;
+    G4int m_pionplusID;
 };

@@ -7,10 +7,35 @@
 
 #include <MySDAbsorber.hpp>
 
+//
+//  Here we use the Particle Data Group (PDG) convention
+//  for particle numbering. Each particle has a unique integer ID.
+//  Name: e-, id: 11
+//  Name: e+, id: -11
+//  Name: gamma, id: 22
+//  Name: mu-, id: 13
+//  Name: mu+, id: -13
+//  Name: pi+, id: 211
+//  Name: pi-, id: -211
+
 // Primaries, electrons, positrons and photons absorbing layer
 AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
+    G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
+
+    const G4ParticleDefinition *electron = particle_table->FindParticle("e-");
+    m_electronID = electron->GetPDGEncoding();
+    m_ParticleList.push_back(m_electronID);
+
+    const G4ParticleDefinition *positron = particle_table->FindParticle("e+");
+    m_positronID = positron->GetPDGEncoding();
+    m_ParticleList.push_back(m_positronID);
+
+    const G4ParticleDefinition *gamma = particle_table->FindParticle("gamma");
+    m_gammaID = gamma->GetPDGEncoding();
+    m_ParticleList.push_back(m_gammaID);
+
 }
 
 AbsorberSD::~AbsorberSD()
@@ -35,10 +60,12 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4StepPoint *preStepPoint = step->GetPreStepPoint();
     G4String thisVolumename = aTrack->GetVolume()->GetName();
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
-    const G4String name = particle->GetParticleName();
-    // Check if particle is in the particle list
+    const G4int particleID = particle->GetPDGEncoding();
     G4int pID = aTrack->GetParentID();
-    if ((m_ParticleList.find(name) == m_ParticleList.end()) && (pID != 0))
+    // Check if particle is in the particle list
+    G4bool particleinvector =
+        ( std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) != m_ParticleList.end() );
+    if (!particleinvector && (pID != 0))
     {
         return false;
     }
@@ -100,7 +127,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         else
         {
 
-            if (name == "e+")
+            if (particleID == m_positronID)
             {
                 histeneid = histomanager->GetPositronEneId();
                 histoxyid = histomanager->GetPositronxyId();
@@ -110,7 +137,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
                 FillNtuple = !(kineticEnergy < MinPositronEnergy);
             }
-            else if (name == "gamma")
+            else if (particleID == m_gammaID)
             {
                 histeneid = histomanager->GetGammaEneId();
                 histoxyid = histomanager->GetGammaxyId();
@@ -120,7 +147,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
                 FillNtuple = !(kineticEnergy < MinPhotonEnergy);
             }
-            else if (name == "e-")
+            else if (particleID == m_electronID)
             {
 
                 histeneid = histomanager->GetElectronEneId();
@@ -186,6 +213,25 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 PiandMuAbsorberSD::PiandMuAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
+    G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
+
+
+    const G4ParticleDefinition *muonminus = particle_table->FindParticle("mu-");
+    m_muonminusID = muonminus->GetPDGEncoding();
+    m_ParticleList.push_back(m_muonminusID);
+
+    const G4ParticleDefinition *muonplus = particle_table->FindParticle("mu+");
+    m_muonplusID = muonplus->GetPDGEncoding();
+    m_ParticleList.push_back(m_muonplusID);
+
+    const G4ParticleDefinition *pionminus = particle_table->FindParticle("pi-");
+    m_pionminusID = pionminus->GetPDGEncoding();
+    m_ParticleList.push_back(m_pionminusID);
+
+    const G4ParticleDefinition *pionplus = particle_table->FindParticle("pi+");
+    m_pionplusID = pionplus->GetPDGEncoding();
+    m_ParticleList.push_back(m_pionplusID);
+
 }
 
 PiandMuAbsorberSD::~PiandMuAbsorberSD()
@@ -210,10 +256,12 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4StepPoint *preStepPoint = step->GetPreStepPoint();
     G4String thisVolumename = aTrack->GetVolume()->GetName();
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
-    const G4String name = particle->GetParticleName();
+    const G4int particleID = particle->GetPDGEncoding();
     G4int pID = aTrack->GetParentID();
     // Check if particle is in the particle list
-    if (m_ParticleList.find(name) == m_ParticleList.end())
+    G4bool particleinvector =
+        ( std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) != m_ParticleList.end() );
+    if (!particleinvector )
     {
         return false;
     }
@@ -267,7 +315,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         else
         {
             // Pions are collected in a single ntuple
-            if (name == "pi+" || name == "pi-")
+            if (particleID == m_pionplusID || particleID == m_pionminusID)
             {
                 histeneid = histomanager->GetPionEneId();
                 histoxyid = histomanager->GetPionxyId();
@@ -277,7 +325,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
             }
             // Muons are collected in a single ntuple
-            else if (name == "mu+" || name == "mu-")
+            else if (particleID == m_muonplusID || particleID == m_muonminusID)
             {
                 histeneid = histomanager->GetMuonEneId();
                 histoxyid = histomanager->GetMuonxyId();
