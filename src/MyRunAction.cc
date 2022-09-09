@@ -14,6 +14,7 @@ MyRunAction::MyRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager)
     m_HistoandNtupleManager = myanalysismanager;
     m_HistoandNtupleManager->Book();
     m_partsfromfile = !useGPS;
+    m_timer = std::make_shared<G4Timer>();
 }
 
 MyRunAction::~MyRunAction()
@@ -26,6 +27,7 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
     G4RunManager *runmanager = G4RunManager::GetRunManager();
     // inform the runManager to save random number seed
     runmanager->SetRandomNumberStore(false);
+    m_timer->Start();
 
     // Checking if particles are read from file and issuing a warning if beamon requests more
     // particles than available
@@ -57,6 +59,10 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
 
 void MyRunAction::EndOfRunAction(const G4Run *run)
 {
+    
+    // Stopping the run timer
+    m_timer->Stop();
+
     // Getting the run manager
     G4RunManager *runmanager = G4RunManager::GetRunManager();
     G4int nofEvents = run->GetNumberOfEvent();
@@ -71,4 +77,19 @@ void MyRunAction::EndOfRunAction(const G4Run *run)
     }
     // Write and close analysis files
     m_HistoandNtupleManager->FinishAnalysis();
+
+    // Print the run timing
+    if (IsMaster())
+    {
+        G4cout << " Finished Run "<< runmanager->GetCurrentRun()->GetRunID() << G4endl;
+        G4cout << "==========================================================================" << G4endl;
+        G4cout << " Timing for the current Run " << runmanager->GetCurrentRun()->GetRunID() << ":" << G4endl;
+        G4cout << "    User elapsed time   => " << m_timer->GetUserElapsed() / 3600 << " h   = "
+            << m_timer->GetUserElapsed() / 60 << " min   = " << m_timer->GetUserElapsed() << " s." << G4endl;
+        G4cout << "    Real elapsed time   => " << m_timer->GetRealElapsed() / 3600 << " h   = "
+            << m_timer->GetRealElapsed() / 60 << " min   = " << m_timer->GetRealElapsed() << " s." << G4endl;
+        G4cout << "    System elapsed time => " << m_timer->GetSystemElapsed() / 3600 << " h   = "
+            << m_timer->GetSystemElapsed() / 60 << " min   = " << m_timer->GetSystemElapsed() << " s." << G4endl;
+        G4cout << "==========================================================================" << G4endl;
+    }
 }
