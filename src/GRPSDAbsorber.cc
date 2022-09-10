@@ -22,19 +22,12 @@
 AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
-    G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
 
-    const G4ParticleDefinition *electron = particle_table->FindParticle("e-");
-    m_electronID = electron->GetPDGEncoding();
-    m_ParticleList.push_back(m_electronID);
+    m_ParticleList.push_back(ParticleID::electronID);
 
-    const G4ParticleDefinition *positron = particle_table->FindParticle("e+");
-    m_positronID = positron->GetPDGEncoding();
-    m_ParticleList.push_back(m_positronID);
+    m_ParticleList.push_back(ParticleID::positronID);
 
-    const G4ParticleDefinition *gamma = particle_table->FindParticle("gamma");
-    m_gammaID = gamma->GetPDGEncoding();
-    m_ParticleList.push_back(m_gammaID);
+    m_ParticleList.push_back(ParticleID::gammaID);
 
 }
 
@@ -127,7 +120,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         else
         {
 
-            if (particleID == m_positronID)
+            if (particleID == ParticleID::positronID)
             {
                 histeneid = histomanager->GetPositronEneId();
                 histoxyid = histomanager->GetPositronxyId();
@@ -137,7 +130,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
                 FillNtuple = !(kineticEnergy < MinPositronEnergy);
             }
-            else if (particleID == m_gammaID)
+            else if (particleID == ParticleID::gammaID)
             {
                 histeneid = histomanager->GetGammaEneId();
                 histoxyid = histomanager->GetGammaxyId();
@@ -147,7 +140,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
                 FillNtuple = !(kineticEnergy < MinPhotonEnergy);
             }
-            else if (particleID == m_electronID)
+            else if (particleID == ParticleID::electronID)
             {
 
                 histeneid = histomanager->GetElectronEneId();
@@ -213,24 +206,14 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 PiandMuAbsorberSD::PiandMuAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
-    G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
 
+    m_ParticleList.push_back(ParticleID::muonminusID);
 
-    const G4ParticleDefinition *muonminus = particle_table->FindParticle("mu-");
-    m_muonminusID = muonminus->GetPDGEncoding();
-    m_ParticleList.push_back(m_muonminusID);
+    m_ParticleList.push_back(ParticleID::muonplusID);
 
-    const G4ParticleDefinition *muonplus = particle_table->FindParticle("mu+");
-    m_muonplusID = muonplus->GetPDGEncoding();
-    m_ParticleList.push_back(m_muonplusID);
+    m_ParticleList.push_back(ParticleID::pionminusID);
 
-    const G4ParticleDefinition *pionminus = particle_table->FindParticle("pi-");
-    m_pionminusID = pionminus->GetPDGEncoding();
-    m_ParticleList.push_back(m_pionminusID);
-
-    const G4ParticleDefinition *pionplus = particle_table->FindParticle("pi+");
-    m_pionplusID = pionplus->GetPDGEncoding();
-    m_ParticleList.push_back(m_pionplusID);
+    m_ParticleList.push_back(ParticleID::pionplusID);
 
 }
 
@@ -315,7 +298,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         else
         {
             // Pions are collected in a single ntuple
-            if (particleID == m_pionplusID || particleID == m_pionminusID)
+            if (particleID == ParticleID::pionminusID || particleID == ParticleID::pionplusID)
             {
                 histeneid = histomanager->GetPionEneId();
                 histoxyid = histomanager->GetPionxyId();
@@ -325,7 +308,7 @@ G4bool PiandMuAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
             }
             // Muons are collected in a single ntuple
-            else if (particleID == m_muonplusID || particleID == m_muonminusID)
+            else if (particleID == ParticleID::muonminusID || particleID == ParticleID::muonplusID)
             {
                 histeneid = histomanager->GetMuonEneId();
                 histoxyid = histomanager->GetMuonxyId();
