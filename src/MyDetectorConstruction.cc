@@ -176,8 +176,8 @@ void MyDetectorConstruction::ConstructSDandField()
 
     G4SDManager * SDMpointer = G4SDManager::GetSDMpointer();
 
-    m_StandardAbsorber = new AbsorberSD("/StandardAbsorber", m_HistoandNtupleManager);
-    m_PiandMuAbsorber = new PiandMuAbsorberSD("/PiandMuAbsorber", m_HistoandNtupleManager);
+    m_StandardAbsorber = new AbsorberSD("/FinalAbsorber/StandardAbsorber", m_HistoandNtupleManager);
+    m_PiandMuAbsorber = new PiandMuAbsorberSD("/FinalAbsorber/PiandMuAbsorber", m_HistoandNtupleManager);
 
     SDMpointer->AddNewDetector(m_StandardAbsorber);
     SDMpointer->AddNewDetector(m_PiandMuAbsorber);
