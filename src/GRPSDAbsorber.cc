@@ -5,7 +5,7 @@
  * License: BSD-3-Clause
  */
 
-#include <MySDAbsorber.hpp>
+#include <GRPSDAbsorber.hpp>
 
 //
 //  Here we use the Particle Data Group (PDG) convention

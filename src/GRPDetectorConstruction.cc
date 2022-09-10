@@ -5,28 +5,28 @@
  * License: BSD-3-Clause
  */
 
-#include <MyDetectorConstruction.hpp>
+#include <GRPDetectorConstruction.hpp>
 
 using CLHEP::deg;
 using CLHEP::mm;
 
-MyDetectorConstruction::MyDetectorConstruction(HistandNTupleManager *myanalysismanager)
+GRPDetectorConstruction::GRPDetectorConstruction(HistandNTupleManager *myanalysismanager)
     : G4VUserDetectorConstruction()
 {
     m_HistoandNtupleManager = myanalysismanager;
     DefineCommands();
 }
 
-MyDetectorConstruction::~MyDetectorConstruction()
+GRPDetectorConstruction::~GRPDetectorConstruction()
 {
 }
 
-G4VPhysicalVolume *MyDetectorConstruction::Construct()
+G4VPhysicalVolume *GRPDetectorConstruction::Construct()
 {
     return ConstructWorldandTarget();
 }
 
-G4VPhysicalVolume *MyDetectorConstruction::ConstructWorldandTarget()
+G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 {
     // Get nist material manager
     G4NistManager *nist = G4NistManager::Instance();
@@ -169,7 +169,7 @@ G4VPhysicalVolume *MyDetectorConstruction::ConstructWorldandTarget()
     return physWorld;
 }
 
-void MyDetectorConstruction::ConstructSDandField()
+void GRPDetectorConstruction::ConstructSDandField()
 {
     // ================================================ //
     // Link and activate Sensitive Detectors
@@ -185,7 +185,7 @@ void MyDetectorConstruction::ConstructSDandField()
     SetSensitiveDetector(std_a_name, m_StandardAbsorber);
 }
 
-void MyDetectorConstruction::DefineCommands()
+void GRPDetectorConstruction::DefineCommands()
 {
     // Modifications to geometry are currently possible
     // but they must be done in the PreInit stage.
@@ -198,7 +198,7 @@ void MyDetectorConstruction::DefineCommands()
     // configure commands
 
     // Print the current status of the world and foil
-    G4GenericMessenger::Command &printcommand = m_GenericMessenger->DeclareMethod("list", &MyDetectorConstruction::PrintDetector,
+    G4GenericMessenger::Command &printcommand = m_GenericMessenger->DeclareMethod("list", &GRPDetectorConstruction::PrintDetector,
                                                                                   "List the current world and detector configuration");
     printcommand.SetGuidance(" Print world and foil status ");
     printcommand.SetStates(G4State_PreInit, G4State_Idle);
@@ -206,7 +206,7 @@ void MyDetectorConstruction::DefineCommands()
     // ===============================
     // Reinitialization stil WIP
     // Update the global geometry after modifications have been made
-    // G4GenericMessenger::Command& updatecommand = m_GenericMessenger->DeclareMethod("reinitialize", &MyDetectorConstruction::ReinitializeGeometry,
+    // G4GenericMessenger::Command& updatecommand = m_GenericMessenger->DeclareMethod("reinitialize", &GRPDetectorConstruction::ReinitializeGeometry,
     //    "Update and reinitialize global geometry");
     // updatecommand.SetGuidance(" Reinitializes global geometry re-constructing the detector, if it has already been constructed ");
     // updatecommand.SetStates(G4State_Idle);
@@ -247,7 +247,7 @@ void MyDetectorConstruction::DefineCommands()
     wmaterialcommand.SetStates(G4State_PreInit);
 }
 
-void MyDetectorConstruction::PrintDetector()
+void GRPDetectorConstruction::PrintDetector()
 {
     G4cout << " World and target information " << G4endl;
     G4cout << " ------------------------------------------------------------- " << G4endl;
@@ -270,7 +270,7 @@ void MyDetectorConstruction::PrintDetector()
     G4cout << " Foil material is " << f_material_name << G4endl;
 }
 
-void MyDetectorConstruction::ReinitializeGeometry()
+void GRPDetectorConstruction::ReinitializeGeometry()
 {
     G4RunManager *runmanager = G4RunManager::GetRunManager();
     runmanager->DefineWorldVolume(ConstructWorldandTarget());

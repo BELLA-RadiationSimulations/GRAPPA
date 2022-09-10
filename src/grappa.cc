@@ -63,14 +63,14 @@ int main(int argc, char* argv[])
     // Mandatory class
     // Constructing actions
     // It takes as input a pointer to the custom analysis manager
-    MyActionInitialization* myActionInitialization =
-        new MyActionInitialization(myanalysismanager);
+    GRPActionInitialization* myActionInitialization =
+        new GRPActionInitialization(myanalysismanager);
     runManager->SetUserInitialization(myActionInitialization);
 
     // Mandatory class
     // Constructing the detectors.
     // It takes as input a pointer to the custom analysis manager
-    runManager->SetUserInitialization(new MyDetectorConstruction(myanalysismanager));
+    runManager->SetUserInitialization(new GRPDetectorConstruction(myanalysismanager));
 
     // Last, setting the verbosity of the run manager
     // RunManager prints a signal every everyevent events.

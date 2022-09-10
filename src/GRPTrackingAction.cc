@@ -5,18 +5,18 @@
  * License: BSD-3-Clause
  */
 
-#include <MyTrackingAction.hpp>
+#include <GRPTrackingAction.hpp>
 
-MyTrackingAction::MyTrackingAction(HistandNTupleManager *myanalysismanager) : G4UserTrackingAction()
+GRPTrackingAction::GRPTrackingAction(HistandNTupleManager *myanalysismanager) : G4UserTrackingAction()
 {
     m_HistandNTupleManager = myanalysismanager;
 }
 
-MyTrackingAction::~MyTrackingAction()
+GRPTrackingAction::~GRPTrackingAction()
 {
 }
 
-void MyTrackingAction::PreUserTrackingAction(const G4Track *track)
+void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
 {
 
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();

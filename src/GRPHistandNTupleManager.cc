@@ -5,7 +5,7 @@
  * License: BSD-3-Clause
  */
 
-#include <MyHistandNTupleManager.hpp>
+#include <GRPHistandNTupleManager.hpp>
 
 HistandNTupleManager::HistandNTupleManager() : fFileName("Data_output")
 {

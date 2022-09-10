@@ -21,16 +21,16 @@
 #include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
-#include <MySDAbsorber.hpp>
+#include <GRPSDAbsorber.hpp>
 
-class MyDetectorConstruction : public G4VUserDetectorConstruction
+class GRPDetectorConstruction : public G4VUserDetectorConstruction
 {
 
 public:
     //Constructor
-    MyDetectorConstruction(HistandNTupleManager* myanalysismanager);
+    GRPDetectorConstruction(HistandNTupleManager* myanalysismanager);
     //Destructor
-    virtual ~MyDetectorConstruction();
+    virtual ~GRPDetectorConstruction();
     virtual G4VPhysicalVolume* Construct() override;
 
     // Sensitive Detector Construction

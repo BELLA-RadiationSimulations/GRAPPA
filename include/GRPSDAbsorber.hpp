@@ -16,7 +16,7 @@
 #include <G4VSensitiveDetector.hh>
 #include <G4SDManager.hh>
 
-#include <MyHistandNTupleManager.hpp>
+#include <GRPHistandNTupleManager.hpp>
 
 //
 //  Here we use the Particle Data Group (PDG) convention

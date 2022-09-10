@@ -11,13 +11,13 @@
 #include <CLHEP/Units/SystemOfUnits.h>
 #include <G4Event.hh>
 
-#include <MyParticleSource.hpp>
+#include <GRPParticleSource.hpp>
 
-class MyPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
+class GRPPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-    MyPrimaryGeneratorAction(bool useGPS, G4String filename);
-    virtual ~MyPrimaryGeneratorAction();
+    GRPPrimaryGeneratorAction(bool useGPS, G4String filename);
+    virtual ~GRPPrimaryGeneratorAction();
 
     // method from the base class
     virtual void GeneratePrimaries(G4Event *anEvent);
