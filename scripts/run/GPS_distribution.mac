@@ -16,11 +16,11 @@
 # Modify geometry (custom functions)
 # /geometry/world/material G4_AIR
 # /geometry/world/radius 20 cm
-# /geometry/target/size 10 mm
-# /geometry/target/center 0 0 0 mm
-/geometry/target/thickness 3 mm
-# /geometry/target/rotation 45 deg
-# /geometry/target/material G4_W
+# /geometry/foil/size 10 mm
+# /geometry/foil/center 0 0 0 mm
+/geometry/foil/thickness 3 mm
+# /geometry/foil/rotation 45 deg
+# /geometry/foil/material G4_W
 
 # Fix random seed to have repeatable runs
 # /random/setSeeds 1 2 3

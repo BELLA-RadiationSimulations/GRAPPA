@@ -187,15 +187,15 @@ They **must** be invoked before the run is initialized in order to avoid the los
 # Modify the world radius
 /geometry/world/radius 120 cm
 # Square target side length
-/geometry/target/size 10 mm
+/geometry/foil/size 10 mm
 # Where the center of the target is placed
-/geometry/target/center 0 0 0 mm
+/geometry/foil/center 0 0 0 mm
 # Target thickness
-/geometry/target/thickness 3 mm
+/geometry/foil/thickness 3 mm
 # Target rotation around the y axis
-/geometry/target/rotation 45 deg
+/geometry/foil/rotation 45 deg
 # Target material
-/geometry/target/material G4_W
+/geometry/foil/material G4_W
 ```
 
 The _world_ is a sphere that surrounds everything else,

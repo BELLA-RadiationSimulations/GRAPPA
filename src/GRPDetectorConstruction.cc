@@ -194,7 +194,7 @@ void GRPDetectorConstruction::DefineCommands()
     // define command directory using generic messenger class
     m_GenericMessenger = std::make_shared<G4GenericMessenger>(this, "/geometry/", "Commands to configure the target");
     m_WMessenger = std::make_shared<G4GenericMessenger>(this, "/geometry/world/", "Commands to configure the target");
-    m_FMessenger = std::make_shared<G4GenericMessenger>(this, "/geometry/target/", "Commands to configure the target");
+    m_FMessenger = std::make_shared<G4GenericMessenger>(this, "/geometry/foil/", "Commands to configure the target");
     // configure commands
 
     // Print the current status of the world and foil
