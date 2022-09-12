@@ -240,6 +240,11 @@ void MyDetectorConstruction::DefineCommands()
                                                                                         "Sets the world radius. Default unit is mm.");
     wradiuscommand.SetGuidance(" Sets the world radius ");
     wradiuscommand.SetStates(G4State_PreInit);
+
+    G4GenericMessenger::Command &wmaterialcommand = m_WMessenger->DeclareProperty("material", w_material_name,
+                                                                                "Sets the world material.");
+    wmaterialcommand.SetGuidance(" Sets the world material ");
+    wmaterialcommand.SetStates(G4State_PreInit);
 }
 
 void MyDetectorConstruction::PrintDetector()

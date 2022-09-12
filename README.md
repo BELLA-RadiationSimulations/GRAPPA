@@ -182,6 +182,8 @@ They **must** be invoked before the run is initialized in order to avoid the los
 ```
 # Modify geometry (custom functions)
 
+# Modify the world material
+# /geometry/world/material G4_AIR
 # Modify the world radius
 /geometry/world/radius 120 cm
 # Square target side length
