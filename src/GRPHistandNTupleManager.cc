@@ -342,4 +342,5 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(muonid, "t");
     analysisManager->CreateNtupleFColumn(muonid, "q");
     analysisManager->FinishNtuple(muonid);
+    
 }

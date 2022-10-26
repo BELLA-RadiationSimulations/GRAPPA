@@ -107,7 +107,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
                       checkOverlaps);                  // overlaps checking
 
     // ================================================ //
-    // Last, we create an absorbing layer that coincides with the world
+    // We create an absorbing layer that coincides with the world
     // that makes us detect particles
 
     // First absorber is for e+, e- and gamma
@@ -122,7 +122,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
                      0., 180 * deg);                                  // its theta initial and final angles
 
     // Creation of the logical volume (with the shape of the sphere)
-    m_LogicAbsorber =
+    m_LogicalAbsorber =
         new G4LogicalVolume(StdsolidAbsorber, // its solid
                             a_material,    // its material
                             std_a_name);       // its name
@@ -130,24 +130,12 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     // Creation of the physical volume associated with the logical volume
     new G4PVPlacement(0,               // no rotation
                       G4ThreeVector(), // at (0,0,0)
-                      m_LogicAbsorber,   // its logical volume
+                      m_LogicalAbsorber,   // its logical volume
                       std_a_name,          // its name
                       logicWorld,      // its mother  volume
                       false,           // no boolean operation
                       0,               // copy number
                       checkOverlaps);  // overlaps checking
-
-    // Second absorber is for pi and mu
-
-    // // Creation of the physical volume associated with the logical volume
-    // new G4PVPlacement(0,               // no rotation
-    //                   G4ThreeVector(), // at (0,0,0)
-    //                   m_PiandMuLogicAbsorber,   // its logical volume
-    //                   pm_a_name,          // its name
-    //                   logicWorld,      // its mother  volume
-    //                   false,           // no boolean operation
-    //                   0,               // copy number
-    //                   checkOverlaps);  // overlaps checking
 
     // ================================================ //
     // Set Visualization attributes
@@ -163,7 +151,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     logicWorld->SetVisAttributes(worldVisAtt);
     logicfoil->SetVisAttributes(targetVisAtt);
-    m_LogicAbsorber->SetVisAttributes(absorberVisAtt);
+    m_LogicalAbsorber->SetVisAttributes(absorberVisAtt);
 
     // Return root volume
     return physWorld;
@@ -180,9 +168,9 @@ void GRPDetectorConstruction::ConstructSDandField()
     m_PiandMuAbsorber = new PiandMuAbsorberSD("/FinalAbsorber/PiandMuAbsorber", m_HistoandNtupleManager);
 
     SDMpointer->AddNewDetector(m_StandardAbsorber);
+    m_LogicalAbsorber->SetSensitiveDetector(m_StandardAbsorber);
     SDMpointer->AddNewDetector(m_PiandMuAbsorber);
-    SetSensitiveDetector(std_a_name, m_PiandMuAbsorber);
-    SetSensitiveDetector(std_a_name, m_StandardAbsorber);
+    m_LogicalAbsorber->SetSensitiveDetector(m_PiandMuAbsorber);
 }
 
 void GRPDetectorConstruction::DefineCommands()

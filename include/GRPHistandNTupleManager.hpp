@@ -138,12 +138,19 @@ public:
     NTupleManager();
     ~NTupleManager();
 
+    // Get index for the initial primaries Ntuple
     inline int GetPrimaryInitialId() { return primaryinitialid; }
+    // Get index for the final primaries Ntuple
     inline int GetPrimaryId() { return primaryid; }
+    // Get index for the positrons Ntuple
     inline int GetPositronId() { return posiid; }
+    // Get index for the electrons Ntuple
     inline int GetElectronId() { return electronid; }
+    // Get index for the photons Ntuple
     inline int GetGammaId() { return gammaid; }
+    // Get index for the pions Ntuple
     inline int GetPionId() { return pionid; }
+    // Get index for the muons Ntuple
     inline int GetMuonId() { return muonid; }
     void Book();
 

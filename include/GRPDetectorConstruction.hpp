@@ -57,10 +57,13 @@ private:
     G4String w_material_name = "G4_Galactic", f_material_name = "G4_W", a_material_name = "G4_Galactic";
     // Pointer to the physical world
     G4VPhysicalVolume* physWorld;
-    // Pointer to the logical absorber for sensitive detectors
-    G4LogicalVolume* m_LogicAbsorber;
     // Pointer to the customized analysis manager
     HistandNTupleManager* m_HistoandNtupleManager;
+
+    // Sensitive detectors
+
+    // Pointer to the logical absorber for sensitive detectors
+    G4LogicalVolume* m_LogicalAbsorber;
     // Pointer to the Standard SD
     AbsorberSD* m_StandardAbsorber;
     // Pointer to the Pi and Mu SD
