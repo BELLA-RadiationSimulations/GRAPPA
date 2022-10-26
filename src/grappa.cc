@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
     // "_LIV_" stands for Livermore, "_PEN" to Penelope.
     //
     G4PhysListFactory factory;
-    G4VModularPhysicsList* physicsList = factory.GetReferencePhysList("FTFP_BERT_LIV");
+    G4VModularPhysicsList* physicsList = factory.GetReferencePhysList("FTFP_BERT_EMZ");
     physicsList->SetVerboseLevel(0);
     runManager->SetUserInitialization(physicsList);
     //FTFP_BERT should be used instead if primary articles energy is <5GeV;
