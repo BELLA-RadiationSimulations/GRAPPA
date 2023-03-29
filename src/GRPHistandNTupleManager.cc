@@ -5,7 +5,7 @@
  * License: BSD-3-Clause
  */
 
-#include <MyHistandNTupleManager.hpp>
+#include <GRPHistandNTupleManager.hpp>
 
 HistandNTupleManager::HistandNTupleManager() : fFileName("Data_output")
 {
@@ -254,13 +254,13 @@ void NTupleManager::Book()
 {
     // Introduce an analysis manager for Ntuple generation
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
-
+    G4bool Activation = true;
     analysisManager->SetNtupleDirectoryName("ntuple");
     // Creation on ntuples
 
     // NTuple 0: Phase space of particles generated at source
     primaryinitialid = analysisManager->CreateNtuple("InitialPrimary", "Initial primary particle phase space");
-    analysisManager->SetNtupleActivation(primaryinitialid, false);
+    analysisManager->SetNtupleActivation(primaryinitialid, Activation);
     analysisManager->CreateNtupleFColumn(primaryinitialid, "x");
     analysisManager->CreateNtupleFColumn(primaryinitialid, "y");
     analysisManager->CreateNtupleFColumn(primaryinitialid, "z");
@@ -271,7 +271,7 @@ void NTupleManager::Book()
 
     // NTuple 1: Phase space of final primaries
     primaryid = analysisManager->CreateNtuple("FinalPrimary", "Final primary particles phase space");
-    analysisManager->SetNtupleActivation(primaryid, false);
+    analysisManager->SetNtupleActivation(primaryid, Activation);
     analysisManager->CreateNtupleFColumn(primaryid, "x");
     analysisManager->CreateNtupleFColumn(primaryid, "y");
     analysisManager->CreateNtupleFColumn(primaryid, "z");
@@ -283,7 +283,7 @@ void NTupleManager::Book()
 
     // NTuple 2: Phase space of final positrons
     posiid = analysisManager->CreateNtuple("FinalPositron", "Final positron phase space");
-    analysisManager->SetNtupleActivation(posiid, false);
+    analysisManager->SetNtupleActivation(posiid, Activation);
     analysisManager->CreateNtupleFColumn(posiid, "x");
     analysisManager->CreateNtupleFColumn(posiid, "y");
     analysisManager->CreateNtupleFColumn(posiid, "z");
@@ -295,7 +295,7 @@ void NTupleManager::Book()
 
     // NTuple 3: Phase space of final electrons
     electronid = analysisManager->CreateNtuple("FinalElectron", "Final electron phase space");
-    analysisManager->SetNtupleActivation(electronid, false);
+    analysisManager->SetNtupleActivation(electronid, Activation);
     analysisManager->CreateNtupleFColumn(electronid, "x");
     analysisManager->CreateNtupleFColumn(electronid, "y");
     analysisManager->CreateNtupleFColumn(electronid, "z");
@@ -307,7 +307,7 @@ void NTupleManager::Book()
 
     // NTuple 4: Phase space of final photons
     gammaid = analysisManager->CreateNtuple("FinalPhoton", "Final photon phase space");
-    analysisManager->SetNtupleActivation(gammaid, false);
+    analysisManager->SetNtupleActivation(gammaid, Activation);
     analysisManager->CreateNtupleFColumn(gammaid, "x");
     analysisManager->CreateNtupleFColumn(gammaid, "y");
     analysisManager->CreateNtupleFColumn(gammaid, "z");
@@ -319,7 +319,7 @@ void NTupleManager::Book()
 
     // NTuple 5: Phase space of final pions
     pionid = analysisManager->CreateNtuple("FinalPions", "Final pions phase space");
-    analysisManager->SetNtupleActivation(pionid, false);
+    analysisManager->SetNtupleActivation(pionid, Activation);
     analysisManager->CreateNtupleFColumn(pionid, "x");
     analysisManager->CreateNtupleFColumn(pionid, "y");
     analysisManager->CreateNtupleFColumn(pionid, "z");
@@ -332,7 +332,7 @@ void NTupleManager::Book()
 
     // NTuple 6: Phase space of final muons
     muonid = analysisManager->CreateNtuple("FinalMuon", "Final muons phase space");
-    analysisManager->SetNtupleActivation(muonid, false);
+    analysisManager->SetNtupleActivation(muonid, Activation);
     analysisManager->CreateNtupleFColumn(muonid, "x");
     analysisManager->CreateNtupleFColumn(muonid, "y");
     analysisManager->CreateNtupleFColumn(muonid, "z");
@@ -342,4 +342,5 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(muonid, "t");
     analysisManager->CreateNtupleFColumn(muonid, "q");
     analysisManager->FinishNtuple(muonid);
+    
 }

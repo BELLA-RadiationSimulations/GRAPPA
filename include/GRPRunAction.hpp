@@ -16,17 +16,17 @@
 #include <G4UnitsTable.hh>
 #include <G4UserRunAction.hh>
 
-#include <MyActionInitialization.hpp>
-#include <MyPrimaryGeneratorAction.hpp>
-#include <MyHistandNTupleManager.hpp>
+#include <GRPActionInitialization.hpp>
+#include <GRPPrimaryGeneratorAction.hpp>
+#include <GRPHistandNTupleManager.hpp>
 
 class G4Run;
 
-class MyRunAction : public G4UserRunAction
+class GRPRunAction : public G4UserRunAction
 {
 public:
-    MyRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager);
-    virtual ~MyRunAction();
+    GRPRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager);
+    virtual ~GRPRunAction();
 
     virtual void BeginOfRunAction(const G4Run *) override;
     virtual void EndOfRunAction(const G4Run *) override;

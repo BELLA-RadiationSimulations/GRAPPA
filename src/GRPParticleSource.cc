@@ -5,7 +5,7 @@
  * License: BSD-3-Clause
  */
 
-#include <MyParticleSource.hpp>
+#include <GRPParticleSource.hpp>
 
 ParticleSource::ParticleSource()
 {

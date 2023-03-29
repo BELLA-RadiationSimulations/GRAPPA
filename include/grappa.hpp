@@ -20,7 +20,7 @@
 #include <G4UImanager.hh>
 #include <G4VisExecutive.hh>
 
-#include <MyDetectorConstruction.hpp>
-#include <MyPrimaryGeneratorAction.hpp>
-#include <MyRunAction.hpp>
-#include <MyActionInitialization.hpp>
+#include <GRPDetectorConstruction.hpp>
+#include <GRPPrimaryGeneratorAction.hpp>
+#include <GRPRunAction.hpp>
+#include <GRPActionInitialization.hpp>

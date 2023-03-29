@@ -5,9 +5,9 @@
  * License: BSD-3-Clause
  */
 
-#include <MyRunAction.hpp>
+#include <GRPRunAction.hpp>
 
-MyRunAction::MyRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager)
+GRPRunAction::GRPRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager)
     : G4UserRunAction()
 {
     // Associate the histrogram and ntuple manager
@@ -17,11 +17,11 @@ MyRunAction::MyRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager)
     m_timer = std::make_shared<G4Timer>();
 }
 
-MyRunAction::~MyRunAction()
+GRPRunAction::~GRPRunAction()
 {
 }
 
-void MyRunAction::BeginOfRunAction(const G4Run *)
+void GRPRunAction::BeginOfRunAction(const G4Run *)
 {
     // Getting the run manager
     G4RunManager *runmanager = G4RunManager::GetRunManager();
@@ -31,8 +31,8 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
 
     // Checking if particles are read from file and issuing a warning if beamon requests more
     // particles than available
-    const MyPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const MyPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
+    const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
+        static_cast<const GRPPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
     // Note: if condition necessary since there is no action object for master when in MT mode
 
     m_Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
@@ -47,7 +47,7 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
                 msg << "The number of particles requested (" << runmanager->GetNumberOfEventsToBeProcessed();
                 msg << ") is greater than the particles available in the input file (" << nparts << ").";
                 msg << " Stored particles will be thus used more than once";
-                G4Exception("MyRunAction::BeginOfRunAction()",
+                G4Exception("GRPRunAction::BeginOfRunAction()",
                             "GRAPPA::MANY_PARTICLES_REQUESTED", JustWarning, msg);
             }
         }
@@ -57,7 +57,7 @@ void MyRunAction::BeginOfRunAction(const G4Run *)
     m_HistoandNtupleManager->OpenFile();
 }
 
-void MyRunAction::EndOfRunAction(const G4Run *run)
+void GRPRunAction::EndOfRunAction(const G4Run *run)
 {
     
     // Stopping the run timer
@@ -68,8 +68,8 @@ void MyRunAction::EndOfRunAction(const G4Run *run)
     G4int nofEvents = run->GetNumberOfEvent();
     if (nofEvents == 0)
         return;
-    const MyPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const MyPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
+    const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
+        static_cast<const GRPPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
 
     if (myprimarygenerationpointer)
     {

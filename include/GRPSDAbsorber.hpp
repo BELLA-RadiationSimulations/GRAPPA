@@ -10,13 +10,13 @@
 #include <algorithm>
 #include <vector>
 
-#include <G4ParticleTable.hh>
 #include <G4VPhysicalVolume.hh>
 #include <G4VProcess.hh>
 #include <G4VSensitiveDetector.hh>
 #include <G4SDManager.hh>
 
-#include <MyHistandNTupleManager.hpp>
+#include <GRPHistandNTupleManager.hpp>
+#include <GRPParticlePDGID.hpp>
 
 //
 //  Here we use the Particle Data Group (PDG) convention
@@ -45,9 +45,6 @@ private:
     HistandNTupleManager *m_HistoandNtupleManager;
     // Set containing the particles included in this absorber
     std::vector<G4int> m_ParticleList;
-    G4int m_electronID;
-    G4int m_positronID;
-    G4int m_gammaID;
 };
 
 // Class that defines the behaviour of the absorbing layer around the world.
@@ -66,8 +63,4 @@ private:
     HistandNTupleManager *m_HistoandNtupleManager;
     // Set containing the particles included in this absorber
     std::vector<G4int> m_ParticleList;
-    G4int m_muonminusID;
-    G4int m_muonplusID;
-    G4int m_pionminusID;
-    G4int m_pionplusID;
 };

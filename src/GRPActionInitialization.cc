@@ -5,50 +5,50 @@
  * License: BSD-3-Clause
  */
 
-#include <MyActionInitialization.hpp>
+#include <GRPActionInitialization.hpp>
 
-MyActionInitialization::MyActionInitialization(HistandNTupleManager *myanalysismanager)
+GRPActionInitialization::GRPActionInitialization(HistandNTupleManager *myanalysismanager)
     : G4VUserActionInitialization()
 {
     m_HistandNTupleManager = myanalysismanager;
-    m_PSMessenger = std::make_shared<MyActionInitializationMessenger>(this);
+    m_PSMessenger = std::make_shared<GRPActionInitializationMessenger>(this);
 }
 
-MyActionInitialization::~MyActionInitialization()
+GRPActionInitialization::~GRPActionInitialization()
 {
 
 }
 
-void MyActionInitialization::BuildForMaster() const
+void GRPActionInitialization::BuildForMaster() const
 {
-    MyRunAction *runAction = new MyRunAction(m_useGPS, m_HistandNTupleManager);
+    GRPRunAction *runAction = new GRPRunAction(m_useGPS, m_HistandNTupleManager);
     SetUserAction(runAction);
 }
 
-void MyActionInitialization::Build() const
+void GRPActionInitialization::Build() const
 {
-    MyPrimaryGeneratorAction *primarygeneratoraction =
-        new MyPrimaryGeneratorAction(m_useGPS, m_filename);
+    GRPPrimaryGeneratorAction *primarygeneratoraction =
+        new GRPPrimaryGeneratorAction(m_useGPS, m_filename);
     SetUserAction(primarygeneratoraction);
 
-    MyRunAction *runAction = new MyRunAction(m_useGPS, m_HistandNTupleManager);
+    GRPRunAction *runAction = new GRPRunAction(m_useGPS, m_HistandNTupleManager);
     SetUserAction(runAction);
 
-    MyTrackingAction *trackingAction = new MyTrackingAction(m_HistandNTupleManager);
+    GRPTrackingAction *trackingAction = new GRPTrackingAction(m_HistandNTupleManager);
     SetUserAction(trackingAction);
 }
 
-void MyActionInitialization::ParticlesFromFile(G4bool particlesfromfile)
+void GRPActionInitialization::ParticlesFromFile(G4bool particlesfromfile)
 {
     m_useGPS = !particlesfromfile;
 }
 
-void MyActionInitialization::ParticlesFileName(G4String filename)
+void GRPActionInitialization::ParticlesFileName(G4String filename)
 {
     m_filename = filename;
 }
 
-MyActionInitializationMessenger::MyActionInitializationMessenger(MyActionInitialization *myactionpointer)
+GRPActionInitializationMessenger::GRPActionInitializationMessenger(GRPActionInitialization *myactionpointer)
 {
     m_myactionpointer = myactionpointer;
     m_CMDDirectory = std::make_shared<G4UIdirectory>("/particle_source/");
@@ -67,12 +67,12 @@ MyActionInitializationMessenger::MyActionInitializationMessenger(MyActionInitial
     m_CMDifpartsfromfile->AvailableForStates(G4State_PreInit);
 }
 
-MyActionInitializationMessenger::~MyActionInitializationMessenger()
+GRPActionInitializationMessenger::~GRPActionInitializationMessenger()
 {
 
 }
 
-void MyActionInitializationMessenger::SetNewValue(
+void GRPActionInitializationMessenger::SetNewValue(
     G4UIcommand *command, G4String newValues)
 {
     if (command == m_CMDifpartsfromfile.get())
@@ -86,7 +86,7 @@ void MyActionInitializationMessenger::SetNewValue(
     }
 }
 
-G4String MyActionInitializationMessenger::GetCurrentValue(G4UIcommand *command)
+G4String GRPActionInitializationMessenger::GetCurrentValue(G4UIcommand *command)
 {
     G4String cv;
 
