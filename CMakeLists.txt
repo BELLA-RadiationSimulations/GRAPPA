@@ -48,7 +48,7 @@ IF (NOT ${Geant4_FOUND})
 ENDIF()
 
 # Defining the target
-ADD_EXECUTABLE(GRAPPA src/grappa.cc)
+ADD_EXECUTABLE(GRAPPA)
 
 # Setting compiler options
 IF (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
@@ -59,13 +59,19 @@ IF (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     ENDIF()
 ENDIF()
 
-# Adding files to sources and headers
-FILE(GLOB SOURCES ${PROJECT_SOURCE_DIR}/src/*.cc)
-FILE(GLOB HEADERS ${PROJECT_SOURCE_DIR}/include/*.hpp)
-
 # Add GRAPPA source files to target
-TARGET_SOURCES(GRAPPA PRIVATE ${SOURCES})
-TARGET_SOURCES(GRAPPA PRIVATE ${HEADERS})
+TARGET_SOURCES(GRAPPA PRIVATE
+    src/GRPActionInitialization.cpp
+    src/GRPDetectorConstruction.cpp
+    src/GRPHistandNTupleManager.cpp
+    src/GRPParticleSource.cpp
+    src/GRPPrimaryGeneratorAction.cpp
+    src/GRPRunAction.cpp
+    src/GRPSDAbsorber.cpp
+    src/GRPTrackingAction.cpp
+    src/ReadASCII.cpp
+    src/grappa.cpp
+)
 
 # Add Geant4 to target
 INCLUDE(${Geant4_USE_FILE})
