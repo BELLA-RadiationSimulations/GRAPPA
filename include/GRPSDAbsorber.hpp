@@ -32,30 +32,12 @@
 // Class that defines the behaviour of the absorbing layer around the world.
 // We treat it as a Sensitive Detector in order to be able to count and manage the
 // incoming particles hits.
-// This absorber counts primary particles, electrons, positrons and photons
+// This absorber counts primary particles, electrons, positrons, photons, pions and muons
 class AbsorberSD : public G4VSensitiveDetector
 {
 public:
     AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager);
     ~AbsorberSD();
-    void Initialize(G4HCofThisEvent *HCE) override;
-    G4bool ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist) override;
-
-private:
-    HistandNTupleManager *m_HistoandNtupleManager;
-    // Set containing the particles included in this absorber
-    std::vector<G4int> m_ParticleList;
-};
-
-// Class that defines the behaviour of the absorbing layer around the world.
-// We treat it as a Sensitive Detector in order to be able to count and manage the
-// incoming particles hits.
-// This absorber counts pions and muons
-class PiandMuAbsorberSD : public G4VSensitiveDetector
-{
-public:
-    PiandMuAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager);
-    ~PiandMuAbsorberSD();
     void Initialize(G4HCofThisEvent *HCE) override;
     G4bool ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist) override;
 
