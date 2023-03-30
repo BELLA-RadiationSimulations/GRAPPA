@@ -165,12 +165,9 @@ void GRPDetectorConstruction::ConstructSDandField()
     G4SDManager * SDMpointer = G4SDManager::GetSDMpointer();
 
     m_StandardAbsorber = new AbsorberSD("/FinalAbsorber/StandardAbsorber", m_HistoandNtupleManager);
-    m_PiandMuAbsorber = new PiandMuAbsorberSD("/FinalAbsorber/PiandMuAbsorber", m_HistoandNtupleManager);
 
     SDMpointer->AddNewDetector(m_StandardAbsorber);
     m_LogicalAbsorber->SetSensitiveDetector(m_StandardAbsorber);
-    SDMpointer->AddNewDetector(m_PiandMuAbsorber);
-    m_LogicalAbsorber->SetSensitiveDetector(m_PiandMuAbsorber);
 }
 
 void GRPDetectorConstruction::DefineCommands()

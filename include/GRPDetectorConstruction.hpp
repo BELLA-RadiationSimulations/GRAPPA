@@ -66,8 +66,6 @@ private:
     G4LogicalVolume* m_LogicalAbsorber;
     // Pointer to the Standard SD
     AbsorberSD* m_StandardAbsorber;
-    // Pointer to the Pi and Mu SD
-    PiandMuAbsorberSD* m_PiandMuAbsorber;
 
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;

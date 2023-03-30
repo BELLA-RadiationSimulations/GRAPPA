@@ -30,6 +30,11 @@
 /particle_source/ParticlesFromFile true
 /particle_source/FileName InitialPhaseSpace.dat
 
+# Introduce the muon pair production from photons and increase artificially its probability
+/physicslists/em/GammaToMuons true
+/physicslists/em/PositronToMuons false
+/physicslists/em/GammaToMuonsFactor 50
+
 # Initialize run
 /run/initialize
 
