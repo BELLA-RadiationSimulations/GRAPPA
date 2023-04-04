@@ -213,7 +213,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 analysisManager->FillH2(histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
             }
         }
-
         FillNtuple = (FillNtuple && analysisManager->GetNtupleActivation(ntupleid));
         if (FillNtuple)
         {
