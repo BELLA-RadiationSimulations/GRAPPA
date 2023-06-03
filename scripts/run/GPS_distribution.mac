@@ -75,7 +75,6 @@
 
 # If setActivationToAll is false, all the ntuples will not be written
 # (faster simulations, but only histograms at the end). Default is false 
-/analysis/ntuple/setActivationToAll false
 /analysis/h1/setActivationToAll false
 /analysis/h1/setPlottingToAll false
 /analysis/h2/setActivationToAll false
@@ -173,6 +172,12 @@
 /analysis/h2/set 16 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
 
 # =/=/=/=/= End analysis section =/=/=/=/=
+
+# =/=/=/=/= Ntuple control section =/=/=/=/=
+
+/ntuplecontrol/setDump 0 1
+
+# =/=/=/=/= End Ntuple control section =/=/=/=/=
 
 ## Run
 /run/beamOn 100000

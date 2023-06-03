@@ -139,24 +139,44 @@ public:
     ~NTupleManager();
 
     // Get index for the initial primaries Ntuple
-    inline int GetPrimaryInitialId() { return primaryinitialid; }
+    inline const int GetPrimaryInitialId() { return primaryinitialid; }
     // Get index for the final primaries Ntuple
-    inline int GetPrimaryId() { return primaryid; }
+    inline const int GetPrimaryId() { return primaryid; }
     // Get index for the positrons Ntuple
-    inline int GetPositronId() { return posiid; }
+    inline const int GetPositronId() { return posiid; }
     // Get index for the electrons Ntuple
-    inline int GetElectronId() { return electronid; }
+    inline const int GetElectronId() { return electronid; }
     // Get index for the photons Ntuple
-    inline int GetGammaId() { return gammaid; }
+    inline const int GetGammaId() { return gammaid; }
     // Get index for the pions Ntuple
-    inline int GetPionId() { return pionid; }
+    inline const int GetPionId() { return pionid; }
     // Get index for the muons Ntuple
-    inline int GetMuonId() { return muonid; }
+    inline const int GetMuonId() { return muonid; }
+    // Get if the Ntuple for the initial primaries is active
+    inline const G4bool GetPrimaryInitialIdActivation() { return m_primaryinitialidactive; }
+    // Get if the Ntuple for the final primaries is active
+    inline const G4bool GetPrimaryIdActivation() { return m_primaryidactive; }
+    // Get if the Ntuple for the positrons is active
+    inline const G4bool GetPositronIdActivation() { return m_posiidactive; }
+    // Get if the Ntuple for the electrons is active
+    inline const G4bool GetElectronIdActivation() { return m_electronidactive; }
+    // Get if the Ntuple for the gammas is active
+    inline const G4bool GetGammaIdActivation() { return m_gammaidactive; }
+    // Get if the Ntuple for the pions is active
+    inline const G4bool GetPionIdActivation() { return m_pionidactive; }
+    // Get if the Ntuple for the muons is active
+    inline const G4bool GetMuonIdActivation() { return m_muonidactive; }
+    // Get if the Ntuple with ID is active
+    const G4bool GetIdActivation(const G4int ID);
     void Book();
+    void ListNtuples();
+    void SetNtupleDump(G4int ID, G4bool ifdump);
 
 private:
     G4int primaryinitialid, primaryid, posiid, electronid,
         gammaid, pionid, muonid;
+    G4bool m_primaryinitialidactive = true, m_primaryidactive = true, m_posiidactive = true, m_electronidactive = true,
+        m_gammaidactive = true, m_pionidactive = true, m_muonidactive = true;
 };
 
 class HistandNTupleManager

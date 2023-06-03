@@ -63,6 +63,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     const G4int particleID = particle->GetPDGEncoding();
     G4int pID = aTrack->GetParentID();
+    G4String creatorprocessname = "";
+
     // Check if particle is in the particle list
     G4bool particleinvector =
         ( std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) != m_ParticleList.end() );
@@ -118,7 +120,14 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
         bool isMuorPi = (particleID == ParticleID::pionminusID || particleID == ParticleID::pionplusID ||
             particleID == ParticleID::muonminusID || particleID == ParticleID::muonplusID);
+        bool hasCreatorProcess = isMuorPi || particleID == ParticleID::positronID ||
+            (particleID == ParticleID::electronID && pID != 0);
 
+        if (hasCreatorProcess)
+        {
+            const G4VProcess * creatorprocess = aTrack->GetCreatorProcess();   
+            creatorprocessname = creatorprocess->GetProcessName();
+        }
         if (pID == 0)
         {
             histeneid = histomanager->GetPrimaryEneId();
@@ -214,9 +223,12 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             }
         }
 
-        FillNtuple = (FillNtuple && analysisManager->GetNtupleActivation(ntupleid));
+        NTupleManager * ntuplemanager = m_HistoandNtupleManager->GetNTupleManager();
+        FillNtuple = (FillNtuple && ntuplemanager->GetIdActivation(ntupleid));
+
         if (FillNtuple)
         {
+            G4int ncol = 0;
             // Filling the correct Ntuple
             analysisManager->FillNtupleFColumn(ntupleid, 0, position.x());
             analysisManager->FillNtupleFColumn(ntupleid, 1, position.y());
@@ -225,7 +237,17 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
             analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            if (isMuorPi) analysisManager->FillNtupleFColumn(ntupleid, 7, charge);
+            ncol = 7;
+            if (isMuorPi)
+            {
+                analysisManager->FillNtupleFColumn(ntupleid, ncol, charge);
+                ncol += 1;
+            }
+            if (hasCreatorProcess)
+            {
+                analysisManager->FillNtupleSColumn(ntupleid, ncol, creatorprocessname);
+                ncol += 1;
+            }
             analysisManager->AddNtupleRow(ntupleid);
         }
 

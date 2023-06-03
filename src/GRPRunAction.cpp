@@ -14,7 +14,8 @@ GRPRunAction::GRPRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanage
     m_HistoandNtupleManager = myanalysismanager;
     m_HistoandNtupleManager->Book();
     m_partsfromfile = !useGPS;
-    m_timer = std::make_shared<G4Timer>();
+    m_timer = std::make_unique<G4Timer>();
+    DefineCommands();
 }
 
 GRPRunAction::~GRPRunAction()
@@ -92,4 +93,24 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
             << m_timer->GetSystemElapsed() / 60 << " min   = " << m_timer->GetSystemElapsed() << " s." << G4endl;
         G4cout << "==========================================================================" << G4endl;
     }
+}
+
+void GRPRunAction::DefineCommands()
+{
+    // Messenger class with custom ntuple commands
+    //
+    // define command directory using generic messenger class
+    m_AMessenger = std::make_shared<G4GenericMessenger>(this, "/ntuplecontrol/", "Custom commands to personalize ntuples");
+
+    // Print the list of ntuples
+    G4GenericMessenger::Command &printcommand = m_AMessenger->DeclareMethod("list", &GRPRunAction::ListNtuples,
+                                                                                  "List the available ntuples");
+    printcommand.SetGuidance(" List the available ntuples' ID, Name and ActivationStatus");
+    printcommand.SetStates(G4State_PreInit, G4State_Idle, G4State_Init);
+
+    G4GenericMessenger::Command &setdumpcommand = m_AMessenger->DeclareMethod("setDump", &GRPRunAction::SetNtupleDump,
+                                                                                  "Set the activation status of a given Ntuple ID");
+    setdumpcommand.SetGuidance(" Set the activation status of a given Ntuple ID ");
+    setdumpcommand.SetStates(G4State_PreInit, G4State_Idle, G4State_Init);
+
 }

@@ -279,9 +279,21 @@ activated and deactivated for plotting
 (histogram only) and being generated at all.
 Additional histograms can also be created on the fly when setting up the simulation.
 
+:warning: Due to a Geant4 behaviour that I do not understand (it might either be a bug or a misunderstanding of mine), it is not possible to guard[^1] Ntuples within the code when more than one ntuple is created. Since it is not advisable to fill unguarded Ntuples, as they might not be active, the code provides a set of custom commands to manage the Ntuple activation status. The two commands are respectively
+```
+\ntuplecontrol\list
+```
+that lists all the Ntuples, and
+```
+\ntuplecontrol\setDump ntupleID ifdump
+```
+that sets the activation status of the `ntupleID` ntuple.
+
+[^1]: By guard I mean checking if the Ntuple is active before trying to fill it. In fact, the code results in an "Ntuple does not exist" error.
+
 ### Modification to the Physics Package
 
-GRAPPA defaults to the use of the `FTFP_BERT_LIV` physics reference.
+GRAPPA defaults to the use of the `FTFP_BERT_EMZ` physics reference.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
 An example of modification to the physics package is the activation (or deactivation) of new processes 
 ```

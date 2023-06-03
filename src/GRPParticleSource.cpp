@@ -67,7 +67,7 @@ ParticleSourceGun::~ParticleSourceGun()
 void ParticleSourceGun::LoadNextParticle(int eventNumber)
 {
     GRAPPAParticle particle;
-    double energy;
+    double Kenergy;
     G4ParticleMomentum momentumdirection;
     int eventModulo = (eventNumber + m_TotalParticlesSimulated) % m_NpartsInFile;
 
@@ -75,9 +75,9 @@ void ParticleSourceGun::LoadNextParticle(int eventNumber)
 
     m_NextPosition = particle.first;
     m_NextMomentum = particle.second;
-    energy = std::sqrt(m_NextMomentum.mag2() + m_particle_mass_squared);
+    Kenergy = std::sqrt(m_NextMomentum.mag2() + m_particle_mass_squared) - m_particle_mass;
     momentumdirection = m_NextMomentum / m_NextMomentum.mag();
     m_Gun->SetParticlePosition(m_NextPosition);
-    m_Gun->SetParticleEnergy(energy);
+    m_Gun->SetParticleEnergy(Kenergy);
     m_Gun->SetParticleMomentumDirection(momentumdirection);
 }
