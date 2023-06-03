@@ -485,7 +485,6 @@
 
 # If setActivationToAll is false, all the ntuples will not be written
 # (faster simulations, but only histograms at the end). Default is false 
-/analysis/ntuple/setActivationToAll true
 /analysis/h1/setActivationToAll true
 /analysis/h1/setPlottingToAll true
 /analysis/h2/setActivationToAll true
@@ -581,6 +580,12 @@
 /analysis/h2/set 14 100 -1.5 1.5 rad none linear 100 -1.5 1.5 rad none linear #x-y
 /analysis/h2/set 15 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
 /analysis/h2/set 16 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
+
+# =/=/=/=/= Ntuple control section =/=/=/=/=
+
+/ntuplecontrol/setDump 0 1
+
+# =/=/=/=/= End Ntuple control section =/=/=/=/=
 
 # =/=/=/=/= End analysis section =/=/=/=/=
 

@@ -167,7 +167,7 @@ public:
     // Get if the Ntuple for the muons is active
     inline const G4bool GetMuonIdActivation() { return m_muonidactive; }
     // Get if the Ntuple with ID is active
-    inline const G4bool GetIdActivation(const G4int ID);
+    const G4bool GetIdActivation(const G4int ID);
     void Book();
     void ListNtuples();
     void SetNtupleDump(G4int ID, G4bool ifdump);

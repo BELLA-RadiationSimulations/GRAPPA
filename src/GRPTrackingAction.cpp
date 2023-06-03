@@ -48,7 +48,7 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
         G4double pz_inv = 1 / pz;
 
         // Fill NTuple with initial particles
-        isntupleactive = analysisManager->GetNtupleActivation(ntupleid);
+        isntupleactive = m_HistandNTupleManager->GetNTupleManager()->GetIdActivation(ntupleid);
         if (isntupleactive)
         {
             analysisManager->FillNtupleFColumn(ntupleid, 0, x);

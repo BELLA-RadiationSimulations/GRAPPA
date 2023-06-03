@@ -32,10 +32,14 @@ public:
     virtual void EndOfRunAction(const G4Run *) override;
 
     inline HistandNTupleManager *GetHistandNTupleManager() { return m_HistoandNtupleManager; }
-
+    void DefineCommands();
+    void ListNtuples() { if(m_HistoandNtupleManager) m_HistoandNtupleManager->GetNTupleManager()->ListNtuples(); }
+    void SetNtupleDump(G4int ID, G4bool ifdump) { if(m_HistoandNtupleManager) m_HistoandNtupleManager->GetNTupleManager()->SetNtupleDump(ID, ifdump); }
 private:
     HistandNTupleManager *m_HistoandNtupleManager;
     G4bool m_partsfromfile = false;
     G4int m_Numberofeventsthisrun = 0;
-    std::shared_ptr<G4Timer> m_timer;
+    std::unique_ptr<G4Timer> m_timer;
+    // Pointer to the generic messengers
+    std::shared_ptr<G4GenericMessenger> m_AMessenger;
 };
