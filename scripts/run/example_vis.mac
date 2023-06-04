@@ -53,7 +53,7 @@
 /vis/viewer/set/hiddenEdge 1
 # Specify view angle:
 #/vis/viewer/set/projection p
-/vis/viewer/set/targetPoint 0 0 0 cm
+/vis/viewer/set/foilPoint 0 0 0 cm
 /vis/viewer/set/viewpointThetaPhi 60 8
 /vis/viewer/set/lightsVector -1 0 0
 /vis/viewer/zoom 2.3

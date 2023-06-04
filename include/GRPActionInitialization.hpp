@@ -15,16 +15,16 @@
 #include <G4UImessenger.hh>
 #include <G4VUserActionInitialization.hh>
 
-#include <MyDetectorConstruction.hpp>
-#include <MyPrimaryGeneratorAction.hpp>
-#include <MyTrackingAction.hpp>
-#include <MyRunAction.hpp>
+#include <GRPDetectorConstruction.hpp>
+#include <GRPPrimaryGeneratorAction.hpp>
+#include <GRPTrackingAction.hpp>
+#include <GRPRunAction.hpp>
 
-class MyActionInitialization : public G4VUserActionInitialization
+class GRPActionInitialization : public G4VUserActionInitialization
 {
 public:
-    MyActionInitialization(HistandNTupleManager *myanalysismanager);
-    virtual ~MyActionInitialization();
+    GRPActionInitialization(HistandNTupleManager *myanalysismanager);
+    virtual ~GRPActionInitialization();
 
     virtual void BuildForMaster() const;
     virtual void Build() const;
@@ -36,24 +36,24 @@ public:
 private:
     HistandNTupleManager *m_HistandNTupleManager;
     // Flag that can be changed if one wants to use particle gun instead of a GPS
-    // MyActionInitialization is constructed when the program starts,
-    // but it is only built (MyActionInitialization::Build() called) when run is initialized.
+    // GRPActionInitialization is constructed when the program starts,
+    // but it is only built (GRPActionInitialization::Build() called) when run is initialized.
     G4bool m_useGPS = true;
     G4String m_filename = "InitialPhaseSpace.dat";
     // Pointer to the generic messengers
     std::shared_ptr<G4UImessenger> m_PSMessenger;
 };
 
-class MyActionInitializationMessenger : public G4UImessenger
+class GRPActionInitializationMessenger : public G4UImessenger
 {
 public:
-    MyActionInitializationMessenger(MyActionInitialization *myactionpointer);
-    virtual ~MyActionInitializationMessenger();
+    GRPActionInitializationMessenger(GRPActionInitialization *myactionpointer);
+    virtual ~GRPActionInitializationMessenger();
     void SetNewValue(G4UIcommand *command, G4String newValues);
     G4String GetCurrentValue(G4UIcommand *command);
 
 private:
-    MyActionInitialization *m_myactionpointer;
+    GRPActionInitialization *m_myactionpointer;
     std::shared_ptr<G4UIdirectory> m_CMDDirectory;
     std::shared_ptr<G4UIcmdWithABool> m_CMDifpartsfromfile;
     std::shared_ptr<G4UIcmdWithAString> m_CMDpartsfilename;

@@ -5,7 +5,7 @@
  * License: BSD-3-Clause
  */
 
-#include <MyHistandNTupleManager.hpp>
+#include <GRPHistandNTupleManager.hpp>
 
 HistandNTupleManager::HistandNTupleManager() : fFileName("Data_output")
 {
@@ -46,7 +46,7 @@ void HistandNTupleManager::Book()
 
     analysisManager->SetDefaultFileType("root");
     // Note: merging ntuples is available only with Root output
-    // analysisManager->SetNtupleMerging(true);
+    analysisManager->SetNtupleMerging(true);
     analysisManager->SetFileName(fFileName);
 
     // This option enables the manual activation and deactivation of
@@ -125,51 +125,28 @@ void HistoManager::Book()
         analysisManager->CreateH1("MuonTheta", "Final #theta of muons", 200, 0 * mrad, 10 * mrad, "mrad", "none", "linear");
     analysisManager->SetH1Activation(muontheta, false);
 
-    // Some 1D histograms to analyze particles after a cut in divergence (i.e. collimator)
-
-    // HistogramId = 13
-    positronenergycut1 =
-        analysisManager->CreateH1("PositronEnergyCut1", "Positron energy (#theta < 1 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut1, false);
-    // HistogramId = 14
-    positronenergycut2 =
-        analysisManager->CreateH1("PositronEnergyCut2", "Positron energy (#theta < 5 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut2, false);
-    // HistogramId = 15
-    positronenergycut3 =
-        analysisManager->CreateH1("PositronEnergyCut3", "Positron energy (#theta < 10 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut3, false);
-    // HistogramId = 16
-    positronenergycut4 =
-        analysisManager->CreateH1("PositronEnergyCut4", "Positron energy (#theta < 20 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut4, false);
-    // HistogramId = 17
-    positronenergycut5 =
-        analysisManager->CreateH1("PositronEnergyCut5", "Positron energy (#theta < 50 mrad)", 200, 10 * MeV, 1 * GeV, "GeV", "none", "log");
-    analysisManager->SetH1Activation(positronenergycut5, false);
-
     // Final phi distributions
-    // HistogramId = 18
+    // HistogramId = 13
     primaryphi =
         analysisManager->CreateH1("PrimaryPhi", "Final #phi of primaries", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(primaryphi, false);
-    // HistogramId = 19
+    // HistogramId = 14
     electronphi =
         analysisManager->CreateH1("ElectronPhi", "Final #phi of electrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(electronphi, false);
-    // HistogramId = 20
+    // HistogramId = 15
     positronphi =
         analysisManager->CreateH1("PositronPhi", "Final #phi of positrons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(positronphi, false);
-    // HistogramId = 21
+    // HistogramId = 16
     gammaphi =
         analysisManager->CreateH1("GammaPhi", "Final #phi of photons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(gammaphi, false);
-    // HistogramId = 22
+    // HistogramId = 17
     pionphi =
         analysisManager->CreateH1("PionPhi", "Final #phi of pions", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(pionphi, false);
-    // HistogramId = 23
+    // HistogramId = 18
     muonphi =
         analysisManager->CreateH1("MuonPhi", "Final #phi of muons", 30, -CLHEP::pi * rad, CLHEP::pi * rad, "rad", "none", "linear");
     analysisManager->SetH1Activation(muonphi, false);
@@ -263,24 +240,6 @@ void HistoManager::Book()
                                                  40, -1.5 * rad, 1.5 * rad, "rad", "rad");
     analysisManager->SetH2Activation(finalmuontxtyid, false);
 
-    analysisManager->SetH1Plotting(primaryeneid, false);
-    analysisManager->SetH1Plotting(posieneid, false);
-    analysisManager->SetH1Plotting(electroneneid, false);
-    analysisManager->SetH1Plotting(gammaeneid, false);
-    analysisManager->SetH1Plotting(initialprimaryeneid, false);
-    analysisManager->SetH2Plotting(initialprimaryxyid, false);
-    analysisManager->SetH2Plotting(initialprimaryzxid, false);
-    analysisManager->SetH2Plotting(initialprimarytxtyid, false);
-    analysisManager->SetH2Plotting(initialprimaryxpxid, false);
-    analysisManager->SetH2Plotting(initialprimaryypyid, false);
-    analysisManager->SetH2Plotting(finalprimaryxyid, false);
-    analysisManager->SetH2Plotting(finalelectronxyid, false);
-    analysisManager->SetH2Plotting(finalpositronxyid, false);
-    analysisManager->SetH2Plotting(finalgammaxyid, false);
-    analysisManager->SetH2Plotting(finalprimarytxtyid, false);
-    analysisManager->SetH2Plotting(finalelectrontxtyid, false);
-    analysisManager->SetH2Plotting(finalpositrontxtyid, false);
-    analysisManager->SetH2Plotting(finalgammatxtyid, false);
 }
 
 NTupleManager::NTupleManager()
@@ -295,13 +254,11 @@ void NTupleManager::Book()
 {
     // Introduce an analysis manager for Ntuple generation
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
-
     analysisManager->SetNtupleDirectoryName("ntuple");
     // Creation on ntuples
 
     // NTuple 0: Phase space of particles generated at source
     primaryinitialid = analysisManager->CreateNtuple("InitialPrimary", "Initial primary particle phase space");
-    analysisManager->SetNtupleActivation(primaryinitialid, false);
     analysisManager->CreateNtupleFColumn(primaryinitialid, "x");
     analysisManager->CreateNtupleFColumn(primaryinitialid, "y");
     analysisManager->CreateNtupleFColumn(primaryinitialid, "z");
@@ -309,10 +266,10 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(primaryinitialid, "py");
     analysisManager->CreateNtupleFColumn(primaryinitialid, "pz");
     analysisManager->FinishNtuple(primaryinitialid);
+    analysisManager->SetNtupleActivation(primaryinitialid, m_primaryinitialidactive);
 
     // NTuple 1: Phase space of final primaries
     primaryid = analysisManager->CreateNtuple("FinalPrimary", "Final primary particles phase space");
-    analysisManager->SetNtupleActivation(primaryid, false);
     analysisManager->CreateNtupleFColumn(primaryid, "x");
     analysisManager->CreateNtupleFColumn(primaryid, "y");
     analysisManager->CreateNtupleFColumn(primaryid, "z");
@@ -321,10 +278,10 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(primaryid, "pz");
     analysisManager->CreateNtupleFColumn(primaryid, "t");
     analysisManager->FinishNtuple(primaryid);
+    analysisManager->SetNtupleActivation(primaryid, m_primaryidactive);
 
     // NTuple 2: Phase space of final positrons
     posiid = analysisManager->CreateNtuple("FinalPositron", "Final positron phase space");
-    analysisManager->SetNtupleActivation(posiid, false);
     analysisManager->CreateNtupleFColumn(posiid, "x");
     analysisManager->CreateNtupleFColumn(posiid, "y");
     analysisManager->CreateNtupleFColumn(posiid, "z");
@@ -332,11 +289,12 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(posiid, "py");
     analysisManager->CreateNtupleFColumn(posiid, "pz");
     analysisManager->CreateNtupleFColumn(posiid, "t");
+    analysisManager->CreateNtupleSColumn(posiid, "process");
     analysisManager->FinishNtuple(posiid);
+    analysisManager->SetNtupleActivation(posiid, m_posiidactive);
 
     // NTuple 3: Phase space of final electrons
     electronid = analysisManager->CreateNtuple("FinalElectron", "Final electron phase space");
-    analysisManager->SetNtupleActivation(electronid, false);
     analysisManager->CreateNtupleFColumn(electronid, "x");
     analysisManager->CreateNtupleFColumn(electronid, "y");
     analysisManager->CreateNtupleFColumn(electronid, "z");
@@ -344,11 +302,12 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(electronid, "py");
     analysisManager->CreateNtupleFColumn(electronid, "pz");
     analysisManager->CreateNtupleFColumn(electronid, "t");
+    analysisManager->CreateNtupleSColumn(electronid, "process");
     analysisManager->FinishNtuple(electronid);
+    analysisManager->SetNtupleActivation(electronid, m_electronidactive);
 
     // NTuple 4: Phase space of final photons
     gammaid = analysisManager->CreateNtuple("FinalPhoton", "Final photon phase space");
-    analysisManager->SetNtupleActivation(gammaid, false);
     analysisManager->CreateNtupleFColumn(gammaid, "x");
     analysisManager->CreateNtupleFColumn(gammaid, "y");
     analysisManager->CreateNtupleFColumn(gammaid, "z");
@@ -357,10 +316,10 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(gammaid, "pz");
     analysisManager->CreateNtupleFColumn(gammaid, "t");
     analysisManager->FinishNtuple(gammaid);
+    analysisManager->SetNtupleActivation(gammaid, m_gammaidactive);
 
     // NTuple 5: Phase space of final pions
     pionid = analysisManager->CreateNtuple("FinalPions", "Final pions phase space");
-    analysisManager->SetNtupleActivation(pionid, false);
     analysisManager->CreateNtupleFColumn(pionid, "x");
     analysisManager->CreateNtupleFColumn(pionid, "y");
     analysisManager->CreateNtupleFColumn(pionid, "z");
@@ -369,11 +328,12 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(pionid, "pz");
     analysisManager->CreateNtupleFColumn(pionid, "t");
     analysisManager->CreateNtupleFColumn(pionid, "q");
+    analysisManager->CreateNtupleSColumn(pionid, "process");
     analysisManager->FinishNtuple(pionid);
+    analysisManager->SetNtupleActivation(pionid, m_pionidactive);
 
     // NTuple 6: Phase space of final muons
     muonid = analysisManager->CreateNtuple("FinalMuon", "Final muons phase space");
-    analysisManager->SetNtupleActivation(muonid, false);
     analysisManager->CreateNtupleFColumn(muonid, "x");
     analysisManager->CreateNtupleFColumn(muonid, "y");
     analysisManager->CreateNtupleFColumn(muonid, "z");
@@ -382,5 +342,112 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(muonid, "pz");
     analysisManager->CreateNtupleFColumn(muonid, "t");
     analysisManager->CreateNtupleFColumn(muonid, "q");
+    analysisManager->CreateNtupleSColumn(muonid, "process");
     analysisManager->FinishNtuple(muonid);
+    analysisManager->SetNtupleActivation(muonid, m_muonidactive);
+    
+}
+
+void NTupleManager::ListNtuples()
+{
+    G4cout << "List of all the available NTuples" << G4endl;
+    G4cout << " ID   Name   ActivationStatus" << G4endl;
+    G4cout << " " << primaryinitialid << "  " <<
+        "InitialPrimary" << "  " << m_primaryinitialidactive << G4endl;
+    G4cout << " " << primaryid << "  " <<
+        "FinalPrimary" << "  " << m_primaryidactive << G4endl;
+    G4cout << " " << posiid << "  " <<
+        "FinalPositron" << "  " << m_posiidactive << G4endl;
+    G4cout << " " << electronid << "  " <<
+        "FinalElectron" << "  " << m_electronidactive << G4endl;
+    G4cout << " " << gammaid << "  " <<
+        "FinalPhoton" << "  " << m_gammaidactive << G4endl;
+    G4cout << " " << pionid << "  " <<
+        "FinalPions" << "  " << m_pionidactive << G4endl;
+    G4cout << " " << muonid << "  " <<
+        "FinalMuon" << "  " << m_muonidactive << G4endl;
+
+}
+
+void NTupleManager::SetNtupleDump(G4int ID, G4bool ifdump)
+{
+    if (ID == primaryinitialid)
+    {
+        m_primaryinitialidactive = ifdump;
+    }
+    else if (ID == primaryid)
+    {
+        m_primaryidactive = ifdump;
+    }
+    else if (ID == posiid)
+    {
+        m_posiidactive = ifdump;
+    }
+    else if (ID == electronid)
+    {
+        m_electronidactive = ifdump;
+    }
+    else if (ID == gammaid)
+    {
+        m_gammaidactive = ifdump;
+    }
+    else if (ID == muonid)
+    {
+        m_muonidactive = ifdump;
+    }
+    else if (ID == pionid)
+    {
+        m_pionidactive = ifdump;
+    }
+    else
+    {
+        G4ExceptionDescription msg;
+        msg << "No NTuple found with id = " << ID;
+        G4Exception("NTupleManager::SetNtupleDump",
+                    "GRAPPA::NO_NTUPLE_FOUND",
+                    G4ExceptionSeverity::JustWarning,
+                    msg);
+    }
+}
+
+const G4bool NTupleManager::GetIdActivation(const G4int ID)
+{
+    if (ID == primaryinitialid)
+    {
+        return GetPrimaryInitialIdActivation();
+    }
+    else if (ID == primaryid)
+    {
+        return GetPrimaryIdActivation();
+    }
+    else if (ID == posiid)
+    {
+        return GetPositronIdActivation();
+    }
+    else if (ID == electronid)
+    {
+        return GetElectronIdActivation();
+    }
+    else if (ID == gammaid)
+    {
+        return GetGammaIdActivation();
+    }
+    else if (ID == muonid)
+    {
+        return GetMuonIdActivation();
+    }
+    else if (ID == pionid)
+    {
+        return GetPionIdActivation();
+    }
+    else
+    {
+        G4ExceptionDescription msg;
+        msg << "No NTuple found with id = " << ID;
+        G4Exception("NTupleManager::SetNtupleDump",
+                    "GRAPPA::NO_NTUPLE_FOUND",
+                    G4ExceptionSeverity::JustWarning,
+                    msg);
+        return false;
+    }
 }
