@@ -11,13 +11,13 @@
 #include <G4UserTrackingAction.hh>
 #include <G4Track.hh>
 
-#include <MyHistandNTupleManager.hpp>
+#include <GRPHistandNTupleManager.hpp>
 
-class MyTrackingAction : public G4UserTrackingAction
+class GRPTrackingAction : public G4UserTrackingAction
 {
 public:
-    MyTrackingAction(HistandNTupleManager* myanalysismanager);
-    ~MyTrackingAction();
+    GRPTrackingAction(HistandNTupleManager* myanalysismanager);
+    ~GRPTrackingAction();
 
     // Action performed at the generation of the particle event track
     virtual void  PreUserTrackingAction(const G4Track*);

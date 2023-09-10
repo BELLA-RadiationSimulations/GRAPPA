@@ -40,11 +40,6 @@ public:
     inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
     inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
     inline int GetPrimaryInitialypyId() { return initialprimaryypyid; }
-    inline int GetPositronEnergyCut1Id() { return positronenergycut1; }
-    inline int GetPositronEnergyCut2Id() { return positronenergycut2; }
-    inline int GetPositronEnergyCut3Id() { return positronenergycut3; }
-    inline int GetPositronEnergyCut4Id() { return positronenergycut4; }
-    inline int GetPositronEnergyCut5Id() { return positronenergycut5; }
     inline int GetPrimaryThetaId() { return primarytheta; }
     inline int GetElectronThetaId() { return electrontheta; }
     inline int GetPositronThetaId() { return positrontheta; }
@@ -135,12 +130,6 @@ private:
     // Final muons transverse angle
     G4int finalmuontxtyid;
 
-    // Some histograms with divergence cuts
-    G4int positronenergycut1;
-    G4int positronenergycut2;
-    G4int positronenergycut3;
-    G4int positronenergycut4;
-    G4int positronenergycut5;
 };
 
 class NTupleManager
@@ -149,18 +138,45 @@ public:
     NTupleManager();
     ~NTupleManager();
 
-    inline int GetPrimaryInitialId() { return primaryinitialid; }
-    inline int GetPrimaryId() { return primaryid; }
-    inline int GetPositronId() { return posiid; }
-    inline int GetElectronId() { return electronid; }
-    inline int GetGammaId() { return gammaid; }
-    inline int GetPionId() { return pionid; }
-    inline int GetMuonId() { return muonid; }
+    // Get index for the initial primaries Ntuple
+    inline const int GetPrimaryInitialId() { return primaryinitialid; }
+    // Get index for the final primaries Ntuple
+    inline const int GetPrimaryId() { return primaryid; }
+    // Get index for the positrons Ntuple
+    inline const int GetPositronId() { return posiid; }
+    // Get index for the electrons Ntuple
+    inline const int GetElectronId() { return electronid; }
+    // Get index for the photons Ntuple
+    inline const int GetGammaId() { return gammaid; }
+    // Get index for the pions Ntuple
+    inline const int GetPionId() { return pionid; }
+    // Get index for the muons Ntuple
+    inline const int GetMuonId() { return muonid; }
+    // Get if the Ntuple for the initial primaries is active
+    inline const G4bool GetPrimaryInitialIdActivation() { return m_primaryinitialidactive; }
+    // Get if the Ntuple for the final primaries is active
+    inline const G4bool GetPrimaryIdActivation() { return m_primaryidactive; }
+    // Get if the Ntuple for the positrons is active
+    inline const G4bool GetPositronIdActivation() { return m_posiidactive; }
+    // Get if the Ntuple for the electrons is active
+    inline const G4bool GetElectronIdActivation() { return m_electronidactive; }
+    // Get if the Ntuple for the gammas is active
+    inline const G4bool GetGammaIdActivation() { return m_gammaidactive; }
+    // Get if the Ntuple for the pions is active
+    inline const G4bool GetPionIdActivation() { return m_pionidactive; }
+    // Get if the Ntuple for the muons is active
+    inline const G4bool GetMuonIdActivation() { return m_muonidactive; }
+    // Get if the Ntuple with ID is active
+    const G4bool GetIdActivation(const G4int ID);
     void Book();
+    void ListNtuples();
+    void SetNtupleDump(G4int ID, G4bool ifdump);
 
 private:
     G4int primaryinitialid, primaryid, posiid, electronid,
         gammaid, pionid, muonid;
+    G4bool m_primaryinitialidactive = true, m_primaryidactive = true, m_posiidactive = true, m_electronidactive = true,
+        m_gammaidactive = true, m_pionidactive = true, m_muonidactive = true;
 };
 
 class HistandNTupleManager

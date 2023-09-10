@@ -14,15 +14,21 @@
 # /run/numberOfThreads 4
 
 # Modify geometry (custom functions)
+# /geometry/world/material G4_AIR
 # /geometry/world/radius 20 cm
-# /geometry/target/size 10 mm
-# /geometry/target/center 0 0 0 mm
-/geometry/target/thickness 3 mm
-# /geometry/target/rotation 45 deg
-# /geometry/target/material G4_W
+# /geometry/foil/size 10 mm
+# /geometry/foil/center 0 0 0 mm
+/geometry/foil/thickness 3 mm
+# /geometry/foil/rotation 45 deg
+# /geometry/foil/material G4_W
 
 # Fix random seed to have repeatable runs
 # /random/setSeeds 1 2 3
+
+# Introduce the muon pair production from photons and increase artificially its probability
+/physicslists/em/GammaToMuons true
+/physicslists/em/PositronToMuons false
+/physicslists/em/GammaToMuonsFactor 50
 
 # Initialize run
 /run/initialize
@@ -69,7 +75,6 @@
 
 # If setActivationToAll is false, all the ntuples will not be written
 # (faster simulations, but only histograms at the end). Default is false 
-/analysis/ntuple/setActivationToAll false
 /analysis/h1/setActivationToAll false
 /analysis/h1/setPlottingToAll false
 /analysis/h2/setActivationToAll false
@@ -90,17 +95,12 @@
 # - 10 Final theta of photons
 # - 11 Final theta of pions
 # - 12 Final theta of muons
-# - 13 Positron Energy if theta < 1 mrad
-# - 14 Positron Energy if theta < 5 mrad
-# - 15 Positron Energy if theta < 10 mrad
-# - 16 Positron Energy if theta < 20 mrad
-# - 17 Positron Energy if theta < 50 mrad
-# - 18 Final phi of primaries
-# - 19 Final phi of electrons
-# - 20 Final phi of positrons
-# - 21 Final phi of photons
-# - 22 Final phi of pions
-# - 23 Final phi of muons
+# - 13 Final phi of primaries
+# - 14 Final phi of electrons
+# - 15 Final phi of positrons
+# - 16 Final phi of photons
+# - 17 Final phi of pions
+# - 18 Final phi of muons
 #
 # 2D
 # - 0 Initial primary transverse distribution
@@ -142,11 +142,6 @@
 /analysis/h1/set 10 200 0. 50 mrad none linear
 /analysis/h1/set 11 200 0. 50 mrad none linear
 /analysis/h1/set 12 200 0. 50 mrad none linear
-/analysis/h1/set 13 1000 1 400 MeV none linear
-/analysis/h1/set 14 1000 1 400 MeV none linear
-/analysis/h1/set 15 1000 1 400 MeV none linear
-/analysis/h1/set 16 1000 1 400 MeV none linear
-/analysis/h1/set 17 1000 1 400 MeV none linear
 
 /analysis/h1/setXaxisLog 0 true
 /analysis/h1/setXaxisLog 1 true
@@ -177,6 +172,12 @@
 /analysis/h2/set 16 60 -100 100 mrad none linear 60 -100 100 mrad none linear #x-y
 
 # =/=/=/=/= End analysis section =/=/=/=/=
+
+# =/=/=/=/= Ntuple control section =/=/=/=/=
+
+/ntuplecontrol/setDump 0 1
+
+# =/=/=/=/= End Ntuple control section =/=/=/=/=
 
 ## Run
 /run/beamOn 100000

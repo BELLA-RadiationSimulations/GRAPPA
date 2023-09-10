@@ -5,13 +5,13 @@
  * License: BSD-3-Clause
  */
 
-#include <MyPrimaryGeneratorAction.hpp>
+#include <GRPPrimaryGeneratorAction.hpp>
 
 using CLHEP::GeV;
 using CLHEP::MeV;
 using CLHEP::mm;
 
-MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(bool useGPS, G4String filename)
+GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(bool useGPS, G4String filename)
 {
     if (useGPS)
     {
@@ -23,11 +23,11 @@ MyPrimaryGeneratorAction::MyPrimaryGeneratorAction(bool useGPS, G4String filenam
     }
 }
 
-MyPrimaryGeneratorAction::~MyPrimaryGeneratorAction()
+GRPPrimaryGeneratorAction::~GRPPrimaryGeneratorAction()
 {
 }
 
-void MyPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
+void GRPPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 {
     int eventID = anEvent->GetEventID();
 
