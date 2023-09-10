@@ -1,9 +1,9 @@
-/* Copyright 2022 Davide Terzani
- *
- * This file is part of GRAPPA.
- *
- * License: BSD-3-Clause
- */
+// Copyright 2022 Davide Terzani
+//
+// This file is part of GRAPPA.
+//
+// License: BSD-3-Clause
+// 
 
 #include <GRPHistandNTupleManager.hpp>
 
