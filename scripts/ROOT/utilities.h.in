@@ -1,3 +1,14 @@
+// Copyright 2021-2023
+//
+// Authors:
+// Stanimir Kisyov, Davide Terzani
+//
+// Creator: Davide Terzani
+//
+// This file is part of GRAPPA.
+//
+// License: BSD-3-Clause
+
 #ifndef UTILITIES_C
 #define UTILITIES_C
 

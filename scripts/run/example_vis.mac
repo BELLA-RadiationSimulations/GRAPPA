@@ -1,7 +1,14 @@
-# Macro file for the initialization of a simple use case of GRAPPA
-# in interactive session
+# Copyright 2021-2023
 #
-# Set some default verbose
+# Authors:
+# Stanimir Kisyov, Davide Terzani
+#
+# Creator: Davide Terzani
+#
+# This file is part of GRAPPA.
+#
+# License: BSD-3-Clause
+
 /control/verbose 2
 /run/verbose 0
 # Initialize kernel

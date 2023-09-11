@@ -1,7 +1,13 @@
-// To execute this MACRO file in root
-// 1) open root
-// 2a) .x PlotParticles.C
-// 2b) .x PlotParticles.C+ (to run a compiled version of this library)
+// Copyright 2021-2023
+//
+// Authors:
+// Stanimir Kisyov, Davide Terzani
+//
+// Creator: Davide Terzani
+//
+// This file is part of GRAPPA.
+//
+// License: BSD-3-Clause
 
 #cmakedefine UTILITIES_PATH "@UTILITIES_PATH@"
 #include <iostream>
