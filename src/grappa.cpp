@@ -1,9 +1,13 @@
-/* Copyright 2022 Davide Terzani
- *
- * This file is part of GRAPPA.
- *
- * License: BSD-3-Clause
- */
+// Copyright 2021-2023
+//
+// Authors:
+// Stanimir Kisyov, Davide Terzani
+//
+// Creator: Davide Terzani
+//
+// This file is part of GRAPPA.
+//
+// License: BSD-3-Clause
 
 #include <grappa.hpp>
 
