@@ -36,10 +36,7 @@ ASCIIReader::ASCIIReader(std::string filename)
 
 ASCIIReader::~ASCIIReader()
 {
-    if (m_filestream.is_open())
-    {
-        m_filestream.close();
-    }
+
 }
 
 G4int ASCIIReader::CountParticles()

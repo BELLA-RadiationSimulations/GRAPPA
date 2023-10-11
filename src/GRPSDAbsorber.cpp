@@ -51,7 +51,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
-    G4double kineticEnergy, time, pz, px, py, theta_mrad, phi, charge;
+    G4double kineticEnergy;
+    G4float time, pz, px, py, theta_mrad, phi, charge;
     G4ThreeVector position, momentum;
 
     // Access track information
@@ -59,14 +60,14 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
     // Getting pre step point information and volume name
     G4StepPoint *preStepPoint = step->GetPreStepPoint();
-    G4String thisVolumename = aTrack->GetVolume()->GetName();
+    const G4String thisVolumename = aTrack->GetVolume()->GetName();
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     const G4int particleID = particle->GetPDGEncoding();
-    G4int pID = aTrack->GetParentID();
+    const G4int pID = aTrack->GetParentID();
     G4String creatorprocessname = "";
 
     // Check if particle is in the particle list
-    G4bool particleinvector =
+    const G4bool particleinvector =
         (std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) !=
          m_ParticleList.end());
     if (!particleinvector && (pID != 0))
@@ -79,7 +80,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     const G4VProcess *CurrentProcess = preStepPoint->GetProcessDefinedStep();
 
     // Boolean flags for histogram and Ntuple filling
-    G4bool FillHistogram = true;
+    const G4bool FillHistogram = true;
     G4bool FillNtuple = true;
 
     // Energy filters for particles
@@ -103,14 +104,14 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             kineticEnergy = aTrack->GetKineticEnergy();
             position = aTrack->GetPosition();
             momentum = aTrack->GetMomentum();
-            charge = particle->GetPDGCharge();
-            time = aTrack->GetGlobalTime();
+            charge = static_cast<G4float>(particle->GetPDGCharge());
+            time = static_cast<G4float>(aTrack->GetGlobalTime());
             aTrack->SetTrackStatus(fStopAndKill);
-            pz = std::abs(momentum.z());
-            px = momentum.x();
-            py = momentum.y();
-            theta_mrad = pi - momentum.theta();
-            phi = momentum.phi();
+            pz = static_cast<G4float>(std::abs(momentum.z()));
+            px = static_cast<G4float>(momentum.x());
+            py = static_cast<G4float>(momentum.y());
+            theta_mrad = static_cast<G4float>(pi - momentum.theta());
+            phi = static_cast<G4float>(momentum.phi());
         }
         else
         {
@@ -119,12 +120,12 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
         HistoManager *histomanager = m_HistoandNtupleManager->GetHistoManager();
 
-        bool isMuorPi =
+        const bool isMuorPi =
             (particleID == ParticleID::pionminusID ||
              particleID == ParticleID::pionplusID ||
              particleID == ParticleID::muonminusID ||
              particleID == ParticleID::muonplusID);
-        bool hasCreatorProcess = isMuorPi ||
+        const bool hasCreatorProcess = isMuorPi ||
             particleID == ParticleID::positronID ||
             (particleID == ParticleID::electronID && pID != 0);
 
@@ -247,12 +248,12 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         {
             G4int ncol = 0;
             // Filling the correct Ntuple
-            analysisManager->FillNtupleFColumn(ntupleid, 0, position.x());
-            analysisManager->FillNtupleFColumn(ntupleid, 1, position.y());
-            analysisManager->FillNtupleFColumn(ntupleid, 2, position.z());
-            analysisManager->FillNtupleFColumn(ntupleid, 3, momentum.x());
-            analysisManager->FillNtupleFColumn(ntupleid, 4, momentum.y());
-            analysisManager->FillNtupleFColumn(ntupleid, 5, momentum.z());
+            analysisManager->FillNtupleFColumn(ntupleid, 0, static_cast<G4float>(position.x()));
+            analysisManager->FillNtupleFColumn(ntupleid, 1, static_cast<G4float>(position.y()));
+            analysisManager->FillNtupleFColumn(ntupleid, 2, static_cast<G4float>(position.z()));
+            analysisManager->FillNtupleFColumn(ntupleid, 3, static_cast<G4float>(momentum.x()));
+            analysisManager->FillNtupleFColumn(ntupleid, 4, static_cast<G4float>(momentum.y()));
+            analysisManager->FillNtupleFColumn(ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
             ncol = 7;
             if (isMuorPi)

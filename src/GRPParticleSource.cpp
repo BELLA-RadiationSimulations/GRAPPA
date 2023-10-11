@@ -22,7 +22,7 @@ void ParticleSource::SetPart(G4ParticleDefinition *part)
     m_particle_mass_squared = std::pow(m_particle_mass, 2);
 }
 
-ParticleSourceGPS::ParticleSourceGPS() : ParticleSource()
+ParticleSourceGPS::ParticleSourceGPS()
 {
     G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
     SetPart(particle_table->FindParticle("e-"));
@@ -33,7 +33,7 @@ ParticleSourceGPS::ParticleSourceGPS() : ParticleSource()
 
 ParticleSourceGPS::~ParticleSourceGPS() { m_part = nullptr; }
 
-ParticleSourceGun::ParticleSourceGun(G4String filename) : ParticleSource()
+ParticleSourceGun::ParticleSourceGun(G4String filename)
 {
     using namespace CLHEP;
     G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
@@ -67,7 +67,7 @@ void ParticleSourceGun::LoadNextParticle(int eventNumber)
     GRAPPAParticle particle;
     double Kenergy;
     G4ParticleMomentum momentumdirection;
-    int eventModulo =
+    const int eventModulo =
         (eventNumber + m_TotalParticlesSimulated) % m_NpartsInFile;
 
     particle = m_particlecollection->at(eventModulo);

@@ -13,7 +13,6 @@
 
 GRPActionInitialization::GRPActionInitialization(
     HistandNTupleManager *myanalysismanager)
-    : G4VUserActionInitialization()
 {
     m_HistandNTupleManager = myanalysismanager;
     m_PSMessenger = std::make_shared<GRPActionInitializationMessenger>(this);
@@ -85,7 +84,7 @@ void GRPActionInitializationMessenger::SetNewValue(
 {
     if (command == m_CMDifpartsfromfile.get())
     {
-        G4bool flag = m_CMDifpartsfromfile->GetNewBoolValue(newValues);
+        const G4bool flag = m_CMDifpartsfromfile->GetNewBoolValue(newValues);
         m_myactionpointer->ParticlesFromFile(flag);
     }
     if (command == m_CMDpartsfilename.get())

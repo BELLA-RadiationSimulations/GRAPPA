@@ -12,7 +12,6 @@
 #include <GRPTrackingAction.hpp>
 
 GRPTrackingAction::GRPTrackingAction(HistandNTupleManager *myanalysismanager)
-    : G4UserTrackingAction()
 {
     m_HistandNTupleManager = myanalysismanager;
 }
@@ -25,7 +24,7 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     HistoManager *histoman = m_HistandNTupleManager->GetHistoManager();
 
-    G4int pID = track->GetParentID();
+    const G4int pID = track->GetParentID();
 
     G4bool isanalysisactive, isntupleactive;
 
@@ -35,21 +34,25 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
     // fill ntuple of primary particles
     if ((pID == 0) && isanalysisactive)
     {
-        G4ThreeVector vertex = track->GetPosition();
-        G4ThreeVector momentum = track->GetMomentum();
-        G4float x = vertex.x(), y = vertex.y(), z = vertex.z();
-        G4float px = momentum.x(), py = momentum.y(), pz = momentum.z();
-        G4double kineticenergy = track->GetKineticEnergy();
+        const G4ThreeVector vertex = track->GetPosition();
+        const G4ThreeVector momentum = track->GetMomentum();
+        const G4float x = static_cast<G4float>(vertex.x());
+        const G4float y = static_cast<G4float>(vertex.y());
+        const G4float z = static_cast<G4float>(vertex.z());
+        const G4float px = static_cast<G4float>(momentum.x());
+        const G4float py = static_cast<G4float>(momentum.y());
+        const G4float pz = static_cast<G4float>(momentum.z());
+        const G4double kineticenergy = track->GetKineticEnergy();
 
-        G4int histoxyid = histoman->GetPrimaryInitialxyId();
-        G4int histozxid = histoman->GetPrimaryInitialzxId();
-        G4int histoEid = histoman->GetPrimaryInitialEneId();
-        G4int histotxtyid = histoman->GetPrimaryInitialtxtyId();
-        G4int histoxpxid = histoman->GetPrimaryInitialxpxId();
-        G4int histoypyid = histoman->GetPrimaryInitialypyId();
-        G4int ntupleid =
+        const G4int histoxyid = histoman->GetPrimaryInitialxyId();
+        const G4int histozxid = histoman->GetPrimaryInitialzxId();
+        const G4int histoEid = histoman->GetPrimaryInitialEneId();
+        const G4int histotxtyid = histoman->GetPrimaryInitialtxtyId();
+        const G4int histoxpxid = histoman->GetPrimaryInitialxpxId();
+        const G4int histoypyid = histoman->GetPrimaryInitialypyId();
+        const G4int ntupleid =
             m_HistandNTupleManager->GetNTupleManager()->GetPrimaryInitialId();
-        G4double pz_inv = 1 / pz;
+        const G4double pz_inv = 1 / pz;
 
         // Fill NTuple with initial particles
         isntupleactive =
