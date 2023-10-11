@@ -24,8 +24,8 @@ public:
     inline int GetPositronEneId() { return posieneid; }
     inline int GetElectronEneId() { return electroneneid; }
     inline int GetGammaEneId() { return gammaeneid; }
-    inline int GetPionEneId() {return pioneneid;}
-    inline int GetMuonEneId() {return muoneneid;}
+    inline int GetPionEneId() { return pioneneid; }
+    inline int GetMuonEneId() { return muoneneid; }
     inline int GetPrimaryxyId() { return finalprimaryxyid; }
     inline int GetPositronxyId() { return finalpositronxyid; }
     inline int GetElectronxyId() { return finalelectronxyid; }
@@ -48,14 +48,14 @@ public:
     inline int GetElectronThetaId() { return electrontheta; }
     inline int GetPositronThetaId() { return positrontheta; }
     inline int GetGammaThetaId() { return gammatheta; }
-    inline int GetPionThetaId() {return piontheta;}
-    inline int GetMuonThetaId() {return muontheta;}
+    inline int GetPionThetaId() { return piontheta; }
+    inline int GetMuonThetaId() { return muontheta; }
     inline int GetPrimaryPhiId() { return primaryphi; }
     inline int GetElectronPhiId() { return electronphi; }
     inline int GetPositronPhiId() { return positronphi; }
     inline int GetGammaPhiId() { return gammaphi; }
-    inline int GetPionPhiId() {return pionphi;}
-    inline int GetMuonPhiId() {return muonphi;}
+    inline int GetPionPhiId() { return pionphi; }
+    inline int GetMuonPhiId() { return muonphi; }
     void Book();
 
 private:
@@ -133,7 +133,6 @@ private:
     G4int finalpiontxtyid;
     // Final muons transverse angle
     G4int finalmuontxtyid;
-
 };
 
 class NTupleManager
@@ -157,7 +156,10 @@ public:
     // Get index for the muons Ntuple
     inline const int GetMuonId() { return muonid; }
     // Get if the Ntuple for the initial primaries is active
-    inline const G4bool GetPrimaryInitialIdActivation() { return m_primaryinitialidactive; }
+    inline const G4bool GetPrimaryInitialIdActivation()
+    {
+        return m_primaryinitialidactive;
+    }
     // Get if the Ntuple for the final primaries is active
     inline const G4bool GetPrimaryIdActivation() { return m_primaryidactive; }
     // Get if the Ntuple for the positrons is active
@@ -177,10 +179,11 @@ public:
     void SetNtupleDump(G4int ID, G4bool ifdump);
 
 private:
-    G4int primaryinitialid, primaryid, posiid, electronid,
-        gammaid, pionid, muonid;
-    G4bool m_primaryinitialidactive = true, m_primaryidactive = true, m_posiidactive = true, m_electronidactive = true,
-        m_gammaidactive = true, m_pionidactive = true, m_muonidactive = true;
+    G4int primaryinitialid, primaryid, posiid, electronid, gammaid, pionid,
+        muonid;
+    G4bool m_primaryinitialidactive = true, m_primaryidactive = true,
+           m_posiidactive = true, m_electronidactive = true,
+           m_gammaidactive = true, m_pionidactive = true, m_muonidactive = true;
 };
 
 class HistandNTupleManager
@@ -193,15 +196,9 @@ public:
     void OpenFile();
     void Book();
 
-    HistoManager *GetHistoManager()
-    {
-        return m_HistoManager;
-    }
+    HistoManager *GetHistoManager() { return m_HistoManager; }
 
-    NTupleManager *GetNTupleManager()
-    {
-        return m_NtupleManager;
-    }
+    NTupleManager *GetNTupleManager() { return m_NtupleManager; }
 
 private:
     G4String fFileName;

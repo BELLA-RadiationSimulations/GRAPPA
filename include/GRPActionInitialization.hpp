@@ -39,9 +39,10 @@ public:
 
 private:
     HistandNTupleManager *m_HistandNTupleManager;
-    // Flag that can be changed if one wants to use particle gun instead of a GPS
-    // GRPActionInitialization is constructed when the program starts,
-    // but it is only built (GRPActionInitialization::Build() called) when run is initialized.
+    // Flag that can be changed if one wants to use particle gun instead of a
+    // GPS GRPActionInitialization is constructed when the program starts, but
+    // it is only built (GRPActionInitialization::Build() called) when run is
+    // initialized.
     G4bool m_useGPS = true;
     G4String m_filename = "InitialPhaseSpace.dat";
     // Pointer to the generic messengers

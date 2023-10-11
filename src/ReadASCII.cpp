@@ -25,8 +25,11 @@ ASCIIReader::ASCIIReader(std::string filename)
         G4ExceptionDescription msg;
         msg << "Impossible to open " << m_filename;
         msg << " Please check if file exists and is accessible";
-        G4Exception("ASCIIReader::ASCIIReader()",
-                    "GRAPPA::FILE_NOT_OPEN", FatalException, msg);
+        G4Exception(
+            "ASCIIReader::ASCIIReader()",
+            "GRAPPA::FILE_NOT_OPEN",
+            FatalException,
+            msg);
     }
     m_particlecollection = std::make_shared<std::vector<GRAPPAParticle>>();
 }

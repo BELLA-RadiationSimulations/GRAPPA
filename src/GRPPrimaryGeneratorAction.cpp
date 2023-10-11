@@ -15,7 +15,8 @@ using CLHEP::GeV;
 using CLHEP::MeV;
 using CLHEP::mm;
 
-GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(bool useGPS, G4String filename)
+GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(
+    bool useGPS, G4String filename)
 {
     if (useGPS)
     {
@@ -27,9 +28,7 @@ GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(bool useGPS, G4String filen
     }
 }
 
-GRPPrimaryGeneratorAction::~GRPPrimaryGeneratorAction()
-{
-}
+GRPPrimaryGeneratorAction::~GRPPrimaryGeneratorAction() {}
 
 void GRPPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 {

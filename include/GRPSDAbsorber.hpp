@@ -34,9 +34,9 @@
 //  Name: pi-, id: -211
 
 // Class that defines the behaviour of the absorbing layer around the world.
-// We treat it as a Sensitive Detector in order to be able to count and manage the
-// incoming particles hits.
-// This absorber counts primary particles, electrons, positrons, photons, pions and muons
+// We treat it as a Sensitive Detector in order to be able to count and manage
+// the incoming particles hits. This absorber counts primary particles,
+// electrons, positrons, photons, pions and muons
 class AbsorberSD : public G4VSensitiveDetector
 {
 public:

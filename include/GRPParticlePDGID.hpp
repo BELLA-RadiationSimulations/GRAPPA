@@ -31,4 +31,4 @@ namespace ParticleID
     constexpr G4int muonplusID = -13;
     constexpr G4int pionplusID = 211;
     constexpr G4int pionminusID = -211;
-}
+} // namespace ParticleID

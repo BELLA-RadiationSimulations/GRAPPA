@@ -11,7 +11,8 @@
 
 #include <GRPRunAction.hpp>
 
-GRPRunAction::GRPRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager)
+GRPRunAction::GRPRunAction(
+    G4bool useGPS, HistandNTupleManager *myanalysismanager)
     : G4UserRunAction()
 {
     // Associate the histrogram and ntuple manager
@@ -22,9 +23,7 @@ GRPRunAction::GRPRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanage
     DefineCommands();
 }
 
-GRPRunAction::~GRPRunAction()
-{
-}
+GRPRunAction::~GRPRunAction() {}
 
 void GRPRunAction::BeginOfRunAction(const G4Run *)
 {
@@ -34,26 +33,35 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
     runmanager->SetRandomNumberStore(false);
     m_timer->Start();
 
-    // Checking if particles are read from file and issuing a warning if beamon requests more
-    // particles than available
+    // Checking if particles are read from file and issuing a warning if beamon
+    // requests more particles than available
     const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const GRPPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
-    // Note: if condition necessary since there is no action object for master when in MT mode
+        static_cast<const GRPPrimaryGeneratorAction *>(
+            runmanager->GetUserPrimaryGeneratorAction());
+    // Note: if condition necessary since there is no action object for master
+    // when in MT mode
 
     m_Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
     if (myprimarygenerationpointer)
     {
         if (m_partsfromfile)
         {
-            G4int nparts = myprimarygenerationpointer->GetSource()->GetNParticlesInFile();
+            G4int nparts =
+                myprimarygenerationpointer->GetSource()->GetNParticlesInFile();
             if (m_Numberofeventsthisrun > nparts)
             {
                 G4ExceptionDescription msg;
-                msg << "The number of particles requested (" << runmanager->GetNumberOfEventsToBeProcessed();
-                msg << ") is greater than the particles available in the input file (" << nparts << ").";
+                msg << "The number of particles requested ("
+                    << runmanager->GetNumberOfEventsToBeProcessed();
+                msg << ") is greater than the particles available in the input "
+                       "file ("
+                    << nparts << ").";
                 msg << " Stored particles will be thus used more than once";
-                G4Exception("GRPRunAction::BeginOfRunAction()",
-                            "GRAPPA::MANY_PARTICLES_REQUESTED", JustWarning, msg);
+                G4Exception(
+                    "GRPRunAction::BeginOfRunAction()",
+                    "GRAPPA::MANY_PARTICLES_REQUESTED",
+                    JustWarning,
+                    msg);
             }
         }
     }
@@ -64,7 +72,7 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
 
 void GRPRunAction::EndOfRunAction(const G4Run *run)
 {
-    
+
     // Stopping the run timer
     m_timer->Stop();
 
@@ -74,11 +82,13 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
     if (nofEvents == 0)
         return;
     const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const GRPPrimaryGeneratorAction *>(runmanager->GetUserPrimaryGeneratorAction());
+        static_cast<const GRPPrimaryGeneratorAction *>(
+            runmanager->GetUserPrimaryGeneratorAction());
 
     if (myprimarygenerationpointer)
     {
-        myprimarygenerationpointer->GetSource()->AddTotalParticlesSimulated(m_Numberofeventsthisrun);
+        myprimarygenerationpointer->GetSource()->AddTotalParticlesSimulated(
+            m_Numberofeventsthisrun);
     }
     // Write and close analysis files
     m_HistoandNtupleManager->FinishAnalysis();
@@ -86,16 +96,28 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
     // Print the run timing
     if (IsMaster())
     {
-        G4cout << " Finished Run "<< runmanager->GetCurrentRun()->GetRunID() << G4endl;
-        G4cout << "==========================================================================" << G4endl;
-        G4cout << " Timing for the current Run " << runmanager->GetCurrentRun()->GetRunID() << ":" << G4endl;
-        G4cout << "    User elapsed time   => " << m_timer->GetUserElapsed() / 3600 << " h   = "
-            << m_timer->GetUserElapsed() / 60 << " min   = " << m_timer->GetUserElapsed() << " s." << G4endl;
-        G4cout << "    Real elapsed time   => " << m_timer->GetRealElapsed() / 3600 << " h   = "
-            << m_timer->GetRealElapsed() / 60 << " min   = " << m_timer->GetRealElapsed() << " s." << G4endl;
-        G4cout << "    System elapsed time => " << m_timer->GetSystemElapsed() / 3600 << " h   = "
-            << m_timer->GetSystemElapsed() / 60 << " min   = " << m_timer->GetSystemElapsed() << " s." << G4endl;
-        G4cout << "==========================================================================" << G4endl;
+        G4cout << " Finished Run " << runmanager->GetCurrentRun()->GetRunID()
+               << G4endl;
+        G4cout << "============================================================"
+                  "=============="
+               << G4endl;
+        G4cout << " Timing for the current Run "
+               << runmanager->GetCurrentRun()->GetRunID() << ":" << G4endl;
+        G4cout << "    User elapsed time   => "
+               << m_timer->GetUserElapsed() / 3600
+               << " h   = " << m_timer->GetUserElapsed() / 60
+               << " min   = " << m_timer->GetUserElapsed() << " s." << G4endl;
+        G4cout << "    Real elapsed time   => "
+               << m_timer->GetRealElapsed() / 3600
+               << " h   = " << m_timer->GetRealElapsed() / 60
+               << " min   = " << m_timer->GetRealElapsed() << " s." << G4endl;
+        G4cout << "    System elapsed time => "
+               << m_timer->GetSystemElapsed() / 3600
+               << " h   = " << m_timer->GetSystemElapsed() / 60
+               << " min   = " << m_timer->GetSystemElapsed() << " s." << G4endl;
+        G4cout << "============================================================"
+                  "=============="
+               << G4endl;
     }
 }
 
@@ -104,17 +126,21 @@ void GRPRunAction::DefineCommands()
     // Messenger class with custom ntuple commands
     //
     // define command directory using generic messenger class
-    m_AMessenger = std::make_shared<G4GenericMessenger>(this, "/ntuplecontrol/", "Custom commands to personalize ntuples");
+    m_AMessenger = std::make_shared<G4GenericMessenger>(
+        this, "/ntuplecontrol/", "Custom commands to personalize ntuples");
 
     // Print the list of ntuples
-    G4GenericMessenger::Command &printcommand = m_AMessenger->DeclareMethod("list", &GRPRunAction::ListNtuples,
-                                                                                  "List the available ntuples");
-    printcommand.SetGuidance(" List the available ntuples' ID, Name and ActivationStatus");
+    G4GenericMessenger::Command &printcommand = m_AMessenger->DeclareMethod(
+        "list", &GRPRunAction::ListNtuples, "List the available ntuples");
+    printcommand.SetGuidance(
+        " List the available ntuples' ID, Name and ActivationStatus");
     printcommand.SetStates(G4State_PreInit, G4State_Idle, G4State_Init);
 
-    G4GenericMessenger::Command &setdumpcommand = m_AMessenger->DeclareMethod("setDump", &GRPRunAction::SetNtupleDump,
-                                                                                  "Set the activation status of a given Ntuple ID");
-    setdumpcommand.SetGuidance(" Set the activation status of a given Ntuple ID ");
+    G4GenericMessenger::Command &setdumpcommand = m_AMessenger->DeclareMethod(
+        "setDump",
+        &GRPRunAction::SetNtupleDump,
+        "Set the activation status of a given Ntuple ID");
+    setdumpcommand.SetGuidance(
+        " Set the activation status of a given Ntuple ID ");
     setdumpcommand.SetStates(G4State_PreInit, G4State_Idle, G4State_Init);
-
 }

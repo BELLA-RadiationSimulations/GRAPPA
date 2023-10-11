@@ -23,7 +23,8 @@
 //  Name: pi-, id: -211
 
 // Primaries, electrons, positrons and photons absorbing layer
-AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) : G4VSensitiveDetector(name)
+AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
+    : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
 
@@ -40,16 +41,11 @@ AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager) :
     m_ParticleList.push_back(ParticleID::pionminusID);
 
     m_ParticleList.push_back(ParticleID::pionplusID);
-
 }
 
-AbsorberSD::~AbsorberSD()
-{
-}
+AbsorberSD::~AbsorberSD() {}
 
-void AbsorberSD::Initialize(G4HCofThisEvent *)
-{
-}
+void AbsorberSD::Initialize(G4HCofThisEvent *) {}
 
 G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
@@ -71,7 +67,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
     // Check if particle is in the particle list
     G4bool particleinvector =
-        ( std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) != m_ParticleList.end() );
+        (std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) !=
+         m_ParticleList.end());
     if (!particleinvector && (pID != 0))
     {
         return false;
@@ -122,14 +119,18 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
         HistoManager *histomanager = m_HistoandNtupleManager->GetHistoManager();
 
-        bool isMuorPi = (particleID == ParticleID::pionminusID || particleID == ParticleID::pionplusID ||
-            particleID == ParticleID::muonminusID || particleID == ParticleID::muonplusID);
-        bool hasCreatorProcess = isMuorPi || particleID == ParticleID::positronID ||
+        bool isMuorPi =
+            (particleID == ParticleID::pionminusID ||
+             particleID == ParticleID::pionplusID ||
+             particleID == ParticleID::muonminusID ||
+             particleID == ParticleID::muonplusID);
+        bool hasCreatorProcess = isMuorPi ||
+            particleID == ParticleID::positronID ||
             (particleID == ParticleID::electronID && pID != 0);
 
         if (hasCreatorProcess)
         {
-            const G4VProcess * creatorprocess = aTrack->GetCreatorProcess();   
+            const G4VProcess *creatorprocess = aTrack->GetCreatorProcess();
             creatorprocessname = creatorprocess->GetProcessName();
         }
         if (pID == 0)
@@ -139,7 +140,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             histotxtyid = histomanager->GetPrimarytxtyId();
             histthetaid = histomanager->GetPrimaryThetaId();
             histphiid = histomanager->GetPrimaryPhiId();
-            ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryId();
+            ntupleid =
+                m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryId();
             FillNtuple = !(kineticEnergy < MinPrimaryEnergy);
         }
         else
@@ -152,7 +154,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histotxtyid = histomanager->GetPositrontxtyId();
                 histthetaid = histomanager->GetPositronThetaId();
                 histphiid = histomanager->GetPositronPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
+                ntupleid = m_HistoandNtupleManager->GetNTupleManager()
+                               ->GetPositronId();
                 FillNtuple = !(kineticEnergy < MinPositronEnergy);
             }
             else if (particleID == ParticleID::gammaID)
@@ -162,7 +165,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histotxtyid = histomanager->GetGammatxtyId();
                 histthetaid = histomanager->GetGammaThetaId();
                 histphiid = histomanager->GetGammaPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
+                ntupleid =
+                    m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
                 FillNtuple = !(kineticEnergy < MinPhotonEnergy);
             }
             else if (particleID == ParticleID::electronID)
@@ -173,28 +177,35 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histotxtyid = histomanager->GetElectrontxtyId();
                 histthetaid = histomanager->GetElectronThetaId();
                 histphiid = histomanager->GetElectronPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetElectronId();
+                ntupleid = m_HistoandNtupleManager->GetNTupleManager()
+                               ->GetElectronId();
                 FillNtuple = !(kineticEnergy < MinElectronEnergy);
             }
             // Pions are collected in a single ntuple
-            else if (particleID == ParticleID::pionminusID || particleID == ParticleID::pionplusID)
+            else if (
+                particleID == ParticleID::pionminusID ||
+                particleID == ParticleID::pionplusID)
             {
                 histeneid = histomanager->GetPionEneId();
                 histoxyid = histomanager->GetPionxyId();
                 histotxtyid = histomanager->GetPiontxtyId();
                 histthetaid = histomanager->GetPionThetaId();
                 histphiid = histomanager->GetPionPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
+                ntupleid =
+                    m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
             }
             // Muons are collected in a single ntuple
-            else if (particleID == ParticleID::muonminusID || particleID == ParticleID::muonplusID)
+            else if (
+                particleID == ParticleID::muonminusID ||
+                particleID == ParticleID::muonplusID)
             {
                 histeneid = histomanager->GetMuonEneId();
                 histoxyid = histomanager->GetMuonxyId();
                 histotxtyid = histomanager->GetMuontxtyId();
                 histthetaid = histomanager->GetMuonThetaId();
                 histphiid = histomanager->GetMuonPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetMuonId();
+                ntupleid =
+                    m_HistoandNtupleManager->GetNTupleManager()->GetMuonId();
             }
             else
             {
@@ -223,11 +234,13 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             }
             if (analysisManager->GetH2Activation(histotxtyid))
             {
-                analysisManager->FillH2(histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
+                analysisManager->FillH2(
+                    histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
             }
         }
 
-        NTupleManager * ntuplemanager = m_HistoandNtupleManager->GetNTupleManager();
+        NTupleManager *ntuplemanager =
+            m_HistoandNtupleManager->GetNTupleManager();
         FillNtuple = (FillNtuple && ntuplemanager->GetIdActivation(ntupleid));
 
         if (FillNtuple)
@@ -249,7 +262,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             }
             if (hasCreatorProcess)
             {
-                analysisManager->FillNtupleSColumn(ntupleid, ncol, creatorprocessname);
+                analysisManager->FillNtupleSColumn(
+                    ntupleid, ncol, creatorprocessname);
                 ncol += 1;
             }
             analysisManager->AddNtupleRow(ntupleid);
