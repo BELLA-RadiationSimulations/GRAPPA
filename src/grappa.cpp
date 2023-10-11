@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
     G4cout << " =================================================== " << G4endl;
     // Detect interactive mode (if no arguments) and define UI session
 
-    G4UIExecutive *ui = 0;
+    G4UIExecutive *ui = nullptr;
     if (argc == 1)
     {
         ui = new G4UIExecutive(argc, argv);
@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     visManager->Initialize();
 
     // Getting run start time
-    std::shared_ptr<G4Timer> timer = std::make_shared<G4Timer>();
+    const std::shared_ptr<G4Timer> timer = std::make_shared<G4Timer>();
     timer->Start();
     G4cout << " Program started at \t" << timer->GetClockTime() << G4endl;
 
@@ -82,7 +82,7 @@ int main(int argc, char *argv[])
 
     // Last, setting the verbosity of the run manager
     // RunManager prints a signal every everyevent events.
-    G4int everyevent = 200;
+    const G4int everyevent = 200;
     runManager->SetPrintProgress(everyevent);
 
     if (ui)
@@ -94,8 +94,8 @@ int main(int argc, char *argv[])
     else
     {
         // batch mode
-        G4String command = "/control/execute ";
-        G4String fileName = argv[1];
+        const G4String command = "/control/execute ";
+        const G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
     }
 

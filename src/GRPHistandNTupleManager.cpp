@@ -709,7 +709,7 @@ void NTupleManager::SetNtupleDump(G4int ID, G4bool ifdump)
     }
 }
 
-const G4bool NTupleManager::GetIdActivation(const G4int ID)
+G4bool NTupleManager::GetIdActivation(const G4int ID) const
 {
     if (ID == primaryinitialid)
     {

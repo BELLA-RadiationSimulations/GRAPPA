@@ -11,10 +11,6 @@
 
 #include <GRPPrimaryGeneratorAction.hpp>
 
-using CLHEP::GeV;
-using CLHEP::MeV;
-using CLHEP::mm;
-
 GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(
     bool useGPS, G4String filename)
 {
@@ -32,7 +28,7 @@ GRPPrimaryGeneratorAction::~GRPPrimaryGeneratorAction() {}
 
 void GRPPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 {
-    int eventID = anEvent->GetEventID();
+    const int eventID = anEvent->GetEventID();
 
     m_PSource->LoadNextParticle(eventID);
     m_PSource->GetGun()->GeneratePrimaryVertex(anEvent);

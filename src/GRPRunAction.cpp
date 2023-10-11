@@ -13,7 +13,6 @@
 
 GRPRunAction::GRPRunAction(
     G4bool useGPS, HistandNTupleManager *myanalysismanager)
-    : G4UserRunAction()
 {
     // Associate the histrogram and ntuple manager
     m_HistoandNtupleManager = myanalysismanager;
@@ -46,7 +45,7 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
     {
         if (m_partsfromfile)
         {
-            G4int nparts =
+            const G4int nparts =
                 myprimarygenerationpointer->GetSource()->GetNParticlesInFile();
             if (m_Numberofeventsthisrun > nparts)
             {
@@ -78,7 +77,7 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
 
     // Getting the run manager
     G4RunManager *runmanager = G4RunManager::GetRunManager();
-    G4int nofEvents = run->GetNumberOfEvent();
+    const G4int nofEvents = run->GetNumberOfEvent();
     if (nofEvents == 0)
         return;
     const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
