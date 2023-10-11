@@ -34,13 +34,7 @@ ASCIIReader::ASCIIReader(std::string filename)
     m_particlecollection = std::make_shared<std::vector<GRAPPAParticle>>();
 }
 
-ASCIIReader::~ASCIIReader()
-{
-    if (m_filestream.is_open())
-    {
-        m_filestream.close();
-    }
-}
+ASCIIReader::~ASCIIReader() {}
 
 G4int ASCIIReader::CountParticles()
 {

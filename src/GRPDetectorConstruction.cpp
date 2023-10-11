@@ -11,12 +11,8 @@
 
 #include <GRPDetectorConstruction.hpp>
 
-using CLHEP::deg;
-using CLHEP::mm;
-
 GRPDetectorConstruction::GRPDetectorConstruction(
     HistandNTupleManager *myanalysismanager)
-    : G4VUserDetectorConstruction()
 {
     m_HistoandNtupleManager = myanalysismanager;
     DefineCommands();
@@ -36,7 +32,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     // Option to switch on/off checking of volumes overlaps
     //
-    G4bool checkOverlaps = true;
+    const G4bool checkOverlaps = true;
 
     // ================================================ //
     // First, we create the world
@@ -68,11 +64,11 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     // Creation of the physical volume associated with the logical volume
     physWorld = new G4PVPlacement(
-        0, // no rotation
+        nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
         logicWorld, // its logical volume
         w_name, // its name
-        0, // its mother  volume
+        nullptr, // its mother  volume
         false, // no boolean operation
         0, // copy number
         checkOverlaps); // overlaps checking
@@ -88,7 +84,8 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     G4Material *f_material = nist->FindOrBuildMaterial(f_material_name);
     G4ThreeVector f_dimensions(foil_x, foil_y, foil_z);
-    G4ThreeVector f_position(foil_center[0], foil_center[1], foil_center[2]);
+    const G4ThreeVector f_position(
+        foil_center[0], foil_center[1], foil_center[2]);
     G4RotationMatrix rotm = G4RotationMatrix();
     // Foil rotation by a given angle
     rotm.rotateY(foil_angle_y);
@@ -122,7 +119,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     // First absorber is for e+, e- and gamma
     //
-    G4double a_dimensions = w_radius;
+    const G4double a_dimensions = w_radius;
     G4Material *a_material = w_material;
 
     G4Sphere *StdsolidAbsorber = new G4Sphere(
@@ -142,7 +139,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     // Creation of the physical volume associated with the logical volume
     new G4PVPlacement(
-        0, // no rotation
+        nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
         m_LogicalAbsorber, // its logical volume
         std_a_name, // its name
