@@ -84,7 +84,8 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     G4Material *f_material = nist->FindOrBuildMaterial(f_material_name);
     G4ThreeVector f_dimensions(foil_x, foil_y, foil_z);
-    const G4ThreeVector f_position(foil_center[0], foil_center[1], foil_center[2]);
+    const G4ThreeVector f_position(
+        foil_center[0], foil_center[1], foil_center[2]);
     G4RotationMatrix rotm = G4RotationMatrix();
     // Foil rotation by a given angle
     rotm.rotateY(foil_angle_y);

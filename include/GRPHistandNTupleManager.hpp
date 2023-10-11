@@ -156,16 +156,25 @@ public:
     // Get index for the muons Ntuple
     inline const int GetMuonId() { return muonid; }
     // Get if the Ntuple for the initial primaries is active
-    inline const G4bool GetPrimaryInitialIdActivation() const 
+    inline const G4bool GetPrimaryInitialIdActivation() const
     {
         return m_primaryinitialidactive;
     }
     // Get if the Ntuple for the final primaries is active
-    inline const G4bool GetPrimaryIdActivation() const { return m_primaryidactive; }
+    inline const G4bool GetPrimaryIdActivation() const
+    {
+        return m_primaryidactive;
+    }
     // Get if the Ntuple for the positrons is active
-    inline const G4bool GetPositronIdActivation() const { return m_posiidactive; }
+    inline const G4bool GetPositronIdActivation() const
+    {
+        return m_posiidactive;
+    }
     // Get if the Ntuple for the electrons is active
-    inline const G4bool GetElectronIdActivation() const { return m_electronidactive; }
+    inline const G4bool GetElectronIdActivation() const
+    {
+        return m_electronidactive;
+    }
     // Get if the Ntuple for the gammas is active
     inline const G4bool GetGammaIdActivation() const { return m_gammaidactive; }
     // Get if the Ntuple for the pions is active

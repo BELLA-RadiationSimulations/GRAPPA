@@ -248,12 +248,18 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         {
             G4int ncol = 0;
             // Filling the correct Ntuple
-            analysisManager->FillNtupleFColumn(ntupleid, 0, static_cast<G4float>(position.x()));
-            analysisManager->FillNtupleFColumn(ntupleid, 1, static_cast<G4float>(position.y()));
-            analysisManager->FillNtupleFColumn(ntupleid, 2, static_cast<G4float>(position.z()));
-            analysisManager->FillNtupleFColumn(ntupleid, 3, static_cast<G4float>(momentum.x()));
-            analysisManager->FillNtupleFColumn(ntupleid, 4, static_cast<G4float>(momentum.y()));
-            analysisManager->FillNtupleFColumn(ntupleid, 5, static_cast<G4float>(momentum.z()));
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 0, static_cast<G4float>(position.x()));
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 1, static_cast<G4float>(position.y()));
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 2, static_cast<G4float>(position.z()));
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 3, static_cast<G4float>(momentum.x()));
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 4, static_cast<G4float>(momentum.y()));
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
             ncol = 7;
             if (isMuorPi)
