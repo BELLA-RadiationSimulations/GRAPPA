@@ -33,6 +33,9 @@ public:
     ~ASCIIReader();
     G4int CountParticles();
     void ReadParticles();
-    inline std::shared_ptr<std::vector<GRAPPAParticle>> GetParticles() { return m_particlecollection; };
+    inline std::shared_ptr<std::vector<GRAPPAParticle>> GetParticles()
+    {
+        return m_particlecollection;
+    };
     inline std::string GetFileName() { return m_filename; };
 };

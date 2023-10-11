@@ -30,246 +30,303 @@
 #include UTILITIES_PATH
 
 template <class T>
-T TranslateandRotate(T inputvec, ROOT::Math::Translation3DF translation, ROOT::Math::RotationY rotation)
+T TranslateandRotate(
+    T inputvec,
+    ROOT::Math::Translation3DF translation,
+    ROOT::Math::RotationY rotation)
 {
-  T outputvec;
-  outputvec = translation * inputvec;
-  return rotation * outputvec;
+    T outputvec;
+    outputvec = translation * inputvec;
+    return rotation * outputvec;
 }
 
 template <class T>
-T RotationAroundCOM(T inputvec, ROOT::Math::Translation3DF com_translation, ROOT::Math::RotationY rotation)
+T RotationAroundCOM(
+    T inputvec,
+    ROOT::Math::Translation3DF com_translation,
+    ROOT::Math::RotationY rotation)
 {
-  T outputvec;
+    T outputvec;
 
-  outputvec = com_translation.Inverse() * inputvec;
-  outputvec = rotation * outputvec;
-  return com_translation * outputvec;
+    outputvec = com_translation.Inverse() * inputvec;
+    outputvec = rotation * outputvec;
+    return com_translation * outputvec;
 }
 
-// The function dumps an ASCII file containing the phasespace (x[mm] y[mm] z[mm] px[MeV] py[MeV] pz[MeV])
-// of the selected particles. Particles are first brought close to the origin using an approximation
-// (collimated beam) and then translated and rotated around the Y axis.
+// The function dumps an ASCII file containing the phasespace (x[mm] y[mm] z[mm]
+// px[MeV] py[MeV] pz[MeV]) of the selected particles. Particles are first
+// brought close to the origin using an approximation (collimated beam) and then
+// translated and rotated around the Y axis.
 void DumpPhaseSpace()
 {
-  using namespace ROOT::Math;
-  gROOT->Reset();
-  std::string filename = "Backpropagated.root";
-  std::string positreename = "PositronSameTime";
-  std::string eletreename = "ElectronSameTime";
-  std::string primtreename = "Primary";
-  int nprimaries, nentriesposi, nentriesele, selectedelements;
-  int i;
-  TBranch *b_pos, *b_mom, *b_mass;
-  std::shared_ptr<XYZPointF> position;
-  XYZPointF backproppos, plotminlimits, plotmaxlimits, transformedminlimits, transformedmaxlimits;
-  ;
-  std::shared_ptr<RhoZPhiVectorF> momentum;
-  float mass, mass_squared, mass_inv, pz, vz, zz, gamma_approx, backpropagationtime;
-  float x, y, z;
-  float mintime = std::numeric_limits<float>::max();
-  ReferenceVariable xref, yref, zref, xrefbefore, yrefbefore, zrefbefore, pzref;
-  std::vector<XYZPointF> VecBackproppos;
-  std::vector<RhoZPhiVectorF> VecMomentum;
+    using namespace ROOT::Math;
+    gROOT->Reset();
+    std::string filename = "Backpropagated.root";
+    std::string positreename = "PositronSameTime";
+    std::string eletreename = "ElectronSameTime";
+    std::string primtreename = "Primary";
+    int nprimaries, nentriesposi, nentriesele, selectedelements;
+    int i;
+    TBranch *b_pos, *b_mom, *b_mass;
+    std::shared_ptr<XYZPointF> position;
+    XYZPointF backproppos, plotminlimits, plotmaxlimits, transformedminlimits,
+        transformedmaxlimits;
+    ;
+    std::shared_ptr<RhoZPhiVectorF> momentum;
+    float mass, mass_squared, mass_inv, pz, vz, zz, gamma_approx,
+        backpropagationtime;
+    float x, y, z;
+    float mintime = std::numeric_limits<float>::max();
+    ReferenceVariable xref, yref, zref, xrefbefore, yrefbefore, zrefbefore,
+        pzref;
+    std::vector<XYZPointF> VecBackproppos;
+    std::vector<RhoZPhiVectorF> VecMomentum;
 
-  std::cout << "Called function DumpPhaseSpace " << std::endl;
-  auto myFile = OpenFile(filename);
+    std::cout << "Called function DumpPhaseSpace " << std::endl;
+    auto myFile = OpenFile(filename);
 
-  std::shared_ptr<TTree> positrons((TTree *)myFile->Get(positreename.c_str()));
-  std::shared_ptr<TTree> electrons((TTree *)myFile->Get(eletreename.c_str()));
-  std::shared_ptr<TTree> primaries((TTree *)myFile->Get(primtreename.c_str()));
+    std::shared_ptr<TTree> positrons(
+        (TTree *)myFile->Get(positreename.c_str()));
+    std::shared_ptr<TTree> electrons((TTree *)myFile->Get(eletreename.c_str()));
+    std::shared_ptr<TTree> primaries(
+        (TTree *)myFile->Get(primtreename.c_str()));
 
-  nprimaries = primaries->GetEntries();
-  nentriesposi = positrons->GetEntries();
-  nentriesele = electrons->GetEntries();
+    nprimaries = primaries->GetEntries();
+    nentriesposi = positrons->GetEntries();
+    nentriesele = electrons->GetEntries();
 
-  VecBackproppos.reserve(nentriesposi);
-  VecMomentum.reserve(nentriesposi);
-  b_pos = positrons->GetBranch("X");
-  b_mom = positrons->GetBranch("P");
-  b_mass = positrons->GetBranch("m");
-  b_pos->SetAddress(&position);
-  b_mom->SetAddress(&momentum);
-  b_mass->SetAddress(&mass);
+    VecBackproppos.reserve(nentriesposi);
+    VecMomentum.reserve(nentriesposi);
+    b_pos = positrons->GetBranch("X");
+    b_mom = positrons->GetBranch("P");
+    b_mass = positrons->GetBranch("m");
+    b_pos->SetAddress(&position);
+    b_mom->SetAddress(&momentum);
+    b_mass->SetAddress(&mass);
 
-  // Fetching particle mass (MeV)
-  b_mass->GetEntry(0);
-  mass_squared = TMath::Power(mass, 2);
+    // Fetching particle mass (MeV)
+    b_mass->GetEntry(0);
+    mass_squared = TMath::Power(mass, 2);
 
-  positrons->ResetBranchAddress(b_mass);
-  // I'm only interested in finding the last particle that is backpropagated to the origin
-  // (Assumption of collimated beam, so pz >> px, py)
-  constexpr double thetamax = 0.05;
-  mass_inv = 1 / mass;
-  for (i = 0; i < nentriesposi; i++)
-  {
-    b_mom->GetEntry(i);
-    if (momentum->Theta() > thetamax)
+    positrons->ResetBranchAddress(b_mass);
+    // I'm only interested in finding the last particle that is backpropagated
+    // to the origin (Assumption of collimated beam, so pz >> px, py)
+    constexpr double thetamax = 0.05;
+    mass_inv = 1 / mass;
+    for (i = 0; i < nentriesposi; i++)
     {
-      continue;
+        b_mom->GetEntry(i);
+        if (momentum->Theta() > thetamax)
+        {
+            continue;
+        }
+        b_pos->GetEntry(i);
+        zz = position->Z();
+        pz = momentum->Z() * mass_inv;
+        pzref.AddEntry(pz);
+        xrefbefore.AddEntry(position->X());
+        yrefbefore.AddEntry(position->Y());
+        zrefbefore.AddEntry(zz);
+        VecMomentum.push_back(*momentum);
     }
-    b_pos->GetEntry(i);
-    zz = position->Z();
-    pz = momentum->Z() * mass_inv;
-    pzref.AddEntry(pz);
-    xrefbefore.AddEntry(position->X());
-    yrefbefore.AddEntry(position->Y());
-    zrefbefore.AddEntry(zz);
-    VecMomentum.push_back(*momentum);
-  }
 
-  xrefbefore.ComputeStatistics();
-  yrefbefore.ComputeStatistics();
-  zrefbefore.ComputeStatistics();
-  pzref.ComputeStatistics();
-  gamma_approx = TMath::Hypot(pzref.Mean(), mass);
-  vz = PhysicalConstants::c_mm_ns * pzref.Mean() / gamma_approx;
-  mintime = -zrefbefore.Mean() / vz;
+    xrefbefore.ComputeStatistics();
+    yrefbefore.ComputeStatistics();
+    zrefbefore.ComputeStatistics();
+    pzref.ComputeStatistics();
+    gamma_approx = TMath::Hypot(pzref.Mean(), mass);
+    vz = PhysicalConstants::c_mm_ns * pzref.Mean() / gamma_approx;
+    mintime = -zrefbefore.Mean() / vz;
 
-  std::cout << "Statistics BEFORE backpropagation " << std::endl;
-  std::cout << "Reference x[mm] " << std::endl;
-  xrefbefore.Print();
-  std::cout << "Reference y[mm] " << std::endl;
-  yrefbefore.Print();
-  std::cout << "Reference z[mm] " << std::endl;
-  zrefbefore.Print();
+    std::cout << "Statistics BEFORE backpropagation " << std::endl;
+    std::cout << "Reference x[mm] " << std::endl;
+    xrefbefore.Print();
+    std::cout << "Reference y[mm] " << std::endl;
+    yrefbefore.Print();
+    std::cout << "Reference z[mm] " << std::endl;
+    zrefbefore.Print();
 
-  constexpr double xmin = -0.08;
-  constexpr double xmax = 0.08;
-  constexpr double ymin = -0.08;
-  constexpr double ymax = 0.08;
-  constexpr double zmin = 2.325;
-  constexpr double zmax = 2.345;
+    constexpr double xmin = -0.08;
+    constexpr double xmax = 0.08;
+    constexpr double ymin = -0.08;
+    constexpr double ymax = 0.08;
+    constexpr double zmin = 2.325;
+    constexpr double zmax = 2.345;
 
-  plotminlimits.SetXYZ(xmin, ymin, zmin);
-  plotmaxlimits.SetXYZ(xmax, ymax, zmax);
-  std::cout << "Particles will be backpropagated by an amount of time t = " << mintime << " ns" << std::endl;
-  std::cout << "which corresponds to a space x = " << PhysicalConstants::c_mm_ns * mintime << " mm" << std::endl;
-  TH2 *xyspace = new TH2D("xy", "X-Y space; x[mm]; y[mm]", 100, plotminlimits.X(), plotmaxlimits.X(),
-                          100, plotminlimits.Y(), plotmaxlimits.Y());
-  TH2 *zxspace = new TH2D("zx", "Z-X space; z[mm]; x[mm]", 100, plotminlimits.Z(), plotmaxlimits.Z(),
-                          100, plotminlimits.X(), plotmaxlimits.X());
+    plotminlimits.SetXYZ(xmin, ymin, zmin);
+    plotmaxlimits.SetXYZ(xmax, ymax, zmax);
+    std::cout << "Particles will be backpropagated by an amount of time t = "
+              << mintime << " ns" << std::endl;
+    std::cout << "which corresponds to a space x = "
+              << PhysicalConstants::c_mm_ns * mintime << " mm" << std::endl;
+    TH2 *xyspace = new TH2D(
+        "xy",
+        "X-Y space; x[mm]; y[mm]",
+        100,
+        plotminlimits.X(),
+        plotmaxlimits.X(),
+        100,
+        plotminlimits.Y(),
+        plotmaxlimits.Y());
+    TH2 *zxspace = new TH2D(
+        "zx",
+        "Z-X space; z[mm]; x[mm]",
+        100,
+        plotminlimits.Z(),
+        plotmaxlimits.Z(),
+        100,
+        plotminlimits.X(),
+        plotmaxlimits.X());
 
-  // Now backpropagating particles by the maximum amount of time
-  for (i = 0; i < nentriesposi; i++)
-  {
-    b_mom->GetEntry(i);
-    if (momentum->Theta() > thetamax)
+    // Now backpropagating particles by the maximum amount of time
+    for (i = 0; i < nentriesposi; i++)
     {
-      continue;
+        b_mom->GetEntry(i);
+        if (momentum->Theta() > thetamax)
+        {
+            continue;
+        }
+        b_pos->GetEntry(i);
+        backproppos =
+            BackPropagateParticle(*position, *momentum, mass_squared, mintime);
+        x = backproppos.X();
+        y = backproppos.Y();
+        z = backproppos.Z();
+        xyspace->Fill(x, y);
+        zxspace->Fill(z, x);
+        xref.AddEntry(x);
+        yref.AddEntry(y);
+        zref.AddEntry(z);
+        VecBackproppos.push_back(backproppos);
     }
-    b_pos->GetEntry(i);
-    backproppos = BackPropagateParticle(*position, *momentum, mass_squared, mintime);
-    x = backproppos.X();
-    y = backproppos.Y();
-    z = backproppos.Z();
-    xyspace->Fill(x, y);
-    zxspace->Fill(z, x);
-    xref.AddEntry(x);
-    yref.AddEntry(y);
-    zref.AddEntry(z);
-    VecBackproppos.push_back(backproppos);
-  }
 
-  xref.ComputeStatistics();
-  yref.ComputeStatistics();
-  zref.ComputeStatistics();
-  std::cout << "Reference x[mm] " << std::endl;
-  xref.Print();
-  std::cout << "Reference y[mm] " << std::endl;
-  yref.Print();
-  std::cout << "Reference z[mm] " << std::endl;
-  zref.Print();
+    xref.ComputeStatistics();
+    yref.ComputeStatistics();
+    zref.ComputeStatistics();
+    std::cout << "Reference x[mm] " << std::endl;
+    xref.Print();
+    std::cout << "Reference y[mm] " << std::endl;
+    yref.Print();
+    std::cout << "Reference z[mm] " << std::endl;
+    zref.Print();
 
-  TCanvas *c1 = new TCanvas("Zeropos", "Particles back on the origin", 20, 20, 1000, 1000);
-  c1->Divide(1, 2);
-  c1->cd(1);
-  xyspace->SetLabelSize(0.04, "xyz");
-  xyspace->SetTitleSize(0.05, "xyz");
-  xyspace->DrawCopy("COLZ2");
-  c1->cd(2);
-  zxspace->SetLabelSize(0.04, "xyz");
-  zxspace->SetTitleSize(0.05, "xyz");
-  zxspace->DrawCopy("COLZ2");
+    TCanvas *c1 = new TCanvas(
+        "Zeropos", "Particles back on the origin", 20, 20, 1000, 1000);
+    c1->Divide(1, 2);
+    c1->cd(1);
+    xyspace->SetLabelSize(0.04, "xyz");
+    xyspace->SetTitleSize(0.05, "xyz");
+    xyspace->DrawCopy("COLZ2");
+    c1->cd(2);
+    zxspace->SetLabelSize(0.04, "xyz");
+    zxspace->SetTitleSize(0.05, "xyz");
+    zxspace->DrawCopy("COLZ2");
 
-  c1->SaveAs("Beam_on_origin.png");
+    c1->SaveAs("Beam_on_origin.png");
 
-  // Now rotate and traslate the beam
+    // Now rotate and traslate the beam
 
-  constexpr double TranslationX = -1.5;
-  constexpr double TranslationY = -0;
-  constexpr double TranslationZ = -0;
-  constexpr double RotationAngley = 0.05;
+    constexpr double TranslationX = -1.5;
+    constexpr double TranslationY = -0;
+    constexpr double TranslationZ = -0;
+    constexpr double RotationAngley = 0.05;
 
-  ROOT::Math::Translation3DF Center_of_Mass(xref.Mean(), yref.Mean(), zref.Mean());
-  ROOT::Math::Translation3DF Inverse_com = Center_of_Mass.Inverse();
-  ROOT::Math::Translation3DF translation(TranslationX, TranslationY, TranslationZ);
-  ROOT::Math::RotationY rotation;
-  rotation.SetAngle(RotationAngley);
+    ROOT::Math::Translation3DF Center_of_Mass(
+        xref.Mean(), yref.Mean(), zref.Mean());
+    ROOT::Math::Translation3DF Inverse_com = Center_of_Mass.Inverse();
+    ROOT::Math::Translation3DF translation(
+        TranslationX, TranslationY, TranslationZ);
+    ROOT::Math::RotationY rotation;
+    rotation.SetAngle(RotationAngley);
 
-  transformedminlimits = translation * (Center_of_Mass * (rotation * (Inverse_com * plotminlimits)));
-  transformedmaxlimits = translation * (Center_of_Mass * (rotation * (Inverse_com * plotmaxlimits)));
+    transformedminlimits = translation *
+        (Center_of_Mass * (rotation * (Inverse_com * plotminlimits)));
+    transformedmaxlimits = translation *
+        (Center_of_Mass * (rotation * (Inverse_com * plotmaxlimits)));
 
-  TH2 *xyspace_transl = new TH2D("xy_transl", "Translated and rotated X-Y space; x[mm]; y[mm]", 100, transformedminlimits.X(), transformedmaxlimits.X(),
-                                 100, transformedminlimits.Y(), transformedmaxlimits.Y());
-  TH2 *zxspace_transl = new TH2D("zx_transl", "Translated and rotated Z-X space; z[mm]; x[mm]", 100, transformedminlimits.Z(), transformedmaxlimits.Z(),
-                                 100, transformedminlimits.X(), transformedmaxlimits.X());
+    TH2 *xyspace_transl = new TH2D(
+        "xy_transl",
+        "Translated and rotated X-Y space; x[mm]; y[mm]",
+        100,
+        transformedminlimits.X(),
+        transformedmaxlimits.X(),
+        100,
+        transformedminlimits.Y(),
+        transformedmaxlimits.Y());
+    TH2 *zxspace_transl = new TH2D(
+        "zx_transl",
+        "Translated and rotated Z-X space; z[mm]; x[mm]",
+        100,
+        transformedminlimits.Z(),
+        transformedmaxlimits.Z(),
+        100,
+        transformedminlimits.X(),
+        transformedmaxlimits.X());
 
-  std::transform(VecBackproppos.begin(), VecBackproppos.end(), VecBackproppos.begin(),
-                 [Center_of_Mass, Inverse_com, translation, rotation](XYZPointF &vec)
-                 {
-                   return translation * (Center_of_Mass * (rotation * (Inverse_com * vec)));
-                 });
+    std::transform(
+        VecBackproppos.begin(),
+        VecBackproppos.end(),
+        VecBackproppos.begin(),
+        [Center_of_Mass, Inverse_com, translation, rotation](XYZPointF &vec) {
+            return translation *
+                (Center_of_Mass * (rotation * (Inverse_com * vec)));
+        });
 
-  std::transform(VecMomentum.begin(), VecMomentum.end(), VecMomentum.begin(),
-                 [rotation](RhoZPhiVectorF &vec)
-                 { return rotation * vec; });
+    std::transform(
+        VecMomentum.begin(),
+        VecMomentum.end(),
+        VecMomentum.begin(),
+        [rotation](RhoZPhiVectorF &vec) { return rotation * vec; });
 
-  std::for_each(VecBackproppos.begin(), VecBackproppos.end(),
-                [xyspace_transl, zxspace_transl](XYZPointF vec)
-                {
-                  double x = vec.X();
-                  if (x <= -0.7)
-                  {
-                    xyspace_transl->Fill(x, vec.Y());
-                    zxspace_transl->Fill(vec.Z(), x);
-                  }
-                });
+    std::for_each(
+        VecBackproppos.begin(),
+        VecBackproppos.end(),
+        [xyspace_transl, zxspace_transl](XYZPointF vec) {
+            double x = vec.X();
+            if (x <= -0.7)
+            {
+                xyspace_transl->Fill(x, vec.Y());
+                zxspace_transl->Fill(vec.Z(), x);
+            }
+        });
 
-  // Control plots
-  TCanvas *c2 = new TCanvas("TranslRot", "Translated and rotated particles", 20, 20, 1000, 1000);
-  c2->Divide(1, 2);
-  c2->cd(1);
-  xyspace_transl->SetLabelSize(0.04, "xyz");
-  xyspace_transl->SetTitleSize(0.05, "xyz");
-  xyspace_transl->DrawCopy("COLZ2");
-  c2->cd(2);
-  zxspace_transl->SetLabelSize(0.04, "xyz");
-  zxspace_transl->SetTitleSize(0.05, "xyz");
-  zxspace_transl->DrawCopy("COLZ2");
-  positrons->ResetBranchAddresses();
+    // Control plots
+    TCanvas *c2 = new TCanvas(
+        "TranslRot", "Translated and rotated particles", 20, 20, 1000, 1000);
+    c2->Divide(1, 2);
+    c2->cd(1);
+    xyspace_transl->SetLabelSize(0.04, "xyz");
+    xyspace_transl->SetTitleSize(0.05, "xyz");
+    xyspace_transl->DrawCopy("COLZ2");
+    c2->cd(2);
+    zxspace_transl->SetLabelSize(0.04, "xyz");
+    zxspace_transl->SetTitleSize(0.05, "xyz");
+    zxspace_transl->DrawCopy("COLZ2");
+    positrons->ResetBranchAddresses();
 
-  c2->SaveAs("Rotated_and_translated.png");
+    c2->SaveAs("Rotated_and_translated.png");
 
-  // Dump phase space into an ascii file
+    // Dump phase space into an ascii file
 
-  std::fstream dumpfile;
-  dumpfile.open("Initial_ps.dat", std::ios_base::out);
-  if (!dumpfile.is_open())
-  {
-    std::cout << "ERROR OPENING FILE" << std::endl;
-    return;
-  }
-  std::cout << "Now dumping particles in file" << std::endl;
-  selectedelements = VecBackproppos.size();
-  for (i = 0; i < selectedelements; i++)
-  {
-    if (VecBackproppos[i].X() > -0.7)
+    std::fstream dumpfile;
+    dumpfile.open("Initial_ps.dat", std::ios_base::out);
+    if (!dumpfile.is_open())
     {
-      continue;
+        std::cout << "ERROR OPENING FILE" << std::endl;
+        return;
     }
-    dumpfile << VecBackproppos[i].X() << " " << VecBackproppos[i].Y() << " " << VecBackproppos[i].Z() << " "
-             << VecMomentum[i].X() << " " << VecMomentum[i].Y() << " " << VecMomentum[i].Z() << std::endl;
-  }
-  dumpfile.close();
+    std::cout << "Now dumping particles in file" << std::endl;
+    selectedelements = VecBackproppos.size();
+    for (i = 0; i < selectedelements; i++)
+    {
+        if (VecBackproppos[i].X() > -0.7)
+        {
+            continue;
+        }
+        dumpfile << VecBackproppos[i].X() << " " << VecBackproppos[i].Y() << " "
+                 << VecBackproppos[i].Z() << " " << VecMomentum[i].X() << " "
+                 << VecMomentum[i].Y() << " " << VecMomentum[i].Z()
+                 << std::endl;
+    }
+    dumpfile.close();
 }

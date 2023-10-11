@@ -26,7 +26,10 @@ public:
     // method from the base class
     virtual void GeneratePrimaries(G4Event *anEvent);
 
-    inline std::shared_ptr<ParticleSource> GetSource() const { return m_PSource; };
+    inline std::shared_ptr<ParticleSource> GetSource() const
+    {
+        return m_PSource;
+    };
 
 private:
     std::shared_ptr<ParticleSource> m_PSource;

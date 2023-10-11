@@ -20,11 +20,12 @@
 class GRPTrackingAction : public G4UserTrackingAction
 {
 public:
-    GRPTrackingAction(HistandNTupleManager* myanalysismanager);
+    GRPTrackingAction(HistandNTupleManager *myanalysismanager);
     ~GRPTrackingAction();
 
     // Action performed at the generation of the particle event track
-    virtual void  PreUserTrackingAction(const G4Track*);
+    virtual void PreUserTrackingAction(const G4Track *);
+
 private:
-    HistandNTupleManager* m_HistandNTupleManager;
+    HistandNTupleManager *m_HistandNTupleManager;
 };

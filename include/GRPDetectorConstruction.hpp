@@ -31,11 +31,11 @@ class GRPDetectorConstruction : public G4VUserDetectorConstruction
 {
 
 public:
-    //Constructor
-    GRPDetectorConstruction(HistandNTupleManager* myanalysismanager);
-    //Destructor
+    // Constructor
+    GRPDetectorConstruction(HistandNTupleManager *myanalysismanager);
+    // Destructor
     virtual ~GRPDetectorConstruction();
-    virtual G4VPhysicalVolume* Construct() override;
+    virtual G4VPhysicalVolume *Construct() override;
 
     // Sensitive Detector Construction
     void ConstructSDandField() override;
@@ -44,7 +44,7 @@ private:
     // Function to define the custom commands for the UI
     void DefineCommands();
     void PrintDetector();
-    G4VPhysicalVolume* ConstructWorldandTarget();
+    G4VPhysicalVolume *ConstructWorldandTarget();
     void ReinitializeGeometry();
 
     // Some useful data about the world and the detectors
@@ -56,20 +56,20 @@ private:
     // Foil angle in radians
     G4double foil_angle_y = 0 * rad;
     const G4double absorber_thickness = 1 * mm;
-    G4String w_name = "World", f_name = "High-Z_foil",
-    std_a_name = "Absorber";
-    G4String w_material_name = "G4_Galactic", f_material_name = "G4_W", a_material_name = "G4_Galactic";
+    G4String w_name = "World", f_name = "High-Z_foil", std_a_name = "Absorber";
+    G4String w_material_name = "G4_Galactic", f_material_name = "G4_W",
+             a_material_name = "G4_Galactic";
     // Pointer to the physical world
-    G4VPhysicalVolume* physWorld;
+    G4VPhysicalVolume *physWorld;
     // Pointer to the customized analysis manager
-    HistandNTupleManager* m_HistoandNtupleManager;
+    HistandNTupleManager *m_HistoandNtupleManager;
 
     // Sensitive detectors
 
     // Pointer to the logical absorber for sensitive detectors
-    G4LogicalVolume* m_LogicalAbsorber;
+    G4LogicalVolume *m_LogicalAbsorber;
     // Pointer to the Standard SD
-    AbsorberSD* m_StandardAbsorber;
+    AbsorberSD *m_StandardAbsorber;
 
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;
