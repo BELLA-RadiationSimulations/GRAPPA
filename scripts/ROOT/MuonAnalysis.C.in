@@ -36,106 +36,119 @@
 
 void MuonAnalysis()
 {
-  using namespace ROOT::Math;
-  gROOT->Reset();
-  gStyle->SetPalette(kBird);
-  std::string filename = "Ntuple.root";
-  std::string ntupleinitialname = "InitialPrimary";
-  std::string ntuplemuonname = "FinalMuon";
-  TParticlePDG *muon_plus, *muon_minus, *electron;
-  int nentries, nentriesmuons, i, nmuplus = 0, nmuminus;
-  double ratiotoincomingcharge, muonmasssquared, energy, thetax;
-  float px, py, pz, q;
-  std::vector<double> energy_muplus, anglex_muplus, energy_muminus, anglex_muminus;
-  TBranch *b_charge, *b_pz, *b_px, *b_py;
+    using namespace ROOT::Math;
+    gROOT->Reset();
+    gStyle->SetPalette(kBird);
+    std::string filename = "Ntuple.root";
+    std::string ntupleinitialname = "InitialPrimary";
+    std::string ntuplemuonname = "FinalMuon";
+    TParticlePDG *muon_plus, *muon_minus, *electron;
+    int nentries, nentriesmuons, i, nmuplus = 0, nmuminus;
+    double ratiotoincomingcharge, muonmasssquared, energy, thetax;
+    float px, py, pz, q;
+    std::vector<double> energy_muplus, anglex_muplus, energy_muminus,
+        anglex_muminus;
+    TBranch *b_charge, *b_pz, *b_px, *b_py;
 
-  constexpr double ElectronCharge_pC = 1.60217663e-7;
-  constexpr double GamToMuonsIncreaseFac = 10000;
-  constexpr double IncomingCharge = 100; // charge in pC
-  constexpr double RadToDeg = 180 / TMath::Pi();
-  constexpr double MeVToGeV = 1.e-3;
+    constexpr double ElectronCharge_pC = 1.60217663e-7;
+    constexpr double GamToMuonsIncreaseFac = 10000;
+    constexpr double IncomingCharge = 100; // charge in pC
+    constexpr double RadToDeg = 180 / TMath::Pi();
+    constexpr double MeVToGeV = 1.e-3;
 
-  std::cout << "Called function MuonAnalysis " << std::endl;
-  auto myFile = OpenFile(filename);
-  assert(myFile != nullptr);
+    std::cout << "Called function MuonAnalysis " << std::endl;
+    auto myFile = OpenFile(filename);
+    assert(myFile != nullptr);
 
-  muon_plus = TDatabasePDG::Instance()->GetParticle("mu+");
-  muon_minus = TDatabasePDG::Instance()->GetParticle("mu-");
-  muonmasssquared = TMath::Power(muon_minus->Mass() * 1.e3, 2); // Mass in MeV
-  electron = TDatabasePDG::Instance()->GetParticle("e-");
+    muon_plus = TDatabasePDG::Instance()->GetParticle("mu+");
+    muon_minus = TDatabasePDG::Instance()->GetParticle("mu-");
+    muonmasssquared = TMath::Power(muon_minus->Mass() * 1.e3, 2); // Mass in MeV
+    electron = TDatabasePDG::Instance()->GetParticle("e-");
 
-  // Getting ntuple associated with muons
-  auto originalntuplemuon = GetNtuple(myFile, ntuplemuonname);
-  assert(originalntuplemuon != nullptr);
+    // Getting ntuple associated with muons
+    auto originalntuplemuon = GetNtuple(myFile, ntuplemuonname);
+    assert(originalntuplemuon != nullptr);
 
-  auto originalntupleinitial = GetNtuple(myFile, ntupleinitialname);
-  assert(originalntupleinitial != nullptr);
+    auto originalntupleinitial = GetNtuple(myFile, ntupleinitialname);
+    assert(originalntupleinitial != nullptr);
 
-  nentriesmuons = originalntuplemuon->GetEntries();
-  nentries = originalntupleinitial->GetEntries();
+    nentriesmuons = originalntuplemuon->GetEntries();
+    nentries = originalntupleinitial->GetEntries();
 
-  ratiotoincomingcharge = (IncomingCharge/ElectronCharge_pC)/nentries;
+    ratiotoincomingcharge = (IncomingCharge / ElectronCharge_pC) / nentries;
 
-  std::cout << "Increase factor for gamma to muon cross section = " << GamToMuonsIncreaseFac << std::endl;
-  std::cout << "Number of total muon pairs = " << nentriesmuons << std::endl;
-  std::cout << "Number of scaled muon pairs = " << nentriesmuons/GamToMuonsIncreaseFac << std::endl;
-  std::cout << "Number of initial particles = " << nentries << std::endl;
-  std::cout << "Number of muon pairs produced per incoming particle = " << static_cast<double>(nentriesmuons)/GamToMuonsIncreaseFac/nentries << std::endl;
-  std::cout << "Number of muon pairs produced from a 100 pC incoming beam = " <<
-    static_cast<double>(nentriesmuons)/GamToMuonsIncreaseFac*ratiotoincomingcharge << std::endl;
+    std::cout << "Increase factor for gamma to muon cross section = "
+              << GamToMuonsIncreaseFac << std::endl;
+    std::cout << "Number of total muon pairs = " << nentriesmuons << std::endl;
+    std::cout << "Number of scaled muon pairs = "
+              << nentriesmuons / GamToMuonsIncreaseFac << std::endl;
+    std::cout << "Number of initial particles = " << nentries << std::endl;
+    std::cout << "Number of muon pairs produced per incoming particle = "
+              << static_cast<double>(nentriesmuons) / GamToMuonsIncreaseFac /
+            nentries
+              << std::endl;
+    std::cout << "Number of muon pairs produced from a 100 pC incoming beam = "
+              << static_cast<double>(nentriesmuons) / GamToMuonsIncreaseFac *
+            ratiotoincomingcharge
+              << std::endl;
 
-  originalntuplemuon->SetBranchAddress("px", &px);
-  originalntuplemuon->SetBranchAddress("py", &py);
-  originalntuplemuon->SetBranchAddress("pz", &pz);
-  originalntuplemuon->SetBranchAddress("q", &q);
+    originalntuplemuon->SetBranchAddress("px", &px);
+    originalntuplemuon->SetBranchAddress("py", &py);
+    originalntuplemuon->SetBranchAddress("pz", &pz);
+    originalntuplemuon->SetBranchAddress("q", &q);
 
-  for (i = 0; i < nentriesmuons; i++)
-  {
-    originalntuplemuon->GetEntry(i);
-    if (q > 0)
+    for (i = 0; i < nentriesmuons; i++)
     {
-      energy = TMath::Sqrt(muonmasssquared + px*px + py*py + pz*pz);
-      thetax = TMath::ATan2(px, -pz); // the -pz is because particles should be rotated by 180 degrees
-      energy_muplus.push_back(energy * MeVToGeV);
-      anglex_muplus.push_back(thetax * RadToDeg);
-      nmuplus += 1;
+        originalntuplemuon->GetEntry(i);
+        if (q > 0)
+        {
+            energy = TMath::Sqrt(muonmasssquared + px * px + py * py + pz * pz);
+            thetax = TMath::ATan2(px, -pz); // the -pz is because particles
+                                            // should be rotated by 180 degrees
+            energy_muplus.push_back(energy * MeVToGeV);
+            anglex_muplus.push_back(thetax * RadToDeg);
+            nmuplus += 1;
+        }
+        else if (q < 0)
+        {
+            energy = TMath::Sqrt(muonmasssquared + px * px + py * py + pz * pz);
+            thetax = TMath::ATan2(px, -pz); // the -pz is because particles
+                                            // should be rotated by 180 degrees
+            energy_muminus.push_back(energy * MeVToGeV);
+            anglex_muminus.push_back(thetax * RadToDeg);
+            nmuminus += 1;
+        }
     }
-    else if (q < 0)    
-    {
-      energy = TMath::Sqrt(muonmasssquared + px*px + py*py + pz*pz);
-      thetax = TMath::ATan2(px, -pz); // the -pz is because particles should be rotated by 180 degrees
-      energy_muminus.push_back(energy * MeVToGeV);
-      anglex_muminus.push_back(thetax * RadToDeg);
-      nmuminus += 1;
-    }
-  }
 
-  std::cout << "Number of positive muons = " << nmuplus << std::endl;
+    std::cout << "Number of positive muons = " << nmuplus << std::endl;
 
-  TVectorD energyplusvector(static_cast<int>(energy_muplus.size()), &energy_muplus[0]);
-  TVectorD thetaxplusvector(static_cast<int>(anglex_muplus.size()), &anglex_muplus[0]);
-  TVectorD energyminusvector(static_cast<int>(energy_muminus.size()), &energy_muminus[0]);
-  TVectorD thetaxminusvector(static_cast<int>(anglex_muminus.size()), &anglex_muminus[0]);
+    TVectorD energyplusvector(
+        static_cast<int>(energy_muplus.size()), &energy_muplus[0]);
+    TVectorD thetaxplusvector(
+        static_cast<int>(anglex_muplus.size()), &anglex_muplus[0]);
+    TVectorD energyminusvector(
+        static_cast<int>(energy_muminus.size()), &energy_muminus[0]);
+    TVectorD thetaxminusvector(
+        static_cast<int>(anglex_muminus.size()), &anglex_muminus[0]);
 
-  TCanvas *c1 = new TCanvas("c1","Graph Draw Options",
-                             400, 20, 1200, 800);
-  TGraph *muplusscatter = new TGraph(energyplusvector, thetaxplusvector);
-  TGraph *muminusscatter = new TGraph(energyminusvector, thetaxminusvector);
+    TCanvas *c1 = new TCanvas("c1", "Graph Draw Options", 400, 20, 1200, 800);
+    TGraph *muplusscatter = new TGraph(energyplusvector, thetaxplusvector);
+    TGraph *muminusscatter = new TGraph(energyminusvector, thetaxminusvector);
 
-  muplusscatter->SetMarkerColor(4);
-  muminusscatter->SetMarkerColorAlpha(2, 0.9);
-  muplusscatter->SetMarkerStyle(8);
-  muminusscatter->SetMarkerStyle(21);
-  muplusscatter->SetMarkerSize(1);
-  muminusscatter->SetMarkerSize(1);
-  muplusscatter->SetTitle("Energy - Angle_x for muon pairs+");
-  muplusscatter->Draw("AP");
-  muminusscatter->Draw("P");
-  auto legend = new TLegend();
-  legend->AddEntry(muplusscatter, "Mu+", "P");
-  legend->AddEntry(muminusscatter, "Mu-", "P");
-  legend->Draw();
-  c1->Update();
-  c1->SaveAs("E_theta.pdf");
-  exit(0);
+    muplusscatter->SetMarkerColor(4);
+    muminusscatter->SetMarkerColorAlpha(2, 0.9);
+    muplusscatter->SetMarkerStyle(8);
+    muminusscatter->SetMarkerStyle(21);
+    muplusscatter->SetMarkerSize(1);
+    muminusscatter->SetMarkerSize(1);
+    muplusscatter->SetTitle("Energy - Angle_x for muon pairs+");
+    muplusscatter->Draw("AP");
+    muminusscatter->Draw("P");
+    auto legend = new TLegend();
+    legend->AddEntry(muplusscatter, "Mu+", "P");
+    legend->AddEntry(muminusscatter, "Mu-", "P");
+    legend->Draw();
+    c1->Update();
+    c1->SaveAs("E_theta.pdf");
+    exit(0);
 }

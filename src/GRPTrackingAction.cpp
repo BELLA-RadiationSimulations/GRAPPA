@@ -11,14 +11,13 @@
 
 #include <GRPTrackingAction.hpp>
 
-GRPTrackingAction::GRPTrackingAction(HistandNTupleManager *myanalysismanager) : G4UserTrackingAction()
+GRPTrackingAction::GRPTrackingAction(HistandNTupleManager *myanalysismanager)
+    : G4UserTrackingAction()
 {
     m_HistandNTupleManager = myanalysismanager;
 }
 
-GRPTrackingAction::~GRPTrackingAction()
-{
-}
+GRPTrackingAction::~GRPTrackingAction() {}
 
 void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
 {
@@ -48,11 +47,14 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
         G4int histotxtyid = histoman->GetPrimaryInitialtxtyId();
         G4int histoxpxid = histoman->GetPrimaryInitialxpxId();
         G4int histoypyid = histoman->GetPrimaryInitialypyId();
-        G4int ntupleid = m_HistandNTupleManager->GetNTupleManager()->GetPrimaryInitialId();
+        G4int ntupleid =
+            m_HistandNTupleManager->GetNTupleManager()->GetPrimaryInitialId();
         G4double pz_inv = 1 / pz;
 
         // Fill NTuple with initial particles
-        isntupleactive = m_HistandNTupleManager->GetNTupleManager()->GetIdActivation(ntupleid);
+        isntupleactive =
+            m_HistandNTupleManager->GetNTupleManager()->GetIdActivation(
+                ntupleid);
         if (isntupleactive)
         {
             analysisManager->FillNtupleFColumn(ntupleid, 0, x);

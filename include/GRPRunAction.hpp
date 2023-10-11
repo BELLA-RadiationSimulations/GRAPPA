@@ -35,10 +35,23 @@ public:
     virtual void BeginOfRunAction(const G4Run *) override;
     virtual void EndOfRunAction(const G4Run *) override;
 
-    inline HistandNTupleManager *GetHistandNTupleManager() { return m_HistoandNtupleManager; }
+    inline HistandNTupleManager *GetHistandNTupleManager()
+    {
+        return m_HistoandNtupleManager;
+    }
     void DefineCommands();
-    void ListNtuples() { if(m_HistoandNtupleManager) m_HistoandNtupleManager->GetNTupleManager()->ListNtuples(); }
-    void SetNtupleDump(G4int ID, G4bool ifdump) { if(m_HistoandNtupleManager) m_HistoandNtupleManager->GetNTupleManager()->SetNtupleDump(ID, ifdump); }
+    void ListNtuples()
+    {
+        if (m_HistoandNtupleManager)
+            m_HistoandNtupleManager->GetNTupleManager()->ListNtuples();
+    }
+    void SetNtupleDump(G4int ID, G4bool ifdump)
+    {
+        if (m_HistoandNtupleManager)
+            m_HistoandNtupleManager->GetNTupleManager()->SetNtupleDump(
+                ID, ifdump);
+    }
+
 private:
     HistandNTupleManager *m_HistoandNtupleManager;
     G4bool m_partsfromfile = false;
