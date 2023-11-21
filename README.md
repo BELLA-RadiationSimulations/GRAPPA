@@ -52,9 +52,9 @@ In fact, they are automatically detected in the G4 installation.
 
 GRAPPA is best built using cmake. From the source folder you can build and install GRAPPA using the commands
 
-```
-cmake . -B build -DCMAKE_INSTALL_PREFIX=. -DGeant4_DIR={G4 cmake directory on the system}
-cmake --build . --config Release --target install
+```commandline
+cmake -S . -B build -DCMAKE_INSTALL_PREFIX=. -DGeant4_DIR={G4 cmake directory on the system} -DCMAKE_BUILD_TYPE="Release"
+cmake --build build --target install
 ```
 
 You should provide `cmake` with the G4 installation directory containing the `Geant4Config.cmake` file.
@@ -70,14 +70,14 @@ GRAPPA can either run using an interactive user interface (`UI`) or using a prov
 Before running, the G4 initialization script, provided by G4, must be sourced.
 It is located in the bin directory of the G4 installation directory and it should be sourced with
 
-```
+```commandline
 source ${G4_base_install_dir}/bin/geant4.sh
 ```
 
 ## GRAPPA in interactive mode
 
 Launch GRAPPA with no extra argument using
-```
+```commandline
 ./GRAPPA
 ```
 and you will be prompted to the interactive session.
@@ -87,7 +87,7 @@ From there, you can control the simulation via the G4 `UI` commands.
 ## Execute macro
 
 In order to execute a macro, you should provide it when running the program as
-```
+```commandline
 ./GRAPPA /path/to/macro
 ```
 Examples of macros can be found in the `script/run` folder.
@@ -121,7 +121,8 @@ where the beam source statistics must be specified,
 or from a file of pre-generated list of positions and momenta.
 Choice between GPS and particles from file must be made before the run initialization.
 An example of GPS settings is
-```
+
+```commandline
 # =/=/=/=/= Particle source section =/=/=/=/=
 
 # Set the particle source: must be done after run initialization.
@@ -154,7 +155,7 @@ In case you want to use a particle source extracted from a file,
 you should provide an ASCII file with the phase space coordinates of the particles.
 The command to extract particles from a given ASCII file is
 
-```
+```commandline
 # Run these commands before initializing the run
 /particle_source/ParticlesFromFile true
 /particle_source/FileName Filename.txt
@@ -179,7 +180,8 @@ Commands to modify the geometry are introduced specifically for GRAPPA
 and, as such, you will not find them in the G4 official guide.
 
 They **must** be invoked before the run is initialized in order to avoid the loss of the geometry.
-```
+
+```commandline
 # Modify geometry (custom functions)
 
 # Modify the world material
@@ -209,8 +211,7 @@ Analysis commands allow to personalize both the _in-situ_ histograms that GRAPPA
 
 The complete list of generated histogram is the following:
 
-```
-
+```commandline
 # Histogram list
 # 1D
 # - 0 Final Energy of primaries
@@ -254,7 +255,8 @@ The complete list of generated histogram is the following:
 ```
 
 When passing an histogram command, the corresponding histogram id must be provided. Some example is
-```
+
+```commandline
 # Modifying the histogram 1D number 3 (Final energy of photons)
 # Setting 200 bins, from 1 to 100 MeV
 # `none` refers to the function that should be applied to the bin value
@@ -265,9 +267,23 @@ When passing an histogram command, the corresponding histogram id must be provid
 # The parameters are analogous to the 1D case, applied to the x and y axis respectively
 /analysis/h2/set 16 60 -100 100 mrad none linear 60 -100 100 mrad none linear
 ```
+
+The complete list of generated ntuples is the following:
+
+```commandline
+# - 0  Initial primary particles
+# - 1  Final primary particles
+# - 2  Final positrons
+# - 3  Final electrons
+# - 4  Final photon
+# - 5  Final pions
+# - 6  Final muons
+```
+
 The name of the file containing the output can be changed too,
 by using the command
-```
+
+```commandline
 /analysis/setFileName Filename
 ```
 File extension **must** be omitted as it's introduced automatically depending on the file type (ROOT is the default type for GRAPPA).
@@ -281,11 +297,11 @@ Additional histograms can also be created on the fly when setting up the simulat
 
 :warning: Due to a Geant4 behaviour that I do not understand (it might either be a bug or a misunderstanding of mine), it is not possible to guard[^1] Ntuples within the code when more than one ntuple is created. Since it is not advisable to fill unguarded Ntuples, as they might not be active, the code provides a set of custom commands to manage the Ntuple activation status. The two commands are respectively
 ```
-\ntuplecontrol\list
+/ntuplecontrol/list
 ```
 that lists all the Ntuples, and
 ```
-\ntuplecontrol\setDump ntupleID ifdump
+/ntuplecontrol/setDump ntupleID ifdump
 ```
 that sets the activation status of the `ntupleID` ntuple.
 
@@ -296,7 +312,8 @@ that sets the activation status of the `ntupleID` ntuple.
 GRAPPA defaults to the use of the `FTFP_BERT_EMZ` physics reference.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
 An example of modification to the physics package is the activation (or deactivation) of new processes 
-```
+
+```commandline
 /physics_lists/em/GammaToMuons true
 /physics_lists/em/PositronToMuons true
 ```
@@ -309,7 +326,7 @@ GRAPPA can easily generate plots of the system being simulated,
 both in interactive and in batch mode.
 Visual aspects can be modified with some commands:
 
-```
+```commandline
 # Use this open statement to create an OpenGL view:
 /vis/open OGL 1280x720-0+0
 
@@ -353,16 +370,20 @@ The **Run** object is the Geant4 component that manages every program run.
 In G4, a run is the collection of some number of particle events, each from the generation to the end of each particle trajectory.
 The run commands specify the number of threads used, how often to print debug messages, the initial random seed, _etc..._
 After the run has been initialized, many aspects of the simulation such as the geometry, the numbers of threads or the particle source type are fixed and cannot be changed. Many others can still be modified afterwards.
-The command to initialize the run is 
-```
+The command to initialize the run is
+
+```commandline
 /run/initialize
 ```
+
 which will print the summary information about the run being generated.
 After the initialization, data analysis, visualization and incoming particle statistics can still be modified.
 A run is started with
-```
+
+```commandline
 /run/beamOn N
 ```
+
 where N is an integer number determining the number of extractions from the particle source.
 After the run is completed, the analysis is automatically performed and closed and the plots (if available) generated.
 Ending the run **does not** end the simulation. In fact, one can have multiple runs in the same simulation. As discussed, analysis, visualization and particle sources can be modified between runs.
@@ -381,8 +402,10 @@ The simulation ends after all the lines of a macro file have been executed, then
 We provide some ROOT scripts to facilitate the analysis of the final GRAPPA data.
 Those are automatically installed in the `bin` folder as `scriptname.C`.
 You can copy them in your output folder and execute them in `ROOT` as
-```
+
+```commandline
 >> root scriptname.C
 ```
+
 For more insights and to learn how to customize the scripts, visit the
 [ROOT manual](https://root.cern/manual/).
