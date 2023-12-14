@@ -29,9 +29,9 @@
 # /random/setSeeds 1 2 3
 
 # Introduce the muon pair production from photons and increase artificially its probability
-/physicslists/em/GammaToMuons true
-/physicslists/em/PositronToMuons false
-/physicslists/em/GammaToMuonsFactor 50
+/physics_lists/em/GammaToMuons true
+/physics_lists/em/PositronToMuons false
+/physics_lists/em/GammaToMuonsFactor 50
 
 # Initialize run
 /run/initialize
