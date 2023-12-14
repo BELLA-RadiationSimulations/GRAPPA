@@ -1,7 +1,7 @@
 #Setting CMAKE options
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-project(GRAPPA VERSION 0.2.3)
+project(GRAPPA VERSION 0.2.6)
 
 # Defining the target
 add_executable(GRAPPA)
@@ -11,6 +11,11 @@ set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 set(CMAKE_INSTALL_RPATH "")
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+if(APPLE)
+    set(MACOSX_RPATH TRUE)
+endif(APPLE)
+
 #=============#
 
 # This standard is required for compatibility with GEANT4
