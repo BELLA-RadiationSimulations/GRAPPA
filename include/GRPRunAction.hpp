@@ -12,6 +12,7 @@
 #pragma once
 
 #include <globals.hh>
+#include <memory>
 #include <G4Run.hh>
 #include <G4RunManager.hh>
 #include <G4SystemOfUnits.hh>

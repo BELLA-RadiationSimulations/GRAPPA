@@ -64,7 +64,13 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
             }
         }
     }
+    // Only reset the analysis manager if the
+    // analysis is not set to backward compatibility
+    // i.e., Geant4 version >= 11.
+    // In previous versions Reset is not public
+#if !defined(GRAPPA_USE_BACKWARDS_ANALYSIS)
     G4AnalysisManager::Instance()->Reset();
+#endif
     //   Open the analysis file
     m_HistoandNtupleManager->OpenFile();
 }
