@@ -3,6 +3,9 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.16 FATAL_ERROR)
 
 PROJECT(GRAPPA VERSION 0.2.3)
 
+# Defining the target
+ADD_EXECUTABLE(GRAPPA)
+
 # Instructions needed to link with Geant 4 if not installed in a standard location
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
@@ -11,8 +14,7 @@ set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 #=============#
 
 # This standard is required for compatibility with GEANT4
-SET(CMAKE_CXX_STANDARD 17)
-SET(CMAKE_CXX_STANDARD_REQUIRED ON)
+set_property(TARGET GRAPPA PROPERTY CXX_STANDARD_REQUIRED 17)
 
 # CMAKE_INSTALL_PREFIX is set here
 SET(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR} CACHE STRING "Installation prefix for GRAPPA")
@@ -47,8 +49,15 @@ IF (NOT ${Geant4_FOUND})
     MESSAGE(FATAL_ERROR "Could not locate Geant 4")
 ENDIF()
 
-# Defining the target
-ADD_EXECUTABLE(GRAPPA)
+MESSAGE(STATUS "Geant 4 was found with version ${Geant4_VERSION}")
+
+# Checking if the Geant4 version was less than 11
+# to enable backward compatibility with the analysis manager
+# of version 10
+IF (Geant4_VERSION VERSION_LESS 11)
+    MESSAGE(STATUS "The major version of Geant 4 is less than 11. Backward compatibility with the analysis manager is enabled.")
+    target_compile_definitions(GRAPPA PRIVATE GRAPPA_USE_BACKWARDS_ANALYSIS)
+ENDIF()
 
 # Setting compiler options
 IF (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
