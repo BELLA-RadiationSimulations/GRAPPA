@@ -49,7 +49,7 @@ ConstructorInitializerIndentWidth:  4
 ContinuationIndentWidth: 4
 FixNamespaceComments: true
 IndentWidth: 4
-# InsertNewlineAtEOF: true
+InsertNewlineAtEOF: true
 NamespaceIndentation: All
 PointerAlignment: Right
 SortIncludes: false
