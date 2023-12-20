@@ -18,7 +18,7 @@
 #include <G4RunManager.hh>
 #include <G4UImanager.hh>
 
-// BELLARPG
+// GRAPPA
 #include <GRPMessages.hpp>
 
 // Utility class that enables signal handling

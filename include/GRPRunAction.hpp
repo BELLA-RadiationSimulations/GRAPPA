@@ -22,6 +22,7 @@
 #include <G4UserRunAction.hh>
 
 #include <GRPActionInitialization.hpp>
+#include <GRPMessages.hpp>
 #include <GRPPrimaryGeneratorAction.hpp>
 #include <GRPHistandNTupleManager.hpp>
 

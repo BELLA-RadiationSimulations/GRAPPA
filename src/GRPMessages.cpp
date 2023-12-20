@@ -14,16 +14,20 @@
 void PrintWelcomeMessage()
 {
     G4cout << " =================================================== " << G4endl;
-    G4cout << "\tBellarpg compiled for " << MAKE_STR(CAVE) << " analysis "
+    G4cout << "  Geant4 RApid Pair Production Application (GRAPPA)  " << G4endl;
+    G4cout << " =================================================== " << G4endl;
+    G4cout << G4endl;
+    G4cout << " =================================================== " << G4endl;
+    G4cout << "\tGRAPPA compiled for " << MAKE_STR(CAVE) << " analysis "
            << G4endl;
     G4cout << " =================================================== " << G4endl;
-#if defined(BELLARPG_VERSION)
-    G4cout << " Running Bellarpg version " << MAKE_STR(BELLARPG_VERSION) << G4endl;
+#if defined(GRAPPA_VERSION)
+    G4cout << " Running GRAPPA version " << MAKE_STR(GRAPPA_VERSION) << G4endl;
     G4cout << G4endl;
 #endif
-#if defined(BELLARPG_DESCRIPTION) && defined(BELLARPG_URL)
-    G4cout << " Bellarpg: " << MAKE_STR(BELLARPG_DESCRIPTION) << G4endl;
-    G4cout << " More info at " << MAKE_STR(BELLARPG_URL) << G4endl;
+#if defined(GRAPPA_DESCRIPTION) && defined(GRAPPA_URL)
+    G4cout << " GRAPPA: " << MAKE_STR(GRAPPA_DESCRIPTION) << G4endl;
+    G4cout << " More info at " << MAKE_STR(GRAPPA_URL) << G4endl;
     G4cout << G4endl;
 #endif
 }
