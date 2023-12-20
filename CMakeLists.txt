@@ -1,14 +1,13 @@
-# Copyright 2023
+# Copyright 2021-2023
 #
 # Authors:
 # Stanimir Kisyov, Davide Terzani
 #
 # Creator: Davide Terzani
 #
-# This file is part of BELLARPG.
+# This file is part of GRAPPA.
 #
 # License: BSD-3-Clause
-
 
 #Setting CMAKE options
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
