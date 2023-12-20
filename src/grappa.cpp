@@ -51,6 +51,9 @@ int main(int argc, char *argv[])
 
     runManager->SetVerboseLevel(0);
 
+    // Registering signals for program safe interruption
+    RegisterSignals();
+    
     // Constructing the custom analysis manager used to create histograms
     // and ntuples in the Sensitive Detectors.
     HistandNTupleManager *myanalysismanager = new HistandNTupleManager();

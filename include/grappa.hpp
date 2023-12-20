@@ -28,3 +28,4 @@
 #include <GRPPrimaryGeneratorAction.hpp>
 #include <GRPRunAction.hpp>
 #include <GRPActionInitialization.hpp>
+#include <GRPSignalHandler.hpp>

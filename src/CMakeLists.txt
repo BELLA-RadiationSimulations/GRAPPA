@@ -14,10 +14,12 @@ target_sources(
     PRIVATE GRPActionInitialization.cpp
             GRPDetectorConstruction.cpp
             GRPHistandNTupleManager.cpp
+            GRPMessages.cpp
             GRPParticleSource.cpp
             GRPPrimaryGeneratorAction.cpp
             GRPRunAction.cpp
             GRPSDAbsorber.cpp
+            GRPSignalHandler.cpp
             GRPTrackingAction.cpp
             ReadASCII.cpp
             grappa.cpp)
