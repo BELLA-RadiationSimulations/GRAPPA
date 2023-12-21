@@ -18,8 +18,10 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Install clang-format
         run: |
+          wget https://apt.llvm.org/llvm.sh
           sudo apt-get update
-          sudo apt-get install clang-format
+          chmod u+x llvm.sh
+          sudo ./llvm.sh 16
       - name: Run clang-format
         run: |
           find src/ include/ scripts/ \
