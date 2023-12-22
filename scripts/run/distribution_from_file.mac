@@ -19,6 +19,7 @@
 # Modify geometry (custom functions)
 # /geometry/world/material G4_AIR
 /geometry/world/radius 80 cm
+/geometry/absorber/thickness 0.2 mm
 /geometry/foil/size 3 cm
 # /geometry/foil/center 0 0 0 mm
 /geometry/foil/thickness 1.42 cm

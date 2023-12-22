@@ -188,6 +188,8 @@ They **must** be invoked before the run is initialized in order to avoid the los
 # /geometry/world/material G4_AIR
 # Modify the world radius
 /geometry/world/radius 120 cm
+# Modify the thickness of the absorber that encompasses the world
+/geometry/absorber/thickness 0.2 mm
 # Square target side length
 /geometry/foil/size 10 mm
 # Where the center of the target is placed
