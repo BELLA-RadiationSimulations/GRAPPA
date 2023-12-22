@@ -95,7 +95,7 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
 #pragma message(__FILE__ "(" MAKE_STR(                                         \
     __LINE__) "): \
 This section of the code assumes that the run \
-completes correctly and does not consider interruptions by the signal handler.\
+completes correctly and does not consider interruptions by the signal handler. \
 To be addressed.")
         myprimarygenerationpointer->GetSource()->AddTotalParticlesSimulated(
             m_Numberofeventsthisrun);
