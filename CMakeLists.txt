@@ -130,11 +130,25 @@ foreach(filename ${ROOT_SCRIPTS_BUILD})
     list(APPEND ROOT_SCRIPTS ${CMAKE_BINARY_DIR}/${filename_we})
 endforeach()
 
+# Save run script for installation in bin folder
+set(RUN_SCRIPTS_DIR ${PROJECT_SOURCE_DIR}/scripts/run)
+list(
+    APPEND
+    RUN_SCRIPTS
+    ${RUN_SCRIPTS_DIR}/custom_distribution.mac
+    ${RUN_SCRIPTS_DIR}/distribution_from_file.mac
+    ${RUN_SCRIPTS_DIR}/example_vis.mac
+    ${RUN_SCRIPTS_DIR}/GPS_distribution.mac
+    ${RUN_SCRIPTS_DIR}/InitialPhaseSpace.dat
+    ${RUN_SCRIPTS_DIR}/photon_energy.dat)
+
 target_link_libraries(GRAPPA PRIVATE ${Geant4_LIBRARIES})
 set_target_properties(GRAPPA PROPERTIES LINKER_LANGUAGE CXX)
 
 # Install target
 install(TARGETS GRAPPA DESTINATION bin)
 
+# Install run scripts
+install(FILES ${RUN_SCRIPTS} DESTINATION bin)
 # Install ROOT scripts
 install(FILES ${ROOT_SCRIPTS} DESTINATION bin)
