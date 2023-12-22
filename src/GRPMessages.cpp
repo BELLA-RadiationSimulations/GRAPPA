@@ -17,7 +17,8 @@ void PrintWelcomeMessage()
     G4cout << "                        GRAPPA                       " << G4endl;
     G4cout << " =================================================== " << G4endl;
 #if defined(GRAPPA_VERSION)
-    G4cout << " Running GRAPPA version " << MAKE_STR(GRAPPA_VERSION) << G4endl;
+    G4cout << " Running GRAPPA version " << MAKE_STR(GRAPPA_VERSION) << 
+    ", compiled using Geant4 version " << MAKE_STR(Geant4_VERSION) << G4endl;
     G4cout << G4endl;
 #endif
 #if defined(GRAPPA_DESCRIPTION) && defined(GRAPPA_URL)

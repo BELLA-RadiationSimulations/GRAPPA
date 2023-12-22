@@ -77,10 +77,11 @@ else()
     find_package(Geant4 REQUIRED)
 endif()
 if(NOT ${Geant4_FOUND})
-    message(FATAL_ERROR "Could not locate Geant 4")
+    message(FATAL_ERROR "Could not locate Geant4")
 endif()
 
-message(STATUS "Geant 4 was found with version ${Geant4_VERSION}")
+message(STATUS "Geant4 was found with version ${Geant4_VERSION}")
+target_compile_definitions(GRAPPA PRIVATE Geant4_VERSION=${Geant4_VERSION})
 
 # Checking if the Geant4 version was less than 11
 # to enable backward compatibility with the analysis manager
