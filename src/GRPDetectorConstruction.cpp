@@ -198,6 +198,10 @@ void GRPDetectorConstruction::DefineCommands()
         this, "/geometry/world/", "Commands to configure the target");
     m_FMessenger = std::make_shared<G4GenericMessenger>(
         this, "/geometry/foil/", "Commands to configure the target");
+    m_AMessenger = std::make_shared<G4GenericMessenger>(
+        this,
+        "/geometry/absorber/",
+        "Commands to configure the particles absorber");
     // configure commands
 
     // Print the current status of the world and foil
@@ -278,6 +282,17 @@ void GRPDetectorConstruction::DefineCommands()
             "material", w_material_name, "Sets the world material.");
     wmaterialcommand.SetGuidance(" Sets the world material ");
     wmaterialcommand.SetStates(G4State_PreInit);
+
+    // Absorber thickness
+    G4GenericMessenger::Command &absthicknesscommand =
+        m_AMessenger->DeclareProperty(
+            "thickness",
+            absorber_thickness,
+            "Sets the thickness of the absorber.");
+    wmaterialcommand.SetGuidance(
+        " Change the thickness of the final particles absorber that surrounds "
+        "the world.");
+    wmaterialcommand.SetStates(G4State_PreInit);
 }
 
 void GRPDetectorConstruction::PrintDetector()
@@ -291,6 +306,8 @@ void GRPDetectorConstruction::PrintDetector()
     G4cout << " Sphere radius [mm] : " << w_radius << G4endl;
     G4cout << " World material is " << w_material_name << G4endl;
     G4cout << G4endl;
+    G4cout << " The absorber that surrounds the world has a thickness "
+           << absorber_thickness << " mm" << G4endl;
     G4cout << " Name of the target: " << f_name << G4endl;
     G4cout << " The target is a foil centered in " << foil_center[0] << " "
            << foil_center[1] << " " << foil_center[2] << " "

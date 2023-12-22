@@ -55,7 +55,7 @@ private:
     G4ThreeVector foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
     // Foil angle in radians
     G4double foil_angle_y = 0 * rad;
-    const G4double absorber_thickness = 1 * mm;
+    G4double absorber_thickness = 1 * mm;
     G4String w_name = "World", f_name = "High-Z_foil", std_a_name = "Absorber";
     G4String w_material_name = "G4_Galactic", f_material_name = "G4_W",
              a_material_name = "G4_Galactic";
@@ -74,5 +74,6 @@ private:
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;
     std::shared_ptr<G4GenericMessenger> m_FMessenger;
+    std::shared_ptr<G4GenericMessenger> m_AMessenger;
     std::shared_ptr<G4GenericMessenger> m_GenericMessenger;
 };
