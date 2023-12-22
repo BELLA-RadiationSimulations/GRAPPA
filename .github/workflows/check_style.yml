@@ -18,10 +18,18 @@ jobs:
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Install clang-format
         run: |
-          wget https://apt.llvm.org/llvm.sh
+          echo "Updating packages"
           sudo apt-get update
-          chmod u+x llvm.sh
-          sudo ./llvm.sh 16
+          sudo apt-get upgrade
+          echo "Adding LLVM repository"
+          sudo add-apt-repository 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main'
+          echo "Adding LLVM key"
+          wget https://apt.llvm.org/llvm-snapshot.gpg.key
+          sudo apt-key add llvm-snapshot.gpg.key
+          sudo apt update
+          sudo apt install clang-format-16
+          echo "The basic installed version of clang-format is $(clang-format --version)"
+          echo "The installed version of clang-format-16 is $(clang-format-16 --version)"
       - name: Run clang-format
         run: |
           find src/ include/ scripts/ \
