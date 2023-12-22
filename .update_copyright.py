@@ -26,6 +26,7 @@ comment = {
     "cpp": "//",
     "py": "#",
     "mac": "#",
+    "cmake": "#"
 }
 
 
@@ -90,10 +91,12 @@ def populate_files(source_dir="."):
     cpp_ext = [".cpp", ".hpp", ".C.in", ".h.in"]
     py_ext = [".py"]
     mac_ext = [".mac"]
+    cmake_names = ["CMakeLists.txt"]
     file_lists = dict()
     file_lists["cpp"] = list()
     file_lists["py"] = list()
     file_lists["mac"] = list()
+    file_lists["cmake"] = list()
     basepath = Path(source_dir)
     exclude_paths = [basepath.joinpath(directory) for directory in exclude_dirs]
     for path in basepath.rglob("*"):
@@ -106,6 +109,8 @@ def populate_files(source_dir="."):
                 file_lists["py"].append(path)
             if path_ext in mac_ext:
                 file_lists["mac"].append(path)
+            if path.name in cmake_names:
+                file_lists["cmake"].append(path)
 
     return file_lists
 

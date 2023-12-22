@@ -1,10 +1,30 @@
+# Copyright 2021-2023
+#
+# Authors:
+# Stanimir Kisyov, Davide Terzani
+#
+# Creator: Davide Terzani
+#
+# This file is part of GRAPPA.
+#
+# License: BSD-3-Clause
+
 #Setting CMAKE options
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-project(GRAPPA VERSION 0.2.6)
+project(
+    GRAPPA
+    VERSION 0.2.6
+    DESCRIPTION "Geant4 RApid Pair Production Application"
+    HOMEPAGE_URL "https://github.com/BELLA-RadiationSimulations/GRAPPA"
+    LANGUAGES CXX)
 
 # Defining the target
 add_executable(GRAPPA)
+target_compile_definitions(GRAPPA PRIVATE GRAPPA_VERSION=${PROJECT_VERSION})
+target_compile_definitions(GRAPPA
+                           PRIVATE GRAPPA_DESCRIPTION=${PROJECT_DESCRIPTION})
+target_compile_definitions(GRAPPA PRIVATE GRAPPA_URL="${PROJECT_HOMEPAGE_URL}")
 
 # Instructions needed to link with Geant 4 if not installed in a standard location
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -57,10 +77,11 @@ else()
     find_package(Geant4 REQUIRED)
 endif()
 if(NOT ${Geant4_FOUND})
-    message(FATAL_ERROR "Could not locate Geant 4")
+    message(FATAL_ERROR "Could not locate Geant4")
 endif()
 
-message(STATUS "Geant 4 was found with version ${Geant4_VERSION}")
+message(STATUS "Geant4 was found with version ${Geant4_VERSION}")
+target_compile_definitions(GRAPPA PRIVATE Geant4_VERSION=${Geant4_VERSION})
 
 # Checking if the Geant4 version was less than 11
 # to enable backward compatibility with the analysis manager
@@ -91,23 +112,12 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 # Add GRAPPA source files to target
-target_sources(
-    GRAPPA
-    PRIVATE src/GRPActionInitialization.cpp
-            src/GRPDetectorConstruction.cpp
-            src/GRPHistandNTupleManager.cpp
-            src/GRPParticleSource.cpp
-            src/GRPPrimaryGeneratorAction.cpp
-            src/GRPRunAction.cpp
-            src/GRPSDAbsorber.cpp
-            src/GRPTrackingAction.cpp
-            src/ReadASCII.cpp
-            src/grappa.cpp)
+add_subdirectory(src)
+add_subdirectory(include)
 
 # Add Geant4 to target
 include(${Geant4_USE_FILE})
 target_include_directories(GRAPPA PRIVATE ${Geant4_INCLUDE_DIR})
-target_include_directories(GRAPPA PRIVATE ${PROJECT_SOURCE_DIR}/include)
 
 set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/bin/utilities.h)
 # Configure ROOT scripts and mark them to install in the install folder

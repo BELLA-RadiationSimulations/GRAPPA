@@ -16,9 +16,7 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     // Welcome message
-    G4cout << " =================================================== " << G4endl;
-    G4cout << "  Geant4 RApid Pair Production Application (GRAPPA)  " << G4endl;
-    G4cout << " =================================================== " << G4endl;
+    PrintWelcomeMessage();
     // Detect interactive mode (if no arguments) and define UI session
 
     G4UIExecutive *ui = nullptr;
@@ -50,6 +48,9 @@ int main(int argc, char *argv[])
 #endif
 
     runManager->SetVerboseLevel(0);
+
+    // Registering signals for program safe interruption
+    RegisterSignals();
 
     // Constructing the custom analysis manager used to create histograms
     // and ntuples in the Sensitive Detectors.
@@ -108,23 +109,7 @@ int main(int argc, char *argv[])
     delete visManager;
     delete myanalysismanager;
 
-    G4cout
-        << "==================================================================="
-        << G4endl;
-    G4cout << " Simulation timing: " << G4endl;
-    G4cout << "    User elapsed time   => " << timer->GetUserElapsed() / 3600
-           << " h   = " << timer->GetUserElapsed() / 60
-           << " min   = " << timer->GetUserElapsed() << " s." << G4endl;
-    G4cout << "    Real elapsed time   => " << timer->GetRealElapsed() / 3600
-           << " h   = " << timer->GetRealElapsed() / 60
-           << " min   = " << timer->GetRealElapsed() << " s." << G4endl;
-    G4cout << "    System elapsed time => " << timer->GetSystemElapsed() / 3600
-           << " h   = " << timer->GetSystemElapsed() / 60
-           << " min   = " << timer->GetSystemElapsed() << " s." << G4endl;
-
-    G4cout << " ================================= " << G4endl;
-    G4cout << "  Program GRAPPA ran successfully  " << G4endl;
-    G4cout << " ================================= " << G4endl;
+    PrintFinalMessage(timer);
 
     return 0;
 }

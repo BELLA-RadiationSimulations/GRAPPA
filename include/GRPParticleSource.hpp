@@ -19,6 +19,7 @@
 #include <G4GeneralParticleSource.hh>
 
 #include <ReadASCII.hpp>
+#include <GRPMessages.hpp>
 
 class ParticleSource
 {

@@ -35,6 +35,19 @@ ParticleSourceGPS::~ParticleSourceGPS() { m_part = nullptr; }
 
 ParticleSourceGun::ParticleSourceGun(G4String filename)
 {
+#pragma message(__FILE__ "(" MAKE_STR(                                         \
+    __LINE__) "): \
+To Do: fix the particle gun.")
+    G4ExceptionDescription warning;
+    warning << "The use of particles from files assumes that the run is not "
+               "interrupted before its end,";
+    warning << " otherwise the actual number of particles in the run is "
+               "counted incorrectly.";
+    G4Exception(
+        "ParticleSourceGun::ParticleSourceGun()",
+        "GRAPPA::INCORRECT_PARTICLE_COUNT",
+        JustWarning,
+        warning);
     using namespace CLHEP;
     G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
     SetPart(particle_table->FindParticle("e-"));
