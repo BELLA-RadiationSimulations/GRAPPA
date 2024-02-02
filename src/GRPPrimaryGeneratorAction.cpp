@@ -12,15 +12,15 @@
 #include <GRPPrimaryGeneratorAction.hpp>
 
 GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(
-    bool useGPS)
+    bool useFile)
 {
-    if (useGPS)
+    if (useFile)
     {
-        m_PSource = std::make_shared<GRPParticleSourceGPS>();
+        m_PSource = std::make_shared<GRPParticleSourceGun>();
     }
     else
     {
-        m_PSource = std::make_shared<GRPParticleSourceGun>();
+        m_PSource = std::make_shared<GRPParticleSourceGPS>();
     }
 }
 
