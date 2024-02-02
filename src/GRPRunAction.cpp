@@ -32,36 +32,28 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
     runmanager->SetRandomNumberStore(false);
     m_timer->Start();
 
-    // Checking if particles are read from file and issuing a warning if beamon
-    // requests more particles than available
-    const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const GRPPrimaryGeneratorAction *>(
-            runmanager->GetUserPrimaryGeneratorAction());
-    // Note: if condition necessary since there is no action object for master
-    // when in MT mode
+    GRPRun *run = static_cast<GRPRun *>(runmanager->GetNonConstCurrentRun());
+    run->SetContainer(m_myParticleContainer);
 
-    if (myprimarygenerationpointer)
+    if (m_myParticleContainer->GetUseFile())
     {
-        if (m_myParticleContainer->GetUseFile())
+        const G4int Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
+        const G4int nparts =
+            m_myParticleContainer->GetNParticlesInFile();
+        if (Numberofeventsthisrun > nparts)
         {
-            const G4int Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
-            const G4int nparts =
-                m_myParticleContainer->GetNParticlesInFile();
-            if (Numberofeventsthisrun > nparts)
-            {
-                G4ExceptionDescription msg;
-                msg << "The number of particles requested ("
-                    << runmanager->GetNumberOfEventsToBeProcessed();
-                msg << ") is greater than the particles available in the input "
-                       "file ("
-                    << nparts << ").";
-                msg << " Stored particles will be thus used more than once";
-                G4Exception(
-                    "GRPRunAction::BeginOfRunAction()",
-                    "GRAPPA::MANY_PARTICLES_REQUESTED",
-                    JustWarning,
-                    msg);
-            }
+            G4ExceptionDescription msg;
+            msg << "The number of particles requested ("
+                << runmanager->GetNumberOfEventsToBeProcessed();
+            msg << ") is greater than the particles available in the input "
+                   "file ("
+                << nparts << ").";
+            msg << " Stored particles will be thus used more than once";
+            G4Exception(
+                "GRPRunAction::BeginOfRunAction()",
+                "GRAPPA::MANY_PARTICLES_REQUESTED",
+                JustWarning,
+                msg);
         }
     }
     // Only reset the analysis manager if the
