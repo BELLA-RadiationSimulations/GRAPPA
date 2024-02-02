@@ -15,15 +15,13 @@
 #define MAKE_STR(x) _MAKE_STR(x)
 #define _MAKE_STR(x) #x
 
-// C++
-#include <memory>
-
 // Geant4
 #include <G4ios.hh>
+#include <G4SystemOfUnits.hh>
 #include <G4Timer.hh>
 
 void PrintWelcomeMessage();
 
-void PrintFinalMessage(std::shared_ptr<G4Timer> timer);
+void PrintFinalMessage(const G4Timer & timer);
 
 void PrintFinalMessage();

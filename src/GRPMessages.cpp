@@ -28,22 +28,22 @@ void PrintWelcomeMessage()
 #endif
 }
 
-void PrintFinalMessage(std::shared_ptr<G4Timer> timer)
+void PrintFinalMessage(const G4Timer & timer)
 {
 
     G4cout
         << "==================================================================="
         << G4endl;
     G4cout << " Simulation timing: " << G4endl;
-    G4cout << "    User elapsed time   => " << timer->GetUserElapsed() / 3600
-           << " h   = " << timer->GetUserElapsed() / 60
-           << " min   = " << timer->GetUserElapsed() << " s." << G4endl;
-    G4cout << "    Real elapsed time   => " << timer->GetRealElapsed() / 3600
-           << " h   = " << timer->GetRealElapsed() / 60
-           << " min   = " << timer->GetRealElapsed() << " s." << G4endl;
-    G4cout << "    System elapsed time => " << timer->GetSystemElapsed() / 3600
-           << " h   = " << timer->GetSystemElapsed() / 60
-           << " min   = " << timer->GetSystemElapsed() << " s." << G4endl;
+    G4cout << "    User elapsed time   => " << timer.GetUserElapsed() * (CLHEP::second / CLHEP::hour)
+           << " h   = " << timer.GetUserElapsed() * (CLHEP::second / CLHEP::minute)
+           << " min   = " << timer.GetUserElapsed() << " s." << G4endl;
+    G4cout << "    Real elapsed time   => " << timer.GetRealElapsed() * (CLHEP::second / CLHEP::hour)
+           << " h   = " << timer.GetRealElapsed() * (CLHEP::second / CLHEP::minute)
+           << " min   = " << timer.GetRealElapsed() << " s." << G4endl;
+    G4cout << "    System elapsed time => " << timer.GetSystemElapsed() * (CLHEP::second / CLHEP::hour)
+           << " h   = " << timer.GetSystemElapsed() * (CLHEP::second / CLHEP::minute)
+           << " min   = " << timer.GetSystemElapsed() << " s." << G4endl;
 
     G4cout << " ================================================== " << G4endl;
     G4cout << "        Program GRAPPA ran successfully  " << G4endl;

@@ -25,6 +25,7 @@
 #include <G4VisExecutive.hh>
 
 #include <GRPDetectorConstruction.hpp>
+#include <GRPParticleContainer.hpp>
 #include <GRPPrimaryGeneratorAction.hpp>
 #include <GRPRunAction.hpp>
 #include <GRPActionInitialization.hpp>

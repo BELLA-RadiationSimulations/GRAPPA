@@ -12,7 +12,7 @@
 #pragma once
 
 #include <memory>
-#include <CLHEP/Units/SystemOfUnits.h>
+#include <G4SystemOfUnits.hh>
 #include <G4Box.hh>
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>

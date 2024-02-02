@@ -12,15 +12,15 @@
 #include <GRPPrimaryGeneratorAction.hpp>
 
 GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(
-    bool useGPS, G4String filename)
+    bool useGPS)
 {
     if (useGPS)
     {
-        m_PSource = std::make_shared<ParticleSourceGPS>();
+        m_PSource = std::make_shared<GRPParticleSourceGPS>();
     }
     else
     {
-        m_PSource = std::make_shared<ParticleSourceGun>(filename);
+        m_PSource = std::make_shared<GRPParticleSourceGun>();
     }
 }
 
@@ -28,8 +28,10 @@ GRPPrimaryGeneratorAction::~GRPPrimaryGeneratorAction() {}
 
 void GRPPrimaryGeneratorAction::GeneratePrimaries(G4Event *anEvent)
 {
+    G4RunManager *runmanager = G4RunManager::GetRunManager();
     const int eventID = anEvent->GetEventID();
-
-    m_PSource->LoadNextParticle(eventID);
+    auto run = static_cast<const GRPRun *>(runmanager->GetCurrentRun());
+    auto container = run->GetContainer();
+    m_PSource->LoadNextParticle(*container, eventID);
     m_PSource->GetGun()->GeneratePrimaryVertex(anEvent);
 }
