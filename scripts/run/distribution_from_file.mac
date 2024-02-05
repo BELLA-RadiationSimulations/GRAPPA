@@ -19,7 +19,7 @@
 # Modify geometry (custom functions)
 # /geometry/world/material G4_AIR
 /geometry/world/radius 80 cm
-/geometry/absorber/thickness 0.2 mm
+/geometry/absorber/thickness 0.1 mm
 /geometry/foil/size 3 cm
 # /geometry/foil/center 0 0 0 mm
 /geometry/foil/thickness 1.42 cm
@@ -31,8 +31,8 @@
 
 # Select particles from file
 
-/particle_source/ParticlesFromFile true
-/particle_source/FileName InitialPhaseSpace.dat
+/particlesource/particlesFromFile true
+
 
 # Introduce the muon pair production from photons and increase artificially its probability
 /physics_lists/em/GammaToMuons true
@@ -51,11 +51,10 @@
 # ==============
 
 # =/=/=/=/= Particle source section =/=/=/=/=
-
-# Set the particle source: must be done after run initialization.
-# Particle source must be chosen between e- and gamma (for our use)
-
-/gun/particle gamma
+# Select the particle filename and the particle type
+/particlesource/setFileName InitialPhaseSpace.dat
+/particlesource/setParticle e-
+/particlesource/print
 
 # Particle source spatial information (NO NEED SINCE FROM FILE)
 
@@ -147,10 +146,10 @@
 /analysis/h1/setXaxisLog 12 true
 /analysis/h1/setXaxisLog 13 true
 
-/analysis/h2/set 0 50 -3 3 um none linear 50 -3 3 um none linear #x-y
-/analysis/h2/set 1 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
-/analysis/h2/set 2 50 -3 3 um none linear 50 -10 10 MeV none linear #x-y
+/analysis/h2/set 0 50 -30 30 um none linear 50 -30 30 um none linear #x-y
+/analysis/h2/set 2 50 -30 30 mrad none linear 50 -30 30 mrad none linear #x-y
 /analysis/h2/set 3 50 -3 3 um none linear 50 -10 10 MeV none linear #x-y
+/analysis/h2/set 4 50 -3 3 um none linear 50 -10 10 MeV none linear #x-y
 /analysis/h2/set 4 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
 /analysis/h2/set 5 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
 /analysis/h2/set 6 50 -20 20 mm none linear 50 -20 20 mm none linear #x-y
@@ -173,17 +172,4 @@
 # =/=/=/=/= End Ntuple control section =/=/=/=/=
 
 ## Run
-/run/beamOn 30000000
-
-# =/=/=/=/= Call visualization script =/=/=/=/=
-
-# Disable analysis before visualization script to avoid
-# ovverriding the past analysis. ONLY if enabled before.
-/analysis/ntuple/setActivationToAll false
-/analysis/h1/setActivationToAll false
-/analysis/h1/setPlottingToAll false
-/analysis/h2/setActivationToAll false
-/analysis/h2/setPlottingToAll false
-
-/control/execute example_vis.mac
-# =/=/=/=/= End visualization script =/=/=/=/=
+#/run/beamOn 30000000
