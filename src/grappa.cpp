@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -36,9 +36,9 @@ int main(int argc, char *argv[])
     visManager->Initialize();
 
     // Getting run start time
-    const std::shared_ptr<G4Timer> timer = std::make_shared<G4Timer>();
-    timer->Start();
-    G4cout << " Program started at \t" << timer->GetClockTime() << G4endl;
+    G4Timer timer = G4Timer();
+    timer.Start();
+    G4cout << " Program started at \t" << timer.GetClockTime() << G4endl;
 
 #ifdef G4MULTITHREADED
     G4RunManager *runManager = G4RunManagerFactory::CreateRunManager();
@@ -68,11 +68,16 @@ int main(int argc, char *argv[])
     runManager->SetUserInitialization(physicsList);
     // FTFP_BERT should be used instead if primary articles energy is <5GeV;
 
+    // Introducing a particle container
+    // that serves if we need to read particles from file
+    GRPParticleContainer myParticleContainer = GRPParticleContainer();
+
     // Mandatory class
     // Constructing actions
     // It takes as input a pointer to the custom analysis manager
     GRPActionInitialization *myActionInitialization =
         new GRPActionInitialization(myanalysismanager);
+    myActionInitialization->SetContainer(&myParticleContainer);
     runManager->SetUserInitialization(myActionInitialization);
 
     // Mandatory class
@@ -80,11 +85,6 @@ int main(int argc, char *argv[])
     // It takes as input a pointer to the custom analysis manager
     runManager->SetUserInitialization(
         new GRPDetectorConstruction(myanalysismanager));
-
-    // Last, setting the verbosity of the run manager
-    // RunManager prints a signal every everyevent events.
-    const G4int everyevent = 200;
-    runManager->SetPrintProgress(everyevent);
 
     if (ui)
     {
@@ -101,7 +101,7 @@ int main(int argc, char *argv[])
     }
 
     // Getting run end time
-    timer->Stop();
+    timer.Stop();
 
     // Final cleanup
     // Must delete: run manager, visualization manager, analysis manager

@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -11,18 +11,18 @@
 
 #include <GRPRunAction.hpp>
 
-GRPRunAction::GRPRunAction(
-    G4bool useGPS, HistandNTupleManager *myanalysismanager)
+GRPRunAction::GRPRunAction(HistandNTupleManager *myanalysismanager)
 {
     // Associate the histrogram and ntuple manager
     m_HistoandNtupleManager = myanalysismanager;
     m_HistoandNtupleManager->Book();
-    m_partsfromfile = !useGPS;
     m_timer = std::make_unique<G4Timer>();
     DefineCommands();
 }
 
 GRPRunAction::~GRPRunAction() {}
+
+G4Run *GRPRunAction::GenerateRun() { return new GRPRun(); }
 
 void GRPRunAction::BeginOfRunAction(const G4Run *)
 {
@@ -32,36 +32,28 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
     runmanager->SetRandomNumberStore(false);
     m_timer->Start();
 
-    // Checking if particles are read from file and issuing a warning if beamon
-    // requests more particles than available
-    const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const GRPPrimaryGeneratorAction *>(
-            runmanager->GetUserPrimaryGeneratorAction());
-    // Note: if condition necessary since there is no action object for master
-    // when in MT mode
+    GRPRun *run = static_cast<GRPRun *>(runmanager->GetNonConstCurrentRun());
+    run->SetContainer(m_myParticleContainer);
 
-    m_Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
-    if (myprimarygenerationpointer)
+    if (m_myParticleContainer->GetUseFile())
     {
-        if (m_partsfromfile)
+        const G4int Numberofeventsthisrun =
+            runmanager->GetNumberOfEventsToBeProcessed();
+        const G4int nparts = m_myParticleContainer->GetNParticlesInFile();
+        if (Numberofeventsthisrun > nparts)
         {
-            const G4int nparts =
-                myprimarygenerationpointer->GetSource()->GetNParticlesInFile();
-            if (m_Numberofeventsthisrun > nparts)
-            {
-                G4ExceptionDescription msg;
-                msg << "The number of particles requested ("
-                    << runmanager->GetNumberOfEventsToBeProcessed();
-                msg << ") is greater than the particles available in the input "
-                       "file ("
-                    << nparts << ").";
-                msg << " Stored particles will be thus used more than once";
-                G4Exception(
-                    "GRPRunAction::BeginOfRunAction()",
-                    "GRAPPA::MANY_PARTICLES_REQUESTED",
-                    JustWarning,
-                    msg);
-            }
+            G4ExceptionDescription msg;
+            msg << "The number of particles requested ("
+                << runmanager->GetNumberOfEventsToBeProcessed();
+            msg << ") is greater than the particles available in the input "
+                   "file ("
+                << nparts << ").";
+            msg << " Stored particles will be thus used more than once";
+            G4Exception(
+                "GRPRunAction::BeginOfRunAction()",
+                "GRAPPA::MANY_PARTICLES_REQUESTED",
+                JustWarning,
+                msg);
         }
     }
     // Only reset the analysis manager if the
@@ -84,28 +76,14 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
     // Getting the run manager
     G4RunManager *runmanager = G4RunManager::GetRunManager();
     const G4int nofEvents = run->GetNumberOfEvent();
-    if (nofEvents == 0)
-        return;
-    const GRPPrimaryGeneratorAction *myprimarygenerationpointer =
-        static_cast<const GRPPrimaryGeneratorAction *>(
-            runmanager->GetUserPrimaryGeneratorAction());
 
-    if (myprimarygenerationpointer)
-    {
-#pragma message(__FILE__ "(" MAKE_STR(                                         \
-    __LINE__) "): \
-This section of the code assumes that the run \
-completes correctly and does not consider interruptions by the signal handler. \
-To be addressed.")
-        myprimarygenerationpointer->GetSource()->AddTotalParticlesSimulated(
-            m_Numberofeventsthisrun);
-    }
     // Write and close analysis files
     m_HistoandNtupleManager->FinishAnalysis();
 
     // Print the run timing
     if (IsMaster())
     {
+        m_myParticleContainer->AddTotalParticlesSimulated(nofEvents);
         G4cout << " Finished Run " << runmanager->GetCurrentRun()->GetRunID()
                << G4endl;
         G4cout << "============================================================"
@@ -114,16 +92,19 @@ To be addressed.")
         G4cout << " Timing for the current Run "
                << runmanager->GetCurrentRun()->GetRunID() << ":" << G4endl;
         G4cout << "    User elapsed time   => "
-               << m_timer->GetUserElapsed() / 3600
-               << " h   = " << m_timer->GetUserElapsed() / 60
+               << m_timer->GetUserElapsed() * (CLHEP::second / CLHEP::hour)
+               << " h   = "
+               << m_timer->GetUserElapsed() * (CLHEP::second / CLHEP::minute)
                << " min   = " << m_timer->GetUserElapsed() << " s." << G4endl;
         G4cout << "    Real elapsed time   => "
-               << m_timer->GetRealElapsed() / 3600
-               << " h   = " << m_timer->GetRealElapsed() / 60
+               << m_timer->GetRealElapsed() * (CLHEP::second / CLHEP::hour)
+               << " h   = "
+               << m_timer->GetRealElapsed() * (CLHEP::second / CLHEP::minute)
                << " min   = " << m_timer->GetRealElapsed() << " s." << G4endl;
         G4cout << "    System elapsed time => "
-               << m_timer->GetSystemElapsed() / 3600
-               << " h   = " << m_timer->GetSystemElapsed() / 60
+               << m_timer->GetSystemElapsed() * (CLHEP::second / CLHEP::hour)
+               << " h   = "
+               << m_timer->GetSystemElapsed() * (CLHEP::second / CLHEP::minute)
                << " min   = " << m_timer->GetSystemElapsed() << " s." << G4endl;
         G4cout << "============================================================"
                   "=============="

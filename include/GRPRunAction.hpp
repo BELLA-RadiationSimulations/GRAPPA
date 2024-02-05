@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -24,6 +24,7 @@
 #include <GRPActionInitialization.hpp>
 #include <GRPMessages.hpp>
 #include <GRPPrimaryGeneratorAction.hpp>
+#include <GRPRun.hpp>
 #include <GRPHistandNTupleManager.hpp>
 
 class G4Run;
@@ -31,9 +32,10 @@ class G4Run;
 class GRPRunAction : public G4UserRunAction
 {
 public:
-    GRPRunAction(G4bool useGPS, HistandNTupleManager *myanalysismanager);
+    GRPRunAction(HistandNTupleManager *myanalysismanager);
     virtual ~GRPRunAction();
 
+    G4Run *GenerateRun() override;
     virtual void BeginOfRunAction(const G4Run *) override;
     virtual void EndOfRunAction(const G4Run *) override;
 
@@ -53,12 +55,16 @@ public:
             m_HistoandNtupleManager->GetNTupleManager()->SetNtupleDump(
                 ID, ifdump);
     }
+    GRPParticleContainer *GetContainer() const { return m_myParticleContainer; }
+    void SetContainer(GRPParticleContainer *mycontainerptr)
+    {
+        m_myParticleContainer = mycontainerptr;
+    }
 
 private:
     HistandNTupleManager *m_HistoandNtupleManager;
-    G4bool m_partsfromfile = false;
-    G4int m_Numberofeventsthisrun = 0;
     std::unique_ptr<G4Timer> m_timer;
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_AMessenger;
+    GRPParticleContainer *m_myParticleContainer;
 };

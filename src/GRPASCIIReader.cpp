@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -9,12 +9,7 @@
 //
 // License: BSD-3-Clause
 
-#include <ReadASCII.hpp>
-
-ASCIIReader::ASCIIReader()
-{
-    m_particlecollection = std::make_shared<std::vector<GRAPPAParticle>>();
-}
+#include <GRPASCIIReader.hpp>
 
 ASCIIReader::ASCIIReader(std::string filename)
 {
@@ -28,10 +23,14 @@ ASCIIReader::ASCIIReader(std::string filename)
         G4Exception(
             "ASCIIReader::ASCIIReader()",
             "GRAPPA::FILE_NOT_OPEN",
-            FatalException,
+            JustWarning,
             msg);
+        m_filegood = false;
     }
-    m_particlecollection = std::make_shared<std::vector<GRAPPAParticle>>();
+    else
+    {
+        m_filegood = true;
+    }
 }
 
 ASCIIReader::~ASCIIReader() {}
@@ -51,12 +50,12 @@ G4int ASCIIReader::CountParticles()
     return nlines;
 }
 
-void ASCIIReader::ReadParticles()
+std::vector<std::pair<G4ThreeVector, G4ParticleMomentum>>
+ASCIIReader::GetParticles()
 {
     double x, y, z, px, py, pz;
-    G4ThreeVector nextposition;
-    G4ParticleMomentum nextmomentum;
-    GRAPPAParticle nextparticle;
+    std::vector<std::pair<G4ThreeVector, G4ParticleMomentum>>
+        particlecollection;
     while (m_filestream.good())
     {
         m_filestream >> x;
@@ -66,10 +65,11 @@ void ASCIIReader::ReadParticles()
         m_filestream >> py;
         m_filestream >> pz;
 
-        nextposition = G4ThreeVector(x, y, z);
-        nextmomentum = G4ParticleMomentum(px, py, pz);
-
-        nextparticle = {nextposition, nextmomentum};
-        m_particlecollection->push_back(nextparticle);
+        const std::pair<G4ThreeVector, G4ParticleMomentum> nextparticle = {
+            G4ThreeVector(x, y, z), G4ParticleMomentum(px, py, pz)};
+        particlecollection.push_back(nextparticle);
     }
+    m_filestream.clear();
+    m_filestream.seekg(0);
+    return particlecollection;
 }

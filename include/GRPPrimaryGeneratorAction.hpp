@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -11,26 +11,24 @@
 
 #pragma once
 
-#include <G4VUserPrimaryGeneratorAction.hh>
-#include <CLHEP/Units/SystemOfUnits.h>
 #include <G4Event.hh>
+#include <G4RunManager.hh>
+#include <G4VUserPrimaryGeneratorAction.hh>
 
 #include <GRPParticleSource.hpp>
+#include <GRPRun.hpp>
 
 class GRPPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 {
 public:
-    GRPPrimaryGeneratorAction(bool useGPS, G4String filename);
+    GRPPrimaryGeneratorAction(bool useGPS);
     virtual ~GRPPrimaryGeneratorAction();
 
     // method from the base class
     virtual void GeneratePrimaries(G4Event *anEvent);
 
-    inline std::shared_ptr<ParticleSource> GetSource() const
-    {
-        return m_PSource;
-    };
+    GRPParticleSource *GetSource() const { return m_PSource.get(); };
 
 private:
-    std::shared_ptr<ParticleSource> m_PSource;
+    std::shared_ptr<GRPParticleSource> m_PSource;
 };

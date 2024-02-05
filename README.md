@@ -156,9 +156,8 @@ you should provide an ASCII file with the phase space coordinates of the particl
 The command to extract particles from a given ASCII file is
 
 ```commandline
-# Run these commands before initializing the run
-/particle_source/ParticlesFromFile true
-/particle_source/FileName Filename.txt
+# Run this commands before initializing the run
+/particlesource/particlesFromFile true
 
 # ... (Other operations)
 # Run initialization
@@ -173,6 +172,21 @@ The structure of an ascii file is a six-column list of all the particles, in the
 | x [mm] | y [mm] | z [mm] | px [MeV] | py [MeV] | pz [MeV] |
 
 (separated by spaces or tabs).
+Other commands are available to modify the input from file and they can be called both before and after
+the initialization and even between runs
+
+```commandline
+# Select the particle type that is being read from the file.
+# If not specified, a geantino is created
+/particlesource/setParticle gamma
+# Provide the filename with the particles phase space
+/particlesource/setFileName filename.dat
+# Command to print the current setup
+/particlesource/print
+```
+
+If the file contains less particles than the ones requested for a run,
+GRAPPA will keep looping through the file relying on the fact that the random seed will be constantly updated.
 
 ### Modify the target geometry
 

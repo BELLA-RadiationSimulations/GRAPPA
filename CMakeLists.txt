@@ -1,4 +1,4 @@
-# Copyright 2021-2023
+# Copyright 2021-2024
 #
 # Authors:
 # Stanimir Kisyov, Davide Terzani
@@ -139,6 +139,7 @@ list(
     ${RUN_SCRIPTS_DIR}/distribution_from_file.mac
     ${RUN_SCRIPTS_DIR}/example_vis.mac
     ${RUN_SCRIPTS_DIR}/GPS_distribution.mac
+    ${RUN_SCRIPTS_DIR}/initialize_vis.mac
     ${RUN_SCRIPTS_DIR}/InitialPhaseSpace.dat
     ${RUN_SCRIPTS_DIR}/photon_energy.dat)
 

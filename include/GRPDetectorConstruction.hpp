@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -12,7 +12,7 @@
 #pragma once
 
 #include <memory>
-#include <CLHEP/Units/SystemOfUnits.h>
+#include <G4SystemOfUnits.hh>
 #include <G4Box.hh>
 #include <G4GenericMessenger.hh>
 #include <G4LogicalVolume.hh>

@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -25,6 +25,7 @@
 #include <G4VisExecutive.hh>
 
 #include <GRPDetectorConstruction.hpp>
+#include <GRPParticleContainer.hpp>
 #include <GRPPrimaryGeneratorAction.hpp>
 #include <GRPRunAction.hpp>
 #include <GRPActionInitialization.hpp>
