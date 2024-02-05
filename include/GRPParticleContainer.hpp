@@ -31,6 +31,8 @@ public:
     std::tuple<G4ThreeVector, G4double, G4ThreeVector>
     GetNextPositionEnergyMomentumdirection(G4int particle) const;
     G4int GetNParticlesInFile() const { return m_NpartsInFile; }
+    G4String GetParticleName() const { return m_particlename; }
+    G4ParticleDefinition * GetParticleDefinition() const { return m_particledefinition; }
     G4int GetTotalParticlesSimulated() const
     {
         return m_TotalParticlesSimulated;
@@ -47,10 +49,12 @@ private:
     G4int m_TotalParticlesSimulated = 0;
     // Simulated particle name
     G4String m_particlename = "geantino";
+    // Simulated particle definition
+    G4ParticleDefinition * m_particledefinition;
     // Simulated particle mass
-    G4double m_particle_mass = 0;
+    G4double m_particle_mass;
     // Simulated particle mass squared
-    G4double m_particle_mass_squared = 0;
+    G4double m_particle_mass_squared;
     // Unit for particle position
     G4double m_input_position_units = CLHEP::mm;
     // Unit for particle momentum

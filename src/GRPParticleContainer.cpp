@@ -11,7 +11,13 @@
 
 #include <GRPParticleContainer.hpp>
 
-GRPParticleContainer::GRPParticleContainer() { DefineCommands(); }
+GRPParticleContainer::GRPParticleContainer() {
+        G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
+    G4ParticleDefinition *particle = particle_table->FindParticle(m_particlename);
+            m_particledefinition = particle;
+        m_particle_mass = particle->GetPDGMass();
+        m_particle_mass_squared = std::pow(m_particle_mass, 2);
+    DefineCommands(); }
 
 GRPParticleContainer::~GRPParticleContainer() {}
 
@@ -182,6 +188,7 @@ void GRPParticleContainer::SetParticle(const G4String particlename)
     else
     {
         m_particlename = particlename;
+        m_particledefinition = particle;
         m_particle_mass = particle->GetPDGMass();
         m_particle_mass_squared = std::pow(m_particle_mass, 2);
     }

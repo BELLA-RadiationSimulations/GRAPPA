@@ -42,6 +42,13 @@ void GRPParticleSourceGun::LoadNextParticle(const GRPParticleContainer &mycontai
     const G4ThreeVector NextPosition = std::get<0>(quantities);
     const G4double Kenergy = std::get<1>(quantities);
     const G4ThreeVector momentumdirection = std::get<2>(quantities);
+    // Here we compare particles by PDG ID to see if they're the same and avoid unnecessary change.
+    // I believe it should be possible to compare the pointer to the definitions obtained by GetParticleDefinition
+    // directly, as the definition should be a static thread-shared object, but I haven't verified.
+    if (m_Gun->GetParticleDefinition()->GetPDGEncoding() != mycontainer.GetParticleDefinition()->GetPDGEncoding())
+    {
+        m_Gun->SetParticleDefinition(mycontainer.GetParticleDefinition());
+    }
     m_Gun->SetParticlePosition(NextPosition);
     m_Gun->SetParticleEnergy(Kenergy);
     m_Gun->SetParticleMomentumDirection(momentumdirection);

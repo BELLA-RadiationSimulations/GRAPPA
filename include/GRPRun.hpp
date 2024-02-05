@@ -11,8 +11,9 @@
 
 #pragma once
 
-#include <GRPParticleContainer.hpp>
 #include <G4Run.hh>
+
+#include <GRPParticleContainer.hpp>
 
 class GRPRun : public G4Run
 {
