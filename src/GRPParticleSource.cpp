@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -22,16 +22,17 @@ GRPParticleSourceGPS::GRPParticleSourceGPS()
     m_GPS->SetParticlePosition(G4ThreeVector());
 }
 
-GRPParticleSourceGPS::~GRPParticleSourceGPS() { }
+GRPParticleSourceGPS::~GRPParticleSourceGPS() {}
 
 GRPParticleSourceGun::GRPParticleSourceGun()
 {
     m_Gun = std::make_unique<G4ParticleGun>();
 }
 
-GRPParticleSourceGun::~GRPParticleSourceGun() { }
+GRPParticleSourceGun::~GRPParticleSourceGun() {}
 
-void GRPParticleSourceGun::LoadNextParticle(const GRPParticleContainer &mycontainer, G4int eventNumber)
+void GRPParticleSourceGun::LoadNextParticle(
+    const GRPParticleContainer &mycontainer, G4int eventNumber)
 {
     if (mycontainer.GetNParticlesInFile() <= 0)
         return;
@@ -42,10 +43,13 @@ void GRPParticleSourceGun::LoadNextParticle(const GRPParticleContainer &mycontai
     const G4ThreeVector NextPosition = std::get<0>(quantities);
     const G4double Kenergy = std::get<1>(quantities);
     const G4ThreeVector momentumdirection = std::get<2>(quantities);
-    // Here we compare particles by PDG ID to see if they're the same and avoid unnecessary change.
-    // I believe it should be possible to compare the pointer to the definitions obtained by GetParticleDefinition
-    // directly, as the definition should be a static thread-shared object, but I haven't verified.
-    if (m_Gun->GetParticleDefinition()->GetPDGEncoding() != mycontainer.GetParticleDefinition()->GetPDGEncoding())
+    // Here we compare particles by PDG ID to see if they're the same and avoid
+    // unnecessary change. I believe it should be possible to compare the
+    // pointer to the definitions obtained by GetParticleDefinition directly, as
+    // the definition should be a static thread-shared object, but I haven't
+    // verified.
+    if (m_Gun->GetParticleDefinition()->GetPDGEncoding() !=
+        mycontainer.GetParticleDefinition()->GetPDGEncoding())
     {
         m_Gun->SetParticleDefinition(mycontainer.GetParticleDefinition());
     }

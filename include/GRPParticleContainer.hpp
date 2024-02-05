@@ -1,4 +1,4 @@
-// Copyright 2022-2024
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -32,7 +32,10 @@ public:
     GetNextPositionEnergyMomentumdirection(G4int particle) const;
     G4int GetNParticlesInFile() const { return m_NpartsInFile; }
     G4String GetParticleName() const { return m_particlename; }
-    G4ParticleDefinition * GetParticleDefinition() const { return m_particledefinition; }
+    G4ParticleDefinition *GetParticleDefinition() const
+    {
+        return m_particledefinition;
+    }
     G4int GetTotalParticlesSimulated() const
     {
         return m_TotalParticlesSimulated;
@@ -50,7 +53,7 @@ private:
     // Simulated particle name
     G4String m_particlename = "geantino";
     // Simulated particle definition
-    G4ParticleDefinition * m_particledefinition;
+    G4ParticleDefinition *m_particledefinition;
     // Simulated particle mass
     G4double m_particle_mass;
     // Simulated particle mass squared

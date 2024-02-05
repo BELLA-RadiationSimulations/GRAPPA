@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -27,10 +27,7 @@ public:
     // method from the base class
     virtual void GeneratePrimaries(G4Event *anEvent);
 
-    GRPParticleSource *GetSource() const
-    {
-        return m_PSource.get();
-    };
+    GRPParticleSource *GetSource() const { return m_PSource.get(); };
 
 private:
     std::shared_ptr<GRPParticleSource> m_PSource;

@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -28,21 +28,27 @@ void PrintWelcomeMessage()
 #endif
 }
 
-void PrintFinalMessage(const G4Timer & timer)
+void PrintFinalMessage(const G4Timer &timer)
 {
 
     G4cout
         << "==================================================================="
         << G4endl;
     G4cout << " Simulation timing: " << G4endl;
-    G4cout << "    User elapsed time   => " << timer.GetUserElapsed() * (CLHEP::second / CLHEP::hour)
-           << " h   = " << timer.GetUserElapsed() * (CLHEP::second / CLHEP::minute)
+    G4cout << "    User elapsed time   => "
+           << timer.GetUserElapsed() * (CLHEP::second / CLHEP::hour)
+           << " h   = "
+           << timer.GetUserElapsed() * (CLHEP::second / CLHEP::minute)
            << " min   = " << timer.GetUserElapsed() << " s." << G4endl;
-    G4cout << "    Real elapsed time   => " << timer.GetRealElapsed() * (CLHEP::second / CLHEP::hour)
-           << " h   = " << timer.GetRealElapsed() * (CLHEP::second / CLHEP::minute)
+    G4cout << "    Real elapsed time   => "
+           << timer.GetRealElapsed() * (CLHEP::second / CLHEP::hour)
+           << " h   = "
+           << timer.GetRealElapsed() * (CLHEP::second / CLHEP::minute)
            << " min   = " << timer.GetRealElapsed() << " s." << G4endl;
-    G4cout << "    System elapsed time => " << timer.GetSystemElapsed() * (CLHEP::second / CLHEP::hour)
-           << " h   = " << timer.GetSystemElapsed() * (CLHEP::second / CLHEP::minute)
+    G4cout << "    System elapsed time => "
+           << timer.GetSystemElapsed() * (CLHEP::second / CLHEP::hour)
+           << " h   = "
+           << timer.GetSystemElapsed() * (CLHEP::second / CLHEP::minute)
            << " min   = " << timer.GetSystemElapsed() << " s." << G4endl;
 
     G4cout << " ================================================== " << G4endl;

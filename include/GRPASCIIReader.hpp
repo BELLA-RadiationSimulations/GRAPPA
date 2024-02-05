@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -8,7 +8,6 @@
 // This file is part of GRAPPA.
 //
 // License: BSD-3-Clause
-
 
 #pragma once
 

@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -67,7 +67,6 @@ int main(int argc, char *argv[])
     physicsList->SetVerboseLevel(0);
     runManager->SetUserInitialization(physicsList);
     // FTFP_BERT should be used instead if primary articles energy is <5GeV;
-
 
     // Introducing a particle container
     // that serves if we need to read particles from file

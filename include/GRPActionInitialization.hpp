@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -35,6 +35,7 @@ public:
     {
         m_myParticleContainer = mycontainer;
     }
+
 private:
     HistandNTupleManager *m_HistandNTupleManager;
     // Observer pointer to the particle container type

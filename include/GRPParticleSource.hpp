@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -47,7 +47,8 @@ class GRPParticleSourceGun : public GRPParticleSource
 public:
     GRPParticleSourceGun();
     virtual ~GRPParticleSourceGun();
-    void LoadNextParticle(const GRPParticleContainer &mycontainer, G4int eventNumber) override;
+    void LoadNextParticle(
+        const GRPParticleContainer &mycontainer, G4int eventNumber) override;
 
     // method to access particle gun
     virtual G4ParticleGun *GetGun() override { return m_Gun.get(); };

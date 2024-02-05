@@ -1,11 +1,11 @@
-// Copyright 2022-2024
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
 //
 // Creator: Davide Terzani
 //
-// This file is part of BELLABD.
+// This file is part of GRAPPA.
 //
 // License: BSD-3-Clause
 

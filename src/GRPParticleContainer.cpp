@@ -1,4 +1,4 @@
-// Copyright 2022-2024
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -11,13 +11,16 @@
 
 #include <GRPParticleContainer.hpp>
 
-GRPParticleContainer::GRPParticleContainer() {
-        G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
-    G4ParticleDefinition *particle = particle_table->FindParticle(m_particlename);
-            m_particledefinition = particle;
-        m_particle_mass = particle->GetPDGMass();
-        m_particle_mass_squared = std::pow(m_particle_mass, 2);
-    DefineCommands(); }
+GRPParticleContainer::GRPParticleContainer()
+{
+    G4ParticleTable *particle_table = G4ParticleTable::GetParticleTable();
+    G4ParticleDefinition *particle =
+        particle_table->FindParticle(m_particlename);
+    m_particledefinition = particle;
+    m_particle_mass = particle->GetPDGMass();
+    m_particle_mass_squared = std::pow(m_particle_mass, 2);
+    DefineCommands();
+}
 
 GRPParticleContainer::~GRPParticleContainer() {}
 

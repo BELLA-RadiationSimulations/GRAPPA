@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -11,8 +11,7 @@
 
 #include <GRPPrimaryGeneratorAction.hpp>
 
-GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(
-    bool useFile)
+GRPPrimaryGeneratorAction::GRPPrimaryGeneratorAction(bool useFile)
 {
     if (useFile)
     {

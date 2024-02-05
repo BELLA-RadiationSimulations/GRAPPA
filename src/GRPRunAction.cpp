@@ -1,4 +1,4 @@
-// Copyright 2021-2023
+// Copyright 2021-2024
 //
 // Authors:
 // Stanimir Kisyov, Davide Terzani
@@ -37,9 +37,9 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
 
     if (m_myParticleContainer->GetUseFile())
     {
-        const G4int Numberofeventsthisrun = runmanager->GetNumberOfEventsToBeProcessed();
-        const G4int nparts =
-            m_myParticleContainer->GetNParticlesInFile();
+        const G4int Numberofeventsthisrun =
+            runmanager->GetNumberOfEventsToBeProcessed();
+        const G4int nparts = m_myParticleContainer->GetNParticlesInFile();
         if (Numberofeventsthisrun > nparts)
         {
             G4ExceptionDescription msg;
@@ -93,15 +93,18 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
                << runmanager->GetCurrentRun()->GetRunID() << ":" << G4endl;
         G4cout << "    User elapsed time   => "
                << m_timer->GetUserElapsed() * (CLHEP::second / CLHEP::hour)
-               << " h   = " << m_timer->GetUserElapsed() * (CLHEP::second / CLHEP::minute)
+               << " h   = "
+               << m_timer->GetUserElapsed() * (CLHEP::second / CLHEP::minute)
                << " min   = " << m_timer->GetUserElapsed() << " s." << G4endl;
         G4cout << "    Real elapsed time   => "
                << m_timer->GetRealElapsed() * (CLHEP::second / CLHEP::hour)
-               << " h   = " << m_timer->GetRealElapsed() * (CLHEP::second / CLHEP::minute)
+               << " h   = "
+               << m_timer->GetRealElapsed() * (CLHEP::second / CLHEP::minute)
                << " min   = " << m_timer->GetRealElapsed() << " s." << G4endl;
         G4cout << "    System elapsed time => "
                << m_timer->GetSystemElapsed() * (CLHEP::second / CLHEP::hour)
-               << " h   = " << m_timer->GetSystemElapsed() * (CLHEP::second / CLHEP::minute)
+               << " h   = "
+               << m_timer->GetSystemElapsed() * (CLHEP::second / CLHEP::minute)
                << " min   = " << m_timer->GetSystemElapsed() << " s." << G4endl;
         G4cout << "============================================================"
                   "=============="
