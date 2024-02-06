@@ -164,8 +164,6 @@ The command to extract particles from a given ASCII file is
 /run/initialize
 # ... (Other operations)
 
-# Define particle type (default is electrons)
-/gun/particle gamma
 ```
 The structure of an ascii file is a six-column list of all the particles, in the form:
 
@@ -184,6 +182,8 @@ the initialization and even between runs
 # Command to print the current setup
 /particlesource/print
 ```
+
+> :warning: If you request particles from a file, the particle type must be changed via the command `/particlesource/setParticle <particlename>` and not via the `/gun` command. The `/gun` command is not aware of the request to read particles from a file and therefore cannot update the particle container consistently.
 
 If the file contains less particles than the ones requested for a run,
 GRAPPA will keep looping through the file relying on the fact that the random seed will be constantly updated.
@@ -294,6 +294,7 @@ The complete list of generated ntuples is the following:
 # - 4  Final photon
 # - 5  Final pions
 # - 6  Final muons
+# - 7  Number of primaries evolved
 ```
 
 The name of the file containing the output can be changed too,
