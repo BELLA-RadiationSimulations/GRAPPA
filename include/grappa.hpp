@@ -11,12 +11,6 @@
 
 #pragma once
 
-#include <iostream>
-#include <ctime>
-
-#include <globals.hh>
-#include <FTFP_BERT.hh>
-#include <QGSP_BERT.hh>
 #include <G4PhysListFactory.hh>
 #include <G4RunManagerFactory.hh>
 #include <G4Timer.hh>
@@ -26,7 +20,5 @@
 
 #include <GRPDetectorConstruction.hpp>
 #include <GRPParticleContainer.hpp>
-#include <GRPPrimaryGeneratorAction.hpp>
-#include <GRPRunAction.hpp>
 #include <GRPActionInitialization.hpp>
 #include <GRPSignalHandler.hpp>

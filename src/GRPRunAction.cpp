@@ -75,11 +75,19 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
 
     // Getting the run manager
     G4RunManager *runmanager = G4RunManager::GetRunManager();
+    G4AnalysisManager * analysismanager = G4AnalysisManager::Instance();
     const G4int nofEvents = run->GetNumberOfEvent();
 
-    // Write and close analysis files
-    m_HistoandNtupleManager->FinishAnalysis();
-
+    if (!IsMaster())
+    {
+        const G4int primarycountid = m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryCountId();
+        const G4bool primarycountactive = m_HistoandNtupleManager->GetNTupleManager()->GetIdActivation(primarycountid);
+        if (primarycountactive)
+        {
+            analysismanager->FillNtupleIColumn(primarycountid, 0, nofEvents);
+            analysismanager->AddNtupleRow(primarycountid);
+        }
+    }
     // Print the run timing
     if (IsMaster())
     {
@@ -110,6 +118,9 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
                   "=============="
                << G4endl;
     }
+
+    // Write and close analysis files
+    m_HistoandNtupleManager->FinishAnalysis();
 }
 
 void GRPRunAction::DefineCommands()
