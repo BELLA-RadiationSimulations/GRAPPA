@@ -25,42 +25,42 @@ public:
     HistoManager();
     ~HistoManager();
 
-    inline int GetPrimaryEneId() { return primaryeneid; }
-    inline int GetPositronEneId() { return posieneid; }
-    inline int GetElectronEneId() { return electroneneid; }
-    inline int GetGammaEneId() { return gammaeneid; }
-    inline int GetPionEneId() { return pioneneid; }
-    inline int GetMuonEneId() { return muoneneid; }
-    inline int GetPrimaryxyId() { return finalprimaryxyid; }
-    inline int GetPositronxyId() { return finalpositronxyid; }
-    inline int GetElectronxyId() { return finalelectronxyid; }
-    inline int GetGammaxyId() { return finalgammaxyid; }
-    inline int GetPionxyId() { return finalpionxyid; }
-    inline int GetMuonxyId() { return finalmuonxyid; }
-    inline int GetPrimarytxtyId() { return finalprimarytxtyid; }
-    inline int GetPositrontxtyId() { return finalpositrontxtyid; }
-    inline int GetElectrontxtyId() { return finalelectrontxtyid; }
-    inline int GetGammatxtyId() { return finalgammatxtyid; }
-    inline int GetPiontxtyId() { return finalpiontxtyid; }
-    inline int GetMuontxtyId() { return finalmuontxtyid; }
-    inline int GetPrimaryInitialxyId() { return initialprimaryxyid; }
-    inline int GetPrimaryInitialzxId() { return initialprimaryzxid; }
-    inline int GetPrimaryInitialEneId() { return initialprimaryeneid; }
-    inline int GetPrimaryInitialtxtyId() { return initialprimarytxtyid; }
-    inline int GetPrimaryInitialxpxId() { return initialprimaryxpxid; }
-    inline int GetPrimaryInitialypyId() { return initialprimaryypyid; }
-    inline int GetPrimaryThetaId() { return primarytheta; }
-    inline int GetElectronThetaId() { return electrontheta; }
-    inline int GetPositronThetaId() { return positrontheta; }
-    inline int GetGammaThetaId() { return gammatheta; }
-    inline int GetPionThetaId() { return piontheta; }
-    inline int GetMuonThetaId() { return muontheta; }
-    inline int GetPrimaryPhiId() { return primaryphi; }
-    inline int GetElectronPhiId() { return electronphi; }
-    inline int GetPositronPhiId() { return positronphi; }
-    inline int GetGammaPhiId() { return gammaphi; }
-    inline int GetPionPhiId() { return pionphi; }
-    inline int GetMuonPhiId() { return muonphi; }
+    G4int GetPrimaryEneId() const { return primaryeneid; }
+    G4int GetPositronEneId() const { return posieneid; }
+    G4int GetElectronEneId() const { return electroneneid; }
+    G4int GetGammaEneId() const { return gammaeneid; }
+    G4int GetPionEneId() const { return pioneneid; }
+    G4int GetMuonEneId() const { return muoneneid; }
+    G4int GetPrimaryxyId() const { return finalprimaryxyid; }
+    G4int GetPositronxyId() const { return finalpositronxyid; }
+    G4int GetElectronxyId() const { return finalelectronxyid; }
+    G4int GetGammaxyId() const { return finalgammaxyid; }
+    G4int GetPionxyId() const { return finalpionxyid; }
+    G4int GetMuonxyId() const { return finalmuonxyid; }
+    G4int GetPrimarytxtyId() const { return finalprimarytxtyid; }
+    G4int GetPositrontxtyId() const { return finalpositrontxtyid; }
+    G4int GetElectrontxtyId() const { return finalelectrontxtyid; }
+    G4int GetGammatxtyId() const { return finalgammatxtyid; }
+    G4int GetPiontxtyId() const { return finalpiontxtyid; }
+    G4int GetMuontxtyId() const { return finalmuontxtyid; }
+    G4int GetPrimaryInitialxyId() const { return initialprimaryxyid; }
+    G4int GetPrimaryInitialzxId() const { return initialprimaryzxid; }
+    G4int GetPrimaryInitialEneId() const { return initialprimaryeneid; }
+    G4int GetPrimaryInitialtxtyId() const { return initialprimarytxtyid; }
+    G4int GetPrimaryInitialxpxId() const { return initialprimaryxpxid; }
+    G4int GetPrimaryInitialypyId() const { return initialprimaryypyid; }
+    G4int GetPrimaryThetaId() const { return primarytheta; }
+    G4int GetElectronThetaId() const { return electrontheta; }
+    G4int GetPositronThetaId() const { return positrontheta; }
+    G4int GetGammaThetaId() const { return gammatheta; }
+    G4int GetPionThetaId() const { return piontheta; }
+    G4int GetMuonThetaId() const { return muontheta; }
+    G4int GetPrimaryPhiId() const { return primaryphi; }
+    G4int GetElectronPhiId() const { return electronphi; }
+    G4int GetPositronPhiId() const { return positronphi; }
+    G4int GetGammaPhiId() const { return gammaphi; }
+    G4int GetPionPhiId() const { return pionphi; }
+    G4int GetMuonPhiId() const { return muonphi; }
     void Book();
 
 private:
@@ -147,36 +147,40 @@ public:
     ~NTupleManager();
 
     // Get index for the initial primaries Ntuple
-    inline int GetPrimaryInitialId() { return primaryinitialid; }
+    G4int GetPrimaryInitialId() const { return m_primaryinitialid; }
     // Get index for the final primaries Ntuple
-    inline int GetPrimaryId() { return primaryid; }
+    G4int GetPrimaryId() const { return m_primaryid; }
     // Get index for the positrons Ntuple
-    inline int GetPositronId() { return posiid; }
+    G4int GetPositronId() const { return m_posiid; }
     // Get index for the electrons Ntuple
-    inline int GetElectronId() { return electronid; }
+    G4int GetElectronId() const { return m_electronid; }
     // Get index for the photons Ntuple
-    inline int GetGammaId() { return gammaid; }
+    G4int GetGammaId() const { return m_gammaid; }
     // Get index for the pions Ntuple
-    inline int GetPionId() { return pionid; }
+    G4int GetPionId() const { return m_pionid; }
     // Get index for the muons Ntuple
-    inline int GetMuonId() { return muonid; }
+    G4int GetMuonId() const { return m_muonid; }
+    // Get index for the primary count Ntuple
+    G4int GetPrimaryCountId() const { return m_primarycountid; }
     // Get if the Ntuple for the initial primaries is active
-    inline G4bool GetPrimaryInitialIdActivation() const
+    inline G4bool GetPrimaryInitialActivation() const
     {
         return m_primaryinitialidactive;
     }
     // Get if the Ntuple for the final primaries is active
-    inline G4bool GetPrimaryIdActivation() const { return m_primaryidactive; }
+    G4bool GetPrimaryActivation() const { return m_primaryactive; }
     // Get if the Ntuple for the positrons is active
-    inline G4bool GetPositronIdActivation() const { return m_posiidactive; }
+    G4bool GetPositronActivation() const { return m_posiactive; }
     // Get if the Ntuple for the electrons is active
-    inline G4bool GetElectronIdActivation() const { return m_electronidactive; }
+    G4bool GetElectronActivation() const { return m_electronactive; }
     // Get if the Ntuple for the gammas is active
-    inline G4bool GetGammaIdActivation() const { return m_gammaidactive; }
+    G4bool GetGammaActivation() const { return m_gammaactive; }
     // Get if the Ntuple for the pions is active
-    inline G4bool GetPionIdActivation() const { return m_pionidactive; }
+    G4bool GetPionActivation() const { return m_pionactive; }
     // Get if the Ntuple for the muons is active
-    inline G4bool GetMuonIdActivation() const { return m_muonidactive; }
+    G4bool GetMuonActivation() const { return m_muonactive; }
+    // Get if the Ntuple for the primary count is active
+    G4bool GetPrimaryCountActivation() const { return m_primarycountactive; }
     // Get if the Ntuple with ID is active
     G4bool GetIdActivation(const G4int ID) const;
     void Book();
@@ -184,11 +188,31 @@ public:
     void SetNtupleDump(G4int ID, G4bool ifdump);
 
 private:
-    G4int primaryinitialid, primaryid, posiid, electronid, gammaid, pionid,
-        muonid;
-    G4bool m_primaryinitialidactive = true, m_primaryidactive = true,
-           m_posiidactive = true, m_electronidactive = true,
-           m_gammaidactive = true, m_pionidactive = true, m_muonidactive = true;
+    // Phase space of initial primaries
+    G4int m_primaryinitialid;
+    // Phase space of final primaries
+    G4int m_primaryid;
+    // Phase space of final positrons
+    G4int m_posiid;
+    // Phase space of final electrons
+    G4int m_electronid;
+    // Phase space of final photons
+    G4int m_gammaid;
+    // Phase space of final pions
+    G4int m_pionid;
+    // Phase space of final muons
+    G4int m_muonid;
+    // Events executed by each thread
+    G4int m_primarycountid;
+
+    G4bool m_primaryinitialidactive = true;
+    G4bool m_primaryactive = true;
+    G4bool m_posiactive = true;
+    G4bool m_electronactive = true;
+    G4bool m_gammaactive = true;
+    G4bool m_pionactive = true;
+    G4bool m_muonactive = true;
+    G4bool m_primarycountactive = true;
 };
 
 class HistandNTupleManager
