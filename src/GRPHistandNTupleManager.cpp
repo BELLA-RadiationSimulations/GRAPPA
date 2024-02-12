@@ -644,7 +644,8 @@ void NTupleManager::Book()
         analysisManager->CreateNtuple("PrimaryCount", "Counting primaries");
     analysisManager->CreateNtupleIColumn(m_primarycountid, "N");
     analysisManager->FinishNtuple(m_primarycountid);
-    analysisManager->SetNtupleActivation(m_primarycountid, m_primarycountactive);
+    analysisManager->SetNtupleActivation(
+        m_primarycountid, m_primarycountactive);
 }
 
 void NTupleManager::ListNtuples()
