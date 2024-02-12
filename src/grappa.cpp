@@ -58,12 +58,12 @@ int main(int argc, char *argv[])
 
     // Constructing the physics list
     // The last characters in the physics list represent the ElectroMagnetic
-    // component By default, FTFP_BERT constructs the standart EM.
+    // component By default, FTFP_BERT constructs the standard EM.
     // "_LIV_" stands for Livermore, "_PEN" to Penelope.
     //
     G4PhysListFactory factory;
     G4VModularPhysicsList *physicsList =
-        factory.GetReferencePhysList("FTFP_BERT_EMZ");
+        factory.GetReferencePhysList("QGSP_BIC_EMZ");
     physicsList->SetVerboseLevel(0);
     runManager->SetUserInitialization(physicsList);
     // FTFP_BERT should be used instead if primary articles energy is <5GeV;
