@@ -5,8 +5,7 @@
 ---
 # Overview
 GRAPPA is a Geant4 application that simulates theinteraction of an incoming particle beam
-(typically electron or photons) with an High-Z materialfoil.
-The basic GRAPPA geometry consists of an incoming beamand a square target of given thickness (foil) that canbe rotated around the vertical axis.
+(typically electron or photons) with an High-Z materialfoil. The basic GRAPPA geometry consists of an incoming beamand a square target of given thickness (foil) that canbe rotated around the vertical axis.
 Detectors are placed onto the _world_ boundary, and the_world_ is a sphere that surrounds the initial particlesand the target.
 Final positions, momenta and proper time are registeredby the detectors, that are triggered by the passage of
 
