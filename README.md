@@ -17,10 +17,8 @@ Final positions, momenta and proper time are registeredby the detectors, that ar
 - Muons
 - Photons
 
-At the end of a simulation, GRAPPA produces
-an histogram plot file, where many of the producedparticle statistics are analyzed,
-an histogram ROOT file and a _Ntuple_ ROOT file.
-In Geant4, an Ntuple represents a file where each column stores some particular data (for example x coordinate or y momentum) of a given particle.
+At the end of a simulation, GRAPPA produces an histogram plot file, where many of the producedparticle statistics are analyzed,
+an histogram ROOT file and a _Ntuple_ ROOT file. In Geant4, an Ntuple represents a file where each column stores some particular data (for example x coordinate or y momentum) of a given particle.
 
 # Build
 
