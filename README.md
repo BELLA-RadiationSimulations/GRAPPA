@@ -4,10 +4,7 @@
 
 ---
 # Overview
-GRAPPA is a Geant4 application that simulates the interaction of an incoming particle beam
-(typically electron or photons) with an High-Z material foil. The basic GRAPPA geometry consists of an incoming beam and a square target of given thickness (foil) that canbe rotated around the vertical axis.
-Detectors are placed onto the _world_ boundary, and the_world_ is a sphere that surrounds the initial particles and the target.
-Final positions, momenta and proper time are registered by the detectors, that are triggered by the passage of
+GRAPPA is a Geant4 application that simulates the interaction of an incoming particle beam (typically electron or photons) with an High-Z material foil. The basic GRAPPA geometry consists of an incoming beam and a rectangular target of given thickness (foil) that can be rotated around the vertical axis. Detectors are placed onto the _world_ boundary; the _world_ is a sphere that surrounds the initial particles and the target. Final positions, momenta and proper time are registered by the detectors, that are triggered by the passage of
 
 - Primary particles
 - Electrons
@@ -16,56 +13,51 @@ Final positions, momenta and proper time are registered by the detectors, that a
 - Muons
 - Photons
 
-At the end of a simulation, GRAPPA produces an histogram plot file, where many of the producedparticle statistics are analyzed,
-an histogram ROOT file and a _Ntuple_ ROOT file. In Geant4, an Ntuple represents a file where each column stores some particular data (for example x coordinate or y momentum) of a given particle.
+At the end of a simulation, GRAPPA produces a histogram plot file, where many of the produced particle statistics are analyzed,
+a histogram ROOT file and a _Ntuple_ ROOT file. In Geant4, an Ntuple represents a file where each column stores some particular data (for example x coordinate or y momentum) of a given particle.
 
-# Build
+# Installation guide
 
-GRAPPA is a Geant4 (G4) application, therefore it requires that G4 is previously installed on the system.
-A comprehensive guide on how to install G4 can be found on the [G4 installation guide](https://geant4-userdoc.web.cern.ch/UsersGuides/InstallationGuide/html/index.html).
+GRAPPA is a Geant4 (G4) application. A comprehensive guide on how to install G4 can be found on the [G4 installation guide](https://geant4-userdoc.web.cern.ch/UsersGuides/InstallationGuide/html/index.html).
 
 ## Requirements
 
 GRAPPA requires:
-- `Geant4` installed on the system
+- `Geant4`
 - `C++` compiler (standard required C++-17)
 
-Besides, other optional argument will enable extra features:
-- Mutithreading support: G4 built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`.
-If G4 is built with multithreading support, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation input.
-- Visualization support: In order to produce visual outputs,
-you must install some of the G4 provided visualization drivers (_e.g._ OpenGL, RayTracer, QT5, etc...),
-that in turn require the correct visualization drivers to be installed on the system.
-Please refer to the installation guide for more information.
-- For nicer histogram plots, `Freetype` libraries should be available.
-G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON` for `Freetype` support in GRAPPA.
-- For the analysis of the `ROOT` (default) output file, `ROOT` should be installed on the system ([ROOT](https://root.cern)).
+Recommended packages:
+- `ROOT` for data post-processing ([ROOT](https://root.cern))
+- `uproot` python package for data post-processing
+- **CAN WE MAKE SUGGESTIONS FOR VISUALISATION?**
 
-All of the mentioned additional features do not require
-any compilation flag to be specified in the building process.
-In fact, they are automatically detected in the G4 installation.
+Additional features:
+- Mutithreading support: if G4 is built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation **input** (What is that?).
+- Visualization support: In order to produce visual outputs, G4 provided visualization drivers must be installed (_e.g._ OpenGL, RayTracer, QT5, etc...).
+Please refer to the installation guide for more information.
+- Advanced histogram plotting is available with the `Freetype` library: G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON`.
+- For the analysis of the `ROOT` (default) output file, `ROOT` must be installed ([ROOT](https://root.cern)).
+
+Additional features do not require any compilation flag to be specified in the building process but are automatically detected in the G4 installation.
 
 ## Build instructions
 
-GRAPPA is best built using cmake. From the source folder you can build and install GRAPPA using the commands
+GRAPPA is built using cmake. From the source folder, GRAPPA is installed using the commands
 
 ```commandline
 cmake -S . -B build -DCMAKE_INSTALL_PREFIX=. -DGeant4_DIR={G4 cmake directory on the system} -DCMAKE_BUILD_TYPE="Release"
 cmake --build build --target install
 ```
 
-You should provide `cmake` with the G4 installation directory containing the `Geant4Config.cmake` file.
-Typically, it can be found in
-`${G4_base_install_dir}/lib/Geant4-version`.
-Depending on the system, one may want to change the `CMAKE_INSTALL_PREFIX` to a conventient location. If the flag is passed as specified in the example, GRAPPA is installed in the `bin` directory of the source code folder.
+**Notes**:
+ - The `Geant4Config.cmake` file of the G4 installation should be specified via the `DGeant4_DIR` flag. (Typically, it can be found in `${G4_base_install_dir}/lib/Geant4-version`. **Following the G4 instruction guide, it is actually located in: **`${G4_base_install_dir}/share/Geant4/geant4make/`)
+ - Installation location of GRAPPA can be specified via the flag `CMAKE_INSTALL_PREFIX`. The default location is the `bin` directory of the source code folder.
 
 ---
 
 # Run a simulation and postprocess data
 
-GRAPPA can either run using an interactive user interface (`UI`) or using a provided macro script.
-Before running, the G4 initialization script, provided by G4, must be sourced.
-It is located in the bin directory of the G4 installation directory and it should be sourced with
+GRAPPA can either run using an interactive user interface (`UI`) or using a provided macro script. Before running, the G4 initialization script, provided by G4, must be sourced. It is located in the bin directory of the G4 installation directory and it should be sourced with
 
 ```commandline
 source ${G4_base_install_dir}/bin/geant4.sh
