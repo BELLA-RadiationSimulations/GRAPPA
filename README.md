@@ -4,7 +4,7 @@
 
 ---
 # Overview
-GRAPPA is a Geant4 application that simulates the interaction of an incoming particle beam (typically electron or photons) with an High-Z material foil. The basic GRAPPA geometry consists of an incoming beam and a rectangular target of given thickness (foil) that can be rotated around the vertical axis. Detectors are placed onto the _world_ boundary; the _world_ is a sphere that surrounds the initial particles and the target. Final positions, momenta and proper time are registered by the detectors, that are triggered by the passage of
+GRAPPA is a Geant4 application that simulates the interaction of an incoming particle beam (typically electron or photons) with an High-Z material foil. The basic GRAPPA geometry consists of an incoming beam and a square target of given thickness (foil) that can be rotated around the vertical axis. Detectors are placed onto the _world_ boundary; the _world_ is a sphere that surrounds the initial particles and the target. Final positions, momenta and proper time are registered by the detectors, that are triggered by the passage of
 
 - Primary particles
 - Electrons
@@ -27,8 +27,7 @@ GRAPPA requires:
 - `C++` compiler (standard required C++-17)
 
 Recommended packages:
-- `ROOT` for data post-processing ([ROOT](https://root.cern))
-- `uproot` python package for data post-processing
+- [uproot](https://pypi.org/project/uproot/) python package for data post-processing, alternatively: [ROOT](https://root.cern)
 - **CAN WE MAKE SUGGESTIONS FOR VISUALISATION?**
 
 Additional features:
@@ -36,7 +35,7 @@ Additional features:
 - Visualization support: In order to produce visual outputs, G4 provided visualization drivers must be installed (_e.g._ OpenGL, RayTracer, QT5, etc...).
 Please refer to the installation guide for more information.
 - Advanced histogram plotting is available with the `Freetype` library: G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON`.
-- For the analysis of the `ROOT` (default) output file, `ROOT` must be installed ([ROOT](https://root.cern)).
+- For the analysis of the `ROOT` (default) output file, [ROOT](https://root.cern) or the python package [uproot](https://pypi.org/project/uproot/) must be installed. 
 
 Additional features do not require any compilation flag to be specified in the building process but are automatically detected in the G4 installation.
 
