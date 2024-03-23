@@ -4,11 +4,10 @@
 
 ---
 # Overview
-GRAPPA is a Geant4 application that simulates theinteraction of an incoming particle beam
-(typically electron or photons) with an High-Z materialfoil.
-The basic GRAPPA geometry consists of an incoming beamand a square target of given thickness (foil) that canbe rotated around the vertical axis.
-Detectors are placed onto the _world_ boundary, and the_world_ is a sphere that surrounds the initial particlesand the target.
-Final positions, momenta and proper time are registeredby the detectors, that are triggered by the passage of
+GRAPPA is a Geant4 application that simulates the interaction of an incoming particle beam
+(typically electron or photons) with an High-Z material foil. The basic GRAPPA geometry consists of an incoming beam and a square target of given thickness (foil) that canbe rotated around the vertical axis.
+Detectors are placed onto the _world_ boundary, and the_world_ is a sphere that surrounds the initial particles and the target.
+Final positions, momenta and proper time are registered by the detectors, that are triggered by the passage of
 
 - Primary particles
 - Electrons
@@ -17,10 +16,8 @@ Final positions, momenta and proper time are registeredby the detectors, that ar
 - Muons
 - Photons
 
-At the end of a simulation, GRAPPA produces
-an histogram plot file, where many of the producedparticle statistics are analyzed,
-an histogram ROOT file and a _Ntuple_ ROOT file.
-In Geant4, an Ntuple represents a file where each column stores some particular data (for example x coordinate or y momentum) of a given particle.
+At the end of a simulation, GRAPPA produces an histogram plot file, where many of the producedparticle statistics are analyzed,
+an histogram ROOT file and a _Ntuple_ ROOT file. In Geant4, an Ntuple represents a file where each column stores some particular data (for example x coordinate or y momentum) of a given particle.
 
 # Build
 
