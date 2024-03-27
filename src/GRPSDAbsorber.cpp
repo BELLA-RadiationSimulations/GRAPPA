@@ -233,7 +233,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             m_HistoandNtupleManager->GetNTupleManager();
         const G4bool analysisactive = analysisManager->IsActive();
 
-        const G4bool activationstatus = ntuplemanager->GetIdActivation(ntupleid);
+        const G4bool activationstatus =
+            ntuplemanager->GetIdActivation(ntupleid);
 
         if (activationstatus && analysisactive)
         {

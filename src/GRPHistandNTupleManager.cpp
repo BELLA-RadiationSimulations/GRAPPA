@@ -150,7 +150,8 @@ void HistoManager::Book()
         9.9 * GeV,
         10.1 * GeV,
         "GeV");
-    analysisManager->SetH1Activation(m_initialprimaryeneid, m_activatehistograms);
+    analysisManager->SetH1Activation(
+        m_initialprimaryeneid, m_activatehistograms);
 
     // Final theta distributions
     // HistogramId = 7
@@ -302,7 +303,8 @@ void HistoManager::Book()
         100 * um,
         "um",
         "um");
-    analysisManager->SetH2Activation(m_initialprimaryxyid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_initialprimaryxyid, m_activatehistograms);
     // HistogramId = 1
     // Initial primary longitudinal distribution
     m_initialprimaryzxid = analysisManager->CreateH2(
@@ -316,7 +318,8 @@ void HistoManager::Book()
         100 * um,
         "um",
         "um");
-    analysisManager->SetH2Activation(m_initialprimaryzxid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_initialprimaryzxid, m_activatehistograms);
     // Initial primary angular distribution
     // HistogramId = 2
     m_initialprimarytxtyid = analysisManager->CreateH2(
@@ -330,7 +333,8 @@ void HistoManager::Book()
         20 * mrad,
         "mrad",
         "mrad");
-    analysisManager->SetH2Activation(m_initialprimarytxtyid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_initialprimarytxtyid, m_activatehistograms);
     // Initial primary trasverse x-phasespace
     // HistogramId = 3
     m_initialprimaryxpxid = analysisManager->CreateH2(
@@ -344,7 +348,8 @@ void HistoManager::Book()
         20 * MeV,
         "um",
         "MeV");
-    analysisManager->SetH2Activation(m_initialprimaryxpxid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_initialprimaryxpxid, m_activatehistograms);
     // Initial primary trasverse y-phasespace
     // HistogramId = 4
     m_initialprimaryypyid = analysisManager->CreateH2(
@@ -358,7 +363,8 @@ void HistoManager::Book()
         20 * MeV,
         "um",
         "MeV");
-    analysisManager->SetH2Activation(m_initialprimaryypyid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_initialprimaryypyid, m_activatehistograms);
 
     // Final primary transverse distribution
     // HistogramId = 5
@@ -458,7 +464,8 @@ void HistoManager::Book()
         1.5 * rad,
         "rad",
         "rad");
-    analysisManager->SetH2Activation(m_finalprimarytxtyid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_finalprimarytxtyid, m_activatehistograms);
     // Final electron angle distribution
     // HistogramId = 12
     m_finalelectrontxtyid = analysisManager->CreateH2(
@@ -472,7 +479,8 @@ void HistoManager::Book()
         1.5 * rad,
         "rad",
         "rad");
-    analysisManager->SetH2Activation(m_finalelectrontxtyid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_finalelectrontxtyid, m_activatehistograms);
     // Final positron angle distribution
     // HistogramId = 13
     m_finalpositrontxtyid = analysisManager->CreateH2(
@@ -486,7 +494,8 @@ void HistoManager::Book()
         1.5 * rad,
         "rad",
         "rad");
-    analysisManager->SetH2Activation(m_finalpositrontxtyid, m_activatehistograms);
+    analysisManager->SetH2Activation(
+        m_finalpositrontxtyid, m_activatehistograms);
     // Final gamma angle distribution
     // HistogramId = 14
     m_finalgammatxtyid = analysisManager->CreateH2(
