@@ -101,9 +101,9 @@ endif()
 
 # Here we set that GRAPPA will prefer static over shared libraries, if both are
 # found
-option(GRAPPA_PREFER_STATIC_G4 "Prefer Geant4 static over shared" ON)
-mark_as_advanced(GRAPPA_PREFER_STATIC_G4)
-if(GRAPPA_PREFER_STATIC_G4)
+option(GRAPPA_PREFER_STATIC_GEANT4 "Prefer Geant4 static over shared" ON)
+mark_as_advanced(GRAPPA_PREFER_STATIC_GEANT4)
+if(GRAPPA_PREFER_STATIC_GEANT4)
     list(APPEND G4_OPTIONAL_COMPONENTS static)
 endif()
 
@@ -123,18 +123,16 @@ target_compile_definitions(GRAPPA PRIVATE Geant4_VERSION=${Geant4_VERSION})
 
 if(${Geant4_shared_FOUND})
     set(GRAPPA_FOUND_SHARED_GEANT4 TRUE)
-    message(STATUS "Geant4 shared library found.")
     set(GRAPPA_USE_SHARED_GEANT4 TRUE)
 endif()
 
 if(${Geant4_static_FOUND})
     set(GRAPPA_FOUND_STATIC_GEANT4 TRUE)
-    message(STATUS "Geant4 static library found.")
     set(GRAPPA_USE_STATIC_GEANT4 TRUE)
 endif()
 
 if(GRAPPA_FOUND_SHARED_GEANT4 AND GRAPPA_FOUND_STATIC_GEANT4)
-    if(GRAPPA_PREFER_STATIC)
+    if(GRAPPA_PREFER_STATIC_GEANT4)
         message(
             STATUS
                 "Both static and shared version of Geant4 found. Static version is preferred."
