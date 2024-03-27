@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# This script requires cmake-format to be installed in python
+# Since it relies on a configuration file,
+# the package pyyaml needs to be installed
 
 find . -name build -prune -o -type f \
     -name "*CMakeLists.txt" -print \
-    | xargs -n1 cmake-format --tab-size 4 \
-    --enable-markup False -i
+    | xargs -n1 cmake-format -i
