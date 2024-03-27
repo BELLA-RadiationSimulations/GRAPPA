@@ -85,7 +85,8 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
         const G4bool primarycountactive =
             m_HistoandNtupleManager->GetNTupleManager()->GetIdActivation(
                 primarycountid);
-        if (primarycountactive)
+        const G4bool analysisactive = analysismanager->IsActive();
+        if (analysisactive && primarycountactive)
         {
             analysismanager->FillNtupleIColumn(primarycountid, 0, nofEvents);
             analysismanager->AddNtupleRow(primarycountid);

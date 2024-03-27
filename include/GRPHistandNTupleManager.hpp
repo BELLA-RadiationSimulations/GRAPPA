@@ -25,119 +25,127 @@ public:
     HistoManager();
     ~HistoManager();
 
-    G4int GetPrimaryEneId() const { return primaryeneid; }
-    G4int GetPositronEneId() const { return posieneid; }
-    G4int GetElectronEneId() const { return electroneneid; }
-    G4int GetGammaEneId() const { return gammaeneid; }
-    G4int GetPionEneId() const { return pioneneid; }
-    G4int GetMuonEneId() const { return muoneneid; }
-    G4int GetPrimaryxyId() const { return finalprimaryxyid; }
-    G4int GetPositronxyId() const { return finalpositronxyid; }
-    G4int GetElectronxyId() const { return finalelectronxyid; }
-    G4int GetGammaxyId() const { return finalgammaxyid; }
-    G4int GetPionxyId() const { return finalpionxyid; }
-    G4int GetMuonxyId() const { return finalmuonxyid; }
-    G4int GetPrimarytxtyId() const { return finalprimarytxtyid; }
-    G4int GetPositrontxtyId() const { return finalpositrontxtyid; }
-    G4int GetElectrontxtyId() const { return finalelectrontxtyid; }
-    G4int GetGammatxtyId() const { return finalgammatxtyid; }
-    G4int GetPiontxtyId() const { return finalpiontxtyid; }
-    G4int GetMuontxtyId() const { return finalmuontxtyid; }
-    G4int GetPrimaryInitialxyId() const { return initialprimaryxyid; }
-    G4int GetPrimaryInitialzxId() const { return initialprimaryzxid; }
-    G4int GetPrimaryInitialEneId() const { return initialprimaryeneid; }
-    G4int GetPrimaryInitialtxtyId() const { return initialprimarytxtyid; }
-    G4int GetPrimaryInitialxpxId() const { return initialprimaryxpxid; }
-    G4int GetPrimaryInitialypyId() const { return initialprimaryypyid; }
-    G4int GetPrimaryThetaId() const { return primarytheta; }
-    G4int GetElectronThetaId() const { return electrontheta; }
-    G4int GetPositronThetaId() const { return positrontheta; }
-    G4int GetGammaThetaId() const { return gammatheta; }
-    G4int GetPionThetaId() const { return piontheta; }
-    G4int GetMuonThetaId() const { return muontheta; }
-    G4int GetPrimaryPhiId() const { return primaryphi; }
-    G4int GetElectronPhiId() const { return electronphi; }
-    G4int GetPositronPhiId() const { return positronphi; }
-    G4int GetGammaPhiId() const { return gammaphi; }
-    G4int GetPionPhiId() const { return pionphi; }
-    G4int GetMuonPhiId() const { return muonphi; }
+    G4int GetPrimaryEneId() const { return m_primaryeneid; }
+    G4int GetPositronEneId() const { return m_posieneid; }
+    G4int GetElectronEneId() const { return m_electroneneid; }
+    G4int GetGammaEneId() const { return m_gammaeneid; }
+    G4int GetPionEneId() const { return m_pioneneid; }
+    G4int GetMuonEneId() const { return m_muoneneid; }
+    G4int GetPrimaryxyId() const { return m_finalprimaryxyid; }
+    G4int GetPositronxyId() const { return m_finalpositronxyid; }
+    G4int GetElectronxyId() const { return m_finalelectronxyid; }
+    G4int GetGammaxyId() const { return m_finalgammaxyid; }
+    G4int GetPionxyId() const { return m_finalpionxyid; }
+    G4int GetMuonxyId() const { return m_finalmuonxyid; }
+    G4int GetPrimarytxtyId() const { return m_finalprimarytxtyid; }
+    G4int GetPositrontxtyId() const { return m_finalpositrontxtyid; }
+    G4int GetElectrontxtyId() const { return m_finalelectrontxtyid; }
+    G4int GetGammatxtyId() const { return m_finalgammatxtyid; }
+    G4int GetPiontxtyId() const { return m_finalpiontxtyid; }
+    G4int GetMuontxtyId() const { return m_finalmuontxtyid; }
+    G4int GetPrimaryInitialxyId() const { return m_initialprimaryxyid; }
+    G4int GetPrimaryInitialzxId() const { return m_initialprimaryzxid; }
+    G4int GetPrimaryInitialEneId() const { return m_initialprimaryeneid; }
+    G4int GetPrimaryInitialtxtyId() const { return m_initialprimarytxtyid; }
+    G4int GetPrimaryInitialxpxId() const { return m_initialprimaryxpxid; }
+    G4int GetPrimaryInitialypyId() const { return m_initialprimaryypyid; }
+    G4int GetPrimaryThetaId() const { return m_primarytheta; }
+    G4int GetElectronThetaId() const { return m_electrontheta; }
+    G4int GetPositronThetaId() const { return m_positrontheta; }
+    G4int GetGammaThetaId() const { return m_gammatheta; }
+    G4int GetPionThetaId() const { return m_piontheta; }
+    G4int GetMuonThetaId() const { return m_muontheta; }
+    G4int GetPrimaryPhiId() const { return m_primaryphi; }
+    G4int GetElectronPhiId() const { return m_electronphi; }
+    G4int GetPositronPhiId() const { return m_positronphi; }
+    G4int GetGammaPhiId() const { return m_gammaphi; }
+    G4int GetPionPhiId() const { return m_pionphi; }
+    G4int GetMuonPhiId() const { return m_muonphi; }
     void Book();
 
 private:
     // Histogram id numbers
 
     // Initial primary energy
-    G4int initialprimaryeneid;
+    G4int m_initialprimaryeneid;
     // Initial primary xy
-    G4int initialprimaryxyid;
+    G4int m_initialprimaryxyid;
     // Initial primary zx
-    G4int initialprimaryzxid;
+    G4int m_initialprimaryzxid;
     // Initial primary theta_x-theta_y
-    G4int initialprimarytxtyid;
+    G4int m_initialprimarytxtyid;
     // Initial primary x-p_x
-    G4int initialprimaryxpxid;
+    G4int m_initialprimaryxpxid;
     // Initial primary y-p_y
-    G4int initialprimaryypyid;
+    G4int m_initialprimaryypyid;
     // Final primary theta distribution
-    G4int primarytheta;
+    G4int m_primarytheta;
     // Final electron theta distribution
-    G4int electrontheta;
+    G4int m_electrontheta;
     // Final positron theta distribution
-    G4int positrontheta;
+    G4int m_positrontheta;
     // Final gamma theta distribution
-    G4int gammatheta;
+    G4int m_gammatheta;
     // Final pions theta distribution
-    G4int piontheta;
+    G4int m_piontheta;
     // Final muons theta distribution
-    G4int muontheta;
+    G4int m_muontheta;
     // Final primary phi distribution
-    G4int primaryphi;
+    G4int m_primaryphi;
     // Final electron phi distribution
-    G4int electronphi;
+    G4int m_electronphi;
     // Final positron phi distribution
-    G4int positronphi;
+    G4int m_positronphi;
     // Final gamma phi distribution
-    G4int gammaphi;
+    G4int m_gammaphi;
     // Final pions phi distribution
-    G4int pionphi;
+    G4int m_pionphi;
     // Final muon phi distribution
-    G4int muonphi;
+    G4int m_muonphi;
     // Final primary energy
-    G4int primaryeneid;
+    G4int m_primaryeneid;
     // Final positron energy
-    G4int posieneid;
+    G4int m_posieneid;
     // Final electron energy
-    G4int electroneneid;
+    G4int m_electroneneid;
     // Final gamma energy
-    G4int gammaeneid;
+    G4int m_gammaeneid;
     // Final pions energy
-    G4int pioneneid;
+    G4int m_pioneneid;
     // Final muons energy
-    G4int muoneneid;
+    G4int m_muoneneid;
     // Final primary transverse distribution
-    G4int finalprimaryxyid;
+    G4int m_finalprimaryxyid;
     // Final electron transverse distribution
-    G4int finalelectronxyid;
+    G4int m_finalelectronxyid;
     // Final positron transverse distribution
-    G4int finalpositronxyid;
+    G4int m_finalpositronxyid;
     // Final gamma transverse distribution
-    G4int finalgammaxyid;
+    G4int m_finalgammaxyid;
     // Final pions transverse distribution
-    G4int finalpionxyid;
+    G4int m_finalpionxyid;
     // Final muons transverse distribution
-    G4int finalmuonxyid;
+    G4int m_finalmuonxyid;
     // Final primary transverse angle
-    G4int finalprimarytxtyid;
+    G4int m_finalprimarytxtyid;
     // Final electron transverse angle
-    G4int finalelectrontxtyid;
+    G4int m_finalelectrontxtyid;
     // Final positron transverse angle
-    G4int finalpositrontxtyid;
+    G4int m_finalpositrontxtyid;
     // Final gamma transverse angle
-    G4int finalgammatxtyid;
+    G4int m_finalgammatxtyid;
     // Final pions transverse angle
-    G4int finalpiontxtyid;
+    G4int m_finalpiontxtyid;
     // Final muons transverse angle
-    G4int finalmuontxtyid;
+    G4int m_finalmuontxtyid;
+    // Flag to default activate the histograms
+    // This needs to be set to true for what I believe is a bug in Geant4
+    // It turns out the analysis manager activation depends on the *histograms*
+    // activation, regardless the activation status of the ntuples.
+    // Therefore, if the histograms are not activated, the ntuples are also not written.
+    // Because histograms are not computationally intensive and memory demanding,
+    // we should just keep them active to allow ntuples to be written
+    G4bool m_activatehistograms = true;
 };
 
 class NTupleManager
