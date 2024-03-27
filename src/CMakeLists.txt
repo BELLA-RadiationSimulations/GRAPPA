@@ -24,4 +24,5 @@ target_sources(
             GRPSDAbsorber.cpp
             GRPSignalHandler.cpp
             GRPTrackingAction.cpp
-            grappa.cpp)
+            grappa.cpp
+)
