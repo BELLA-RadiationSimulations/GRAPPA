@@ -26,10 +26,19 @@ target_compile_definitions(GRAPPA
                            PRIVATE GRAPPA_DESCRIPTION=${PROJECT_DESCRIPTION})
 target_compile_definitions(GRAPPA PRIVATE GRAPPA_URL="${PROJECT_HOMEPAGE_URL}")
 
-# Instructions needed to link with Geant 4 if not installed in a standard location
+# ~~~
+# Instructions needed to link with Geant 4 if not installed in a standard
+# location This is cmake default behavior
+# ~~~
 set(CMAKE_SKIP_BUILD_RPATH FALSE)
+# This is cmake default behavior
 set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+# This is cmake default behavior
 set(CMAKE_INSTALL_RPATH "")
+# ~~~
+# This is NOT cmake default behavior and it is needed with Geant4 in order to
+# link to the libraries it uses
+# ~~~
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 if(APPLE)
@@ -71,19 +80,52 @@ message("   ==== Using ${CMAKE_CXX_COMPILER_ID} compiler ====")
 # (As taken from G4 examples)
 
 option(WITH_GEANT4_UIVIS "Build example with Geant4 UI and Vis drivers" ON)
-if(WITH_GEANT4_UIVIS)
-    find_package(Geant4 REQUIRED ui_all vis_all)
-else()
-    find_package(Geant4 REQUIRED)
+mark_as_advanced(WITH_GEANT4_UIVIS)
+if (WITH_GEANT4_UIVIS)
+    list(APPEND G4_REQUIRED_COMPONENTS ui_all vis_all)
 endif()
+
+# Here we set that GRAPPA will prefer static over shared libraries, if both are found
+option(GRAPPA_PREFER_STATIC_G4 "Prefer Geant4 static over shared" ON)
+mark_as_advanced(GRAPPA_PREFER_STATIC_G4)
+if (GRAPPA_PREFER_STATIC_G4)
+    list(APPEND G4_OPTIONAL_COMPONENTS static)
+endif()
+
+find_package(Geant4 REQUIRED ${G4_REQUIRED_COMPONENTS} OPTIONAL_COMPONENTS ${G4_OPTIONAL_COMPONENTS})
+
 if(NOT ${Geant4_FOUND})
-    message(FATAL_ERROR "Could not locate Geant4")
+message(FATAL_ERROR "Could not locate Geant4")
 endif()
 
 message(STATUS "Geant4 was found with version ${Geant4_VERSION}")
 target_compile_definitions(GRAPPA PRIVATE Geant4_VERSION=${Geant4_VERSION})
 
-# Checking if the Geant4 version was less than 11
+# Check if Geant4 is found with static or shared version
+
+if (${Geant4_shared_FOUND})
+    set(GRAPPA_FOUND_SHARED_GEANT4 TRUE)
+    message(STATUS "Geant4 shared library found.")
+    set(GRAPPA_USE_SHARED_GEANT4 TRUE)
+endif()
+
+if(${Geant4_static_FOUND})
+    set(GRAPPA_FOUND_STATIC_GEANT4 TRUE)
+    message(STATUS "Geant4 static library found.")
+    set(GRAPPA_USE_STATIC_GEANT4 TRUE)
+endif()
+
+if (GRAPPA_FOUND_SHARED_GEANT4 AND GRAPPA_FOUND_STATIC_GEANT4)
+    if (GRAPPA_PREFER_STATIC)
+    message(STATUS "Both static and shared version of Geant4 found. Static version is preferred.")
+    set(GRAPPA_USE_SHARED_GEANT4 FALSE)
+    else()
+    message(STATUS "Both static and shared version of Geant4 found. Shared version is preferred.")
+    set(GRAPPA_USE_STATIC_GEANT4 FALSE)
+    endif()
+endif()
+
+# Checking if the Geant4 version is less than 11
 # to enable backward compatibility with the analysis manager
 # of version 10
 if(Geant4_VERSION VERSION_LESS 11)
@@ -143,8 +185,17 @@ list(
     ${RUN_SCRIPTS_DIR}/InitialPhaseSpace.dat
     ${RUN_SCRIPTS_DIR}/photon_energy.dat)
 
-target_link_libraries(GRAPPA PRIVATE ${Geant4_LIBRARIES})
+
+target_link_libraries(GRAPPA PRIVATE ${Geant4_LIBRARIES} )
+
+get_filename_component(Geant4_LIBRARY_PATH "${Geant4_DIR}/../.." ABSOLUTE)
+
 set_target_properties(GRAPPA PROPERTIES LINKER_LANGUAGE CXX)
+
+if (APPLE AND GRAPPA_USE_SHARED_GEANT4)
+    message(STATUS "Compiling on MacOS using Geant4 shared libraries requires adding the library path to the INSTALL_RPATH of the executable. Now adding the path ${Geant4_LIBRARY_PATH} to INSTALL_RPATH.")
+    set_target_properties(GRAPPA PROPERTIES INSTALL_RPATH "${Geant4_LIBRARY_PATH}")
+endif()
 
 # Install target
 install(TARGETS GRAPPA DESTINATION bin)
