@@ -145,7 +145,8 @@ private:
     // activation, regardless the activation status of the ntuples.
     // Therefore, if the histograms are not activated, the ntuples are also not
     // written. Because histograms are not computationally intensive and memory
-    // demanding, we should just keep them active to allow ntuples to be written.
+    // demanding, we should just keep them active to allow ntuples to be
+    // written.
     G4bool m_activatehistograms = true;
 };
 
