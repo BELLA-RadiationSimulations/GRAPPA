@@ -139,7 +139,8 @@ private:
     // Final muons transverse angle
     G4int m_finalmuontxtyid;
     // Flag to default activate the histograms
-    // This needs to be set to 'true' for what I believe is a bug in Geant4.
+    // This needs to be set to 'true' for (what I believe is) a bug in Geant4,
+    // but it may require additional investigation.
     // The analysis manager activation depends on the *histograms*
     // activation, regardless the activation status of the ntuples.
     // Therefore, if the histograms are not activated, the ntuples are also not
