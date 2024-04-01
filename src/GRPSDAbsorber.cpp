@@ -79,10 +79,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     // Pointer to current process
     const G4VProcess *CurrentProcess = preStepPoint->GetProcessDefinedStep();
 
-    // Boolean flags for histogram and Ntuple filling
-    const G4bool FillHistogram = true;
-    G4bool FillNtuple = true;
-
     // Energy filters for particles
     constexpr G4double MinPrimaryEnergy = 4 * MeV;
     constexpr G4double MinPhotonEnergy = 4 * MeV;
@@ -143,7 +139,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             histphiid = histomanager->GetPrimaryPhiId();
             ntupleid =
                 m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryId();
-            FillNtuple = !(kineticEnergy < MinPrimaryEnergy);
         }
         else
         {
@@ -157,7 +152,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histphiid = histomanager->GetPositronPhiId();
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()
                                ->GetPositronId();
-                FillNtuple = !(kineticEnergy < MinPositronEnergy);
             }
             else if (particleID == ParticleID::gammaID)
             {
@@ -168,7 +162,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histphiid = histomanager->GetGammaPhiId();
                 ntupleid =
                     m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
-                FillNtuple = !(kineticEnergy < MinPhotonEnergy);
             }
             else if (particleID == ParticleID::electronID)
             {
@@ -180,7 +173,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histphiid = histomanager->GetElectronPhiId();
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()
                                ->GetElectronId();
-                FillNtuple = !(kineticEnergy < MinElectronEnergy);
             }
             // Pions are collected in a single ntuple
             else if (
@@ -214,37 +206,37 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             }
         }
 
-        if (FillHistogram)
+        // Filling the correct histogram
+        if (analysisManager->GetH1Activation(histeneid))
         {
-            // Filling the correct histogram
-            if (analysisManager->GetH1Activation(histeneid))
-            {
-                analysisManager->FillH1(histeneid, kineticEnergy);
-            }
-            if (analysisManager->GetH1Activation(histthetaid))
-            {
-                analysisManager->FillH1(histthetaid, theta_mrad);
-            }
-            if (analysisManager->GetH1Activation(histphiid))
-            {
-                analysisManager->FillH1(histphiid, phi);
-            }
-            if (analysisManager->GetH2Activation(histoxyid))
-            {
-                analysisManager->FillH2(histoxyid, position.x(), position.y());
-            }
-            if (analysisManager->GetH2Activation(histotxtyid))
-            {
-                analysisManager->FillH2(
-                    histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
-            }
+            analysisManager->FillH1(histeneid, kineticEnergy);
+        }
+        if (analysisManager->GetH1Activation(histthetaid))
+        {
+            analysisManager->FillH1(histthetaid, theta_mrad);
+        }
+        if (analysisManager->GetH1Activation(histphiid))
+        {
+            analysisManager->FillH1(histphiid, phi);
+        }
+        if (analysisManager->GetH2Activation(histoxyid))
+        {
+            analysisManager->FillH2(histoxyid, position.x(), position.y());
+        }
+        if (analysisManager->GetH2Activation(histotxtyid))
+        {
+            analysisManager->FillH2(
+                histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
         }
 
         NTupleManager *ntuplemanager =
             m_HistoandNtupleManager->GetNTupleManager();
-        FillNtuple = (FillNtuple && ntuplemanager->GetIdActivation(ntupleid));
+        const G4bool analysisactive = analysisManager->IsActive();
 
-        if (FillNtuple)
+        const G4bool activationstatus =
+            ntuplemanager->GetIdActivation(ntupleid);
+
+        if (activationstatus && analysisactive)
         {
             G4int ncol = 0;
             // Filling the correct Ntuple

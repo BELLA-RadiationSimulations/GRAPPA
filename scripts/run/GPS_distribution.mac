@@ -185,16 +185,3 @@
 
 ## Run
 /run/beamOn 100000
-
-# =/=/=/=/= Call visualization script =/=/=/=/=
-
-# Disable analysis before visualization script to avoid
-# ovverriding the past analysis. ONLY if enabled before.
-#/analysis/ntuple/setActivationToAll false
-#/analysis/h1/setActivationToAll false
-#/analysis/h1/setPlottingToAll false
-#/analysis/h2/setActivationToAll false
-#/analysis/h2/setPlottingToAll false
-
-# /control/execute example_vis.mac
-# =/=/=/=/= End visualization script =/=/=/=/=
