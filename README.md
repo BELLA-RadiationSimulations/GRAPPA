@@ -46,7 +46,7 @@ cmake --build build --target install
 ```
 
 **Notes**:
- - The `Geant4Config.cmake` file of the G4 installation should be specified via the `DGeant4_DIR` flag. (Typically, it can be found in `${G4_base_install_dir}/lib/Geant4-version`. **Following the G4 instruction guide, it is actually located in: **`${G4_base_install_dir}/share/Geant4/geant4make/`)
+ - The `Geant4Config.cmake` file of the G4 installation should be specified via the `DGeant4_DIR` flag. For Geant4 versions < 11.1 it is located in `${G4_base_install_dir}/lib/Geant4-version` otherwise in `${G4_base_install_dir}/lib/cmake/Geant4`.
 - The default installation directory is system-dependent. Please specify the installation directory via the flag `CMAKE_INSTALL_PREFIX` or make sure you have the necessary privileges to install it in a system folder. The example build command, as shown before, installs GRAPPA in the `bin` directory of the source code folder.
 
 ---
