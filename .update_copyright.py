@@ -1,7 +1,7 @@
 # Copyright 2021-2024
 #
 # Authors:
-# Stanimir Kisyov, Davide Terzani
+# Stanimir Kisyov, Sarah Schröder, Davide Terzani
 #
 # Creator: Davide Terzani
 #
@@ -15,19 +15,15 @@ from pathlib import Path
 from numpy import any
 
 _FILE_CHANGED_CODE = -1
-authors = ["Stanimir Kisyov", "Davide Terzani"]
+authors = ["Stanimir Kisyov", "Sarah Schröder", "Davide Terzani"]
+authors.sort(key=lambda x: x.split()[-1])
 
 copyright_initial_year: int = 2021
 copyright_end_year = date.today().year
 
 creator = "Davide Terzani"
 
-comment = {
-    "cpp": "//",
-    "py": "#",
-    "mac": "#",
-    "cmake": "#"
-}
+comment = {"cpp": "//", "py": "#", "mac": "#", "cmake": "#"}
 
 
 def generate_copyright(language="cpp"):

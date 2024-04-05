@@ -1,7 +1,7 @@
 # Copyright 2021-2024
 #
 # Authors:
-# Stanimir Kisyov, Davide Terzani
+# Stanimir Kisyov, Sarah Schröder, Davide Terzani
 #
 # Creator: Davide Terzani
 #
