@@ -35,7 +35,7 @@ Additional features do not require any compilation flag to be specified in the b
 
 ## Build instructions
 
-GRAPPA is built using cmake. From the source folder, GRAPPA is installed using the commands
+GRAPPA is built using cmake. From the source folder, GRAPPA is built and installed using the commands
 
 ```commandline
 cmake -S . -B build -DCMAKE_INSTALL_PREFIX=. -DGeant4_DIR={G4 cmake directory on the system} -DCMAKE_BUILD_TYPE="Release"
