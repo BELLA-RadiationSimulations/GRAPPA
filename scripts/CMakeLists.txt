@@ -9,6 +9,8 @@
 #
 # License: BSD-3-Clause
 
+set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/bin/utilities.h)
+
 # Configure ROOT scripts and mark them to install in the install folder
 set(ROOT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ROOT)
 list(

@@ -183,8 +183,6 @@ add_subdirectory(include)
 include(${Geant4_USE_FILE})
 target_include_directories(GRAPPA PRIVATE ${Geant4_INCLUDE_DIR})
 
-set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/bin/utilities.h)
-
 target_link_libraries(GRAPPA PRIVATE ${Geant4_LIBRARIES})
 
 get_filename_component(Geant4_LIBRARY_PATH "${Geant4_DIR}/../.." ABSOLUTE)
