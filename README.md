@@ -31,8 +31,6 @@ Additional features:
 - Mutithreading support: if G4 is built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation parameters (e.g., in the macro file).
 - Visualization support: In order to produce visual outputs, G4 provided visualization drivers must be installed (_e.g._ OpenGL, RayTracer, QT5, etc...).
 
-Additional features do not require any compilation flag to be specified in the building process but are automatically detected in the G4 installation. **This is a bit meaningless for newcomers, let's discuss it**
-
 ## Build instructions
 
 GRAPPA is built using cmake. From the source folder, GRAPPA is built and installed using the commands
