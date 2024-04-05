@@ -26,9 +26,6 @@ GRAPPA requires:
 - `Geant4`
 - `C++` compiler (standard required C++-17)
 
-Recommended packages:
-- [uproot](https://pypi.org/project/uproot/) python package for data post-processing, alternatively: [ROOT](https://root.cern)
-- **CAN WE MAKE SUGGESTIONS FOR VISUALISATION?**
 
 Additional features:
 - Mutithreading support: if G4 is built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation **input** (What is that?).
