@@ -31,8 +31,6 @@ Additional features:
 - Mutithreading support: if G4 is built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation parameters.
 - Visualization support: In order to produce visual outputs, G4 provided visualization drivers must be installed (_e.g._ OpenGL, RayTracer, QT5, etc...).
 Please refer to the installation guide for more information.
-- Advanced histogram plotting is available with the `Freetype` library: G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON`.
-- For the analysis of the `ROOT` (default) output file, [ROOT](https://root.cern) or the python package [uproot](https://pypi.org/project/uproot/) must be installed. 
 
 Additional features do not require any compilation flag to be specified in the building process but are automatically detected in the G4 installation.
 
@@ -365,6 +363,10 @@ Visual aspects can be modified with some commands:
 ```
 
 The image is updated after every run.
+
+**Notes**
+- Advanced histogram plotting is available with the `Freetype` library: G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON`.
+- For the analysis of the `ROOT` (default) output file, [ROOT](https://root.cern) or the python package [uproot](https://pypi.org/project/uproot/) must be installed. 
 
 ### Running the simulation
 
