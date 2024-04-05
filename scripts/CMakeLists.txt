@@ -9,7 +9,8 @@
 #
 # License: BSD-3-Clause
 
-set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/bin/utilities.h)
+set(ROOT_ANALYSIS_INSTALL_DIR bin/analysis)
+set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/${ROOT_ANALYSIS_INSTALL_DIR}/utilities.h)
 
 # Configure ROOT scripts and mark them to install in the install folder
 set(ROOT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ROOT)
@@ -46,4 +47,4 @@ list(
 # Install run scripts
 install(FILES ${RUN_SCRIPTS} DESTINATION bin)
 # Install ROOT scripts
-install(FILES ${ROOT_SCRIPTS} DESTINATION bin)
+install(FILES ${ROOT_SCRIPTS} DESTINATION ${ROOT_ANALYSIS_INSTALL_DIR})

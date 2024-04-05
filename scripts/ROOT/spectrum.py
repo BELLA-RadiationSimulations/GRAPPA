@@ -87,18 +87,18 @@ def plotspectrum(file: Path, particle: str, muonfactor: float):
     fig, ax = subplots(layout="constrained")
     ax.plot(edges / GeV, hist, color="black", linewidth=3)
     ax.set_xlabel("$E_{kin} [GeV]$")
-    ax.set_ylabel("$1/N_0 dN / dE \,[1/GeV]$")
+    ax.set_ylabel("$1/N_0 dN / dE [1/GeV]$")
     ax.set_yscale("log")
     fig.savefig("spectrum_{}_{}.png".format(file.stem, particle), dpi=200)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog="spectrum.py",
-        description="Produce the particle spectrum.",
+        description="Produce the particle spectrum for the specified particle type. Particles could either be muons or positrons.",
     )
     parser.add_argument(
         "particle",
-        metavar="muon",
+        metavar="muon", 
         type=str,
         nargs=1,
         help="Particle type",
@@ -126,10 +126,13 @@ if __name__ == "__main__":
     particle = args.particle[0]
     muonfactor = args.muonfactor[0]
 
-    if particle not in ["muon", "positron"]:
-        raise NameError("Particle name {} incorrect".format(particle))
+    _expected_particles = ["muon", "positron"]
+    if particle not in _expected_particles:
+        raise NameError("Particle name {} incorrect. Particle must be one of {}".format(particle, _expected_particles))
     
     for ff in inputfiles:
         print("Working on file", ff)
         pathff = Path(ff)
+        if not pathff.exists():
+            raise FileNotFoundError("The provided file '{}' does not exist".format(ff))
         plotspectrum(pathff, particle, muonfactor)
