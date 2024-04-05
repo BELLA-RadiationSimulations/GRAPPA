@@ -13,7 +13,7 @@ GRAPPA is a Geant4 application that simulates the interaction of an incoming par
 - Muons
 - Photons
 
-The output of a GRAPPA simulation consists of a _histogram plot_ file with pe-analysed particle statistics,
+The output of a GRAPPA simulation consists of a _histogram plot_ file with pe-analyzed particle statistics,
 a _histogram ROOT_ file and an _Ntuple_ ROOT file. In Geant4, an Ntuple represents a file where each column stores particular data (for example x coordinate or y momentum) of a given particle.
 
 # Installation guide
