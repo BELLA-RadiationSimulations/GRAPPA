@@ -10,7 +10,9 @@
 # License: BSD-3-Clause
 
 set(ROOT_ANALYSIS_INSTALL_DIR bin/analysis)
-set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/${ROOT_ANALYSIS_INSTALL_DIR}/utilities.h)
+set(UTILITIES_PATH
+    ${CMAKE_INSTALL_PREFIX}/${ROOT_ANALYSIS_INSTALL_DIR}/utilities.h
+)
 
 # Configure ROOT scripts and mark them to install in the install folder
 set(ROOT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ROOT)
@@ -21,12 +23,15 @@ list(
     ${ROOT_SCRIPTS_DIR}/MuonAnalysis.C.in
     ${ROOT_SCRIPTS_DIR}/PlotParticles.C.in
     ${ROOT_SCRIPTS_DIR}/utilities.h.in
-    ${ROOT_SCRIPTS_DIR}/WriteSametimeParticles.C.in)
+    ${ROOT_SCRIPTS_DIR}/WriteSametimeParticles.C.in
+)
 
 foreach(filename ${ROOT_SCRIPTS_BUILD})
     get_filename_component(filename_we ${filename} NAME_WLE)
-    configure_file(${ROOT_SCRIPTS_DIR}/${filename_we}.in
-                   ${CMAKE_BINARY_DIR}/${filename_we} @ONLY)
+    configure_file(
+        ${ROOT_SCRIPTS_DIR}/${filename_we}.in
+        ${CMAKE_BINARY_DIR}/${filename_we} @ONLY
+    )
     list(APPEND ROOT_SCRIPTS ${CMAKE_BINARY_DIR}/${filename_we})
 endforeach()
 
@@ -42,7 +47,8 @@ list(
     ${RUN_SCRIPTS_DIR}/GPS_distribution.mac
     ${RUN_SCRIPTS_DIR}/initialize_vis.mac
     ${RUN_SCRIPTS_DIR}/InitialPhaseSpace.dat
-    ${RUN_SCRIPTS_DIR}/photon_energy.dat)
+    ${RUN_SCRIPTS_DIR}/photon_energy.dat
+)
 
 # Install run scripts
 install(FILES ${RUN_SCRIPTS} DESTINATION bin)
