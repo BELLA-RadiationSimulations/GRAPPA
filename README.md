@@ -25,6 +25,7 @@ GRAPPA is a Geant4 (G4) application. A comprehensive guide on how to install G4 
 GRAPPA requires:
 - `Geant4`
 - `C++` compiler (standard required C++-17)
+- `cmake`
 
 Additional features:
 - Mutithreading support: if G4 is built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation parameters (e.g., in the macro file).
