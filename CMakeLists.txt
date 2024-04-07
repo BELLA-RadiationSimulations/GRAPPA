@@ -183,37 +183,14 @@ add_subdirectory(include)
 include(${Geant4_USE_FILE})
 target_include_directories(GRAPPA PRIVATE ${Geant4_INCLUDE_DIR})
 
-set(UTILITIES_PATH ${CMAKE_INSTALL_PREFIX}/bin/utilities.h)
-# Configure ROOT scripts and mark them to install in the install folder
-set(ROOT_SCRIPTS_DIR ${PROJECT_SOURCE_DIR}/scripts/ROOT)
-file(GLOB ROOT_SCRIPTS_BUILD ${PROJECT_SOURCE_DIR}/scripts/ROOT/*)
-foreach(filename ${ROOT_SCRIPTS_BUILD})
-    get_filename_component(filename_we ${filename} NAME_WLE)
-    configure_file(
-        ${ROOT_SCRIPTS_DIR}/${filename_we}.in
-        ${CMAKE_BINARY_DIR}/${filename_we} @ONLY
-    )
-    list(APPEND ROOT_SCRIPTS ${CMAKE_BINARY_DIR}/${filename_we})
-endforeach()
-
-# Save run script for installation in bin folder
-set(RUN_SCRIPTS_DIR ${PROJECT_SOURCE_DIR}/scripts/run)
-list(
-    APPEND
-    RUN_SCRIPTS
-    ${RUN_SCRIPTS_DIR}/custom_distribution.mac
-    ${RUN_SCRIPTS_DIR}/distribution_from_file.mac
-    ${RUN_SCRIPTS_DIR}/example_vis.mac
-    ${RUN_SCRIPTS_DIR}/GPS_distribution.mac
-    ${RUN_SCRIPTS_DIR}/InitialPhaseSpace.dat
-    ${RUN_SCRIPTS_DIR}/photon_energy.dat
-)
-
 target_link_libraries(GRAPPA PRIVATE ${Geant4_LIBRARIES})
 
 get_filename_component(Geant4_LIBRARY_PATH "${Geant4_DIR}/../.." ABSOLUTE)
 
 set_target_properties(GRAPPA PROPERTIES LINKER_LANGUAGE CXX)
+
+# Add scripts
+add_subdirectory(scripts)
 
 if(APPLE AND GRAPPA_USE_SHARED_GEANT4)
     message(
@@ -227,8 +204,3 @@ endif()
 
 # Install target
 install(TARGETS GRAPPA DESTINATION bin)
-
-# Install run scripts
-install(FILES ${RUN_SCRIPTS} DESTINATION bin)
-# Install ROOT scripts
-install(FILES ${ROOT_SCRIPTS} DESTINATION bin)

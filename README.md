@@ -401,7 +401,7 @@ The simulation ends after all the lines of a macro file have been executed, then
 ## Data analysis
 
 We provide some ROOT scripts to facilitate the analysis of the final GRAPPA data.
-Those are automatically installed in the `bin` folder as `scriptname.C`.
+Those are automatically installed in the `bin/analysis` folder as `scriptname.C`.
 You can copy them in your output folder and execute them in `ROOT` as
 
 ```commandline

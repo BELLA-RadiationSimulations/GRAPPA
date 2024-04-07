@@ -1,0 +1,70 @@
+# Copyright 2021-2024
+#
+# Authors:
+# Stanimir Kisyov, Davide Terzani
+#
+# Creator: Davide Terzani
+#
+# This file is part of GRAPPA.
+#
+# License: BSD-3-Clause
+
+/control/verbose 2
+/run/verbose 0
+# Initialize kernel
+/run/initialize
+
+# Use this open statement to create an OpenGL view:
+/vis/open OGL 640x480-0+0
+#
+# Disable auto refresh and quieten vis messages whilst scene and
+# trajectories are established:
+/vis/viewer/set/autoRefresh false
+/vis/verbose errors
+#
+# Draw geometry:
+/vis/drawVolume
+#
+# Draw smooth trajectories at end of event, showing trajectory points
+# as markers 2 pixels wide:
+/vis/scene/add/trajectories
+/vis/modeling/trajectories/create/drawByCharge
+/vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
+/vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 3
+
+# Create some custom filters
+
+# Filter on particle momentum
+/vis/filtering/trajectories/create/attributeFilter
+/vis/filtering/trajectories/attributeFilter-0/setAttribute IMag
+/vis/filtering/trajectories/attributeFilter-0/addInterval 5 MeV 400 MeV
+
+# Filter on particle type (show only electrons and positrons)
+/vis/filtering/trajectories/create/particleFilter
+/vis/filtering/trajectories/particleFilter-0/add e-
+/vis/filtering/trajectories/particleFilter-0/add e+
+/vis/filtering/trajectories/particleFilter-0/add gamma
+
+# To superimpose all of the events from a given run:
+/vis/scene/endOfEventAction accumulate
+# Axes, scale, etc.
+# Simple scale line
+/vis/scene/add/scale 5 cm z 0 0 1 manual -10 0 -2 cm
+# Simple axes: x=red, y=green, z=blue.
+/vis/scene/add/axes -10 0 0 2 cm
+# To get nice view
+# Make the "World" box invisible
+/vis/geometry/set/visibility World 0 false
+
+# Remove hidden edges
+/vis/viewer/set/hiddenEdge 1
+# Specify view angle:
+#/vis/viewer/set/projection p
+/vis/viewer/set/targetPoint 0 0 0 cm
+/vis/viewer/set/viewpointThetaPhi 60 8
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/zoom 2.3
+
+# The GPS source is not set in this file
+# please select a source using the GPS commands.
+# The goal of this script is only to initialize the visualization
