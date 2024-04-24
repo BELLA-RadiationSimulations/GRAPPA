@@ -553,7 +553,7 @@ void NTupleManager::Book()
 
     // NTuple 0: Phase space of particles generated at source
     m_primaryinitialid = analysisManager->CreateNtuple(
-        "InitialPrimary", "Initial primary particle phase space");
+        "InitialPrimary", "Initial primary particles phase space");
     analysisManager->CreateNtupleFColumn(m_primaryinitialid, "x");
     analysisManager->CreateNtupleFColumn(m_primaryinitialid, "y");
     analysisManager->CreateNtupleFColumn(m_primaryinitialid, "z");
@@ -579,7 +579,7 @@ void NTupleManager::Book()
 
     // NTuple 2: Phase space of final positrons
     m_posiid = analysisManager->CreateNtuple(
-        "FinalPositron", "Final positron phase space");
+        "FinalPositron", "Final positrons phase space");
     analysisManager->CreateNtupleFColumn(m_posiid, "x");
     analysisManager->CreateNtupleFColumn(m_posiid, "y");
     analysisManager->CreateNtupleFColumn(m_posiid, "z");
@@ -593,7 +593,7 @@ void NTupleManager::Book()
 
     // NTuple 3: Phase space of final electrons
     m_electronid = analysisManager->CreateNtuple(
-        "FinalElectron", "Final electron phase space");
+        "FinalElectron", "Final electrons phase space");
     analysisManager->CreateNtupleFColumn(m_electronid, "x");
     analysisManager->CreateNtupleFColumn(m_electronid, "y");
     analysisManager->CreateNtupleFColumn(m_electronid, "z");
@@ -607,7 +607,7 @@ void NTupleManager::Book()
 
     // NTuple 4: Phase space of final photons
     m_gammaid = analysisManager->CreateNtuple(
-        "FinalPhoton", "Final photon phase space");
+        "FinalPhoton", "Final photons phase space");
     analysisManager->CreateNtupleFColumn(m_gammaid, "x");
     analysisManager->CreateNtupleFColumn(m_gammaid, "y");
     analysisManager->CreateNtupleFColumn(m_gammaid, "z");
@@ -620,7 +620,7 @@ void NTupleManager::Book()
 
     // NTuple 5: Phase space of final pions
     m_pionid =
-        analysisManager->CreateNtuple("FinalPions", "Final pions phase space");
+        analysisManager->CreateNtuple("FinalPion", "Final pions phase space");
     analysisManager->CreateNtupleFColumn(m_pionid, "x");
     analysisManager->CreateNtupleFColumn(m_pionid, "y");
     analysisManager->CreateNtupleFColumn(m_pionid, "z");
@@ -677,7 +677,7 @@ void NTupleManager::ListNtuples()
            << "FinalPhoton"
            << "  " << m_gammaactive << G4endl;
     G4cout << " " << m_pionid << "  "
-           << "FinalPions"
+           << "FinalPion"
            << "  " << m_pionactive << G4endl;
     G4cout << " " << m_muonid << "  "
            << "FinalMuon"
