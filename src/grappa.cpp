@@ -56,8 +56,8 @@ int main(int argc, char *argv[])
     HistandNTupleManager *myanalysismanager = new HistandNTupleManager();
 
     // Constructing the physics list
-    // The last characters in the physics list represent the ElectroMagnetic
-    // component By default, FTFP_BERT constructs the standard EM.
+    // The last characters in the physics list represent the Electro-Magnetic
+    // component by default, FTFP_BERT constructs the standard EM.
     // "_LIV_" stands for Livermore, "_PEN" to Penelope.
     //
     G4PhysListFactory factory;
@@ -65,7 +65,7 @@ int main(int argc, char *argv[])
         factory.GetReferencePhysList("QGSP_BIC_EMZ");
     physicsList->SetVerboseLevel(0);
     runManager->SetUserInitialization(physicsList);
-    // FTFP_BERT should be used instead if primary articles energy is <5GeV;
+    // FTFP_BERT should be used instead if primary particle energy is <5GeV;
 
     // Introducing a particle container
     // that serves if we need to read particles from file
@@ -80,20 +80,20 @@ int main(int argc, char *argv[])
     runManager->SetUserInitialization(myActionInitialization);
 
     // Mandatory class
-    // Constructing the detectors.
+    // Constructing the detectors
     // It takes as input a pointer to the custom analysis manager
     runManager->SetUserInitialization(
         new GRPDetectorConstruction(myanalysismanager));
 
     if (ui)
     {
-        // interactive mode
+        // Interactive mode
         ui->SessionStart();
         delete ui;
     }
     else
     {
-        // batch mode
+        // Batch mode
         const G4String command = "/control/execute ";
         const G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
