@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
     //
     G4VisManager *visManager = new G4VisExecutive("Quiet");
     // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
-    // G4VisManager* visManager = new G4VisExecutive("Quiet");
     visManager->Initialize();
 
     // Getting run start time
