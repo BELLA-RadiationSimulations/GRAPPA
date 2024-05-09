@@ -60,7 +60,6 @@ int main(int argc, char *argv[])
     // Constructing the physics list
     // The last characters in the physics list represent the Electro-Magnetic
     // component by default, FTFP_BERT constructs the standard EM.
-    // "_LIV_" stands for Livermore, "_PEN" to Penelope.
     //
     G4PhysListFactory factory;
     G4VModularPhysicsList *physicsList =
