@@ -21,7 +21,7 @@ HistandNTupleManager::~HistandNTupleManager() {}
 
 void HistandNTupleManager::FinishAnalysis()
 {
-    // Close Analysis and write files
+    // Close analysis and write files
     G4AnalysisManager *analysisManager = G4AnalysisManager::Instance();
     if (analysisManager->IsActive())
     {

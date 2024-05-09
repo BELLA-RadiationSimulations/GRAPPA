@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 {
     // Welcome message
     PrintWelcomeMessage();
-    // Detect interactive mode (if no arguments) and define UI session
 
+    // Detect interactive mode (if no arguments) and define UI session
     G4UIExecutive *ui = nullptr;
     if (argc == 1)
     {
@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
     timer.Start();
     G4cout << " Program started at \t" << timer.GetClockTime() << G4endl;
 
+// Instantiating RunManager
 #ifdef G4MULTITHREADED
     G4RunManager *runManager = G4RunManagerFactory::CreateRunManager();
 #else
@@ -55,6 +56,7 @@ int main(int argc, char *argv[])
     // and ntuples in the Sensitive Detectors.
     HistandNTupleManager *myanalysismanager = new HistandNTupleManager();
 
+    // Mandatory user initialization class
     // Constructing the physics list
     // The last characters in the physics list represent the Electro-Magnetic
     // component by default, FTFP_BERT constructs the standard EM.
@@ -71,7 +73,7 @@ int main(int argc, char *argv[])
     // that serves if we need to read particles from file
     GRPParticleContainer myParticleContainer = GRPParticleContainer();
 
-    // Mandatory class
+    // Mandatory user initialization class
     // Constructing actions
     // It takes as input a pointer to the custom analysis manager
     GRPActionInitialization *myActionInitialization =
@@ -79,7 +81,7 @@ int main(int argc, char *argv[])
     myActionInitialization->SetContainer(&myParticleContainer);
     runManager->SetUserInitialization(myActionInitialization);
 
-    // Mandatory class
+    // Mandatory user initialization class
     // Constructing the detectors
     // It takes as input a pointer to the custom analysis manager
     runManager->SetUserInitialization(

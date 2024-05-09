@@ -28,6 +28,8 @@ void GRPActionInitialization::BuildForMaster() const
 
 void GRPActionInitialization::Build() const
 {
+    // Mandatory user action class
+    // Instantiating primary particle generator
     GRPPrimaryGeneratorAction *primarygeneratoraction =
         new GRPPrimaryGeneratorAction(m_myParticleContainer->GetUseFile());
     SetUserAction(primarygeneratoraction);
