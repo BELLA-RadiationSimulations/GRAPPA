@@ -9,7 +9,7 @@
 //
 // License: BSD-3-Clause
 
-#include <GRPWorldAbsorberSD.hpp>
+#include <GRPSDWorldAbsorber.hpp>
 
 //
 //  Here we use the Particle Data Group (PDG) convention
