@@ -132,7 +132,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         180 * deg); // its theta initial and final angles
 
     // Creation of the logical volume (with the shape of the sphere)
-    m_LogicalAbsorber = new G4LogicalVolume(
+    m_LogicalWorldAbsorber = new G4LogicalVolume(
         StdsolidAbsorber, // its solid
         a_material, // its material
         std_a_name); // its name
@@ -141,7 +141,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
-        m_LogicalAbsorber, // its logical volume
+        m_LogicalWorldAbsorber, // its logical volume
         std_a_name, // its name
         logicWorld, // its mother  volume
         false, // no boolean operation
@@ -165,7 +165,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     logicWorld->SetVisAttributes(worldVisAtt);
     logicfoil->SetVisAttributes(targetVisAtt);
-    m_LogicalAbsorber->SetVisAttributes(absorberVisAtt);
+    m_LogicalWorldAbsorber->SetVisAttributes(absorberVisAtt);
 
     // Return root volume
     return physWorld;
@@ -178,11 +178,11 @@ void GRPDetectorConstruction::ConstructSDandField()
 
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
-    m_StandardAbsorber = new AbsorberSD(
+    m_StandardWorldAbsorber = new WorldAbsorberSD(
         "/FinalAbsorber/StandardAbsorber", m_HistoandNtupleManager);
 
-    SDMpointer->AddNewDetector(m_StandardAbsorber);
-    m_LogicalAbsorber->SetSensitiveDetector(m_StandardAbsorber);
+    SDMpointer->AddNewDetector(m_StandardWorldAbsorber);
+    m_LogicalWorldAbsorber->SetSensitiveDetector(m_StandardWorldAbsorber);
 }
 
 void GRPDetectorConstruction::DefineCommands()

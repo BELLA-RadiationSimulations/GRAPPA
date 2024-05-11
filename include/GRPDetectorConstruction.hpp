@@ -25,7 +25,7 @@
 #include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
-#include <GRPSDAbsorber.hpp>
+#include <GRPWorldAbsorberSD.hpp>
 
 class GRPDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -67,9 +67,9 @@ private:
     // Sensitive detectors
 
     // Pointer to the logical absorber for sensitive detectors
-    G4LogicalVolume *m_LogicalAbsorber;
+    G4LogicalVolume *m_LogicalWorldAbsorber;
     // Pointer to the Standard SD
-    AbsorberSD *m_StandardAbsorber;
+    WorldAbsorberSD *m_StandardWorldAbsorber;
 
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;

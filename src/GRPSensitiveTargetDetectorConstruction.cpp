@@ -135,16 +135,15 @@ void GRPSTDetectorConstruction::ConstructSDandField()
 
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
-    m_SDAbsorberWorld = new AbsorberSD(
-        "/FinalAbsorber/WorldAbsorber", m_HistoandNtupleManager);
-    m_SDAbsorberFoil = new AbsorberSD(
-        "/FinalAbsorber/FoilAbsorber", m_HistoandNtupleManager);
+    m_SDAbsorber = new WorldAbsorberSD(
+        "/FinalAbsorber/Absorber", m_HistoandNtupleManager);
+    //m_SDAbsorberFoil = new AbsorberSD(
+    //    "/FinalAbsorber/AbsorberFoil", m_HistoandNtupleManager);
 
-    SDMpointer->AddNewDetector(m_SDAbsorberWorld);
-    SDMpointer->AddNewDetector(m_SDAbsorberFoil);
+    SDMpointer->AddNewDetector(m_SDAbsorber);
 
-    m_LogicalAbsorberWorld->SetSensitiveDetector(m_SDAbsorberWorld);
-    m_LogicalAbsorberFoil->SetSensitiveDetector(m_SDAbsorberFoil);
+    m_LogicalAbsorberWorld->SetSensitiveDetector(m_SDAbsorber);
+    m_LogicalAbsorberFoil->SetSensitiveDetector(m_SDAbsorber);
 }
 
 void GRPSTDetectorConstruction::ReinitializeGeometry()

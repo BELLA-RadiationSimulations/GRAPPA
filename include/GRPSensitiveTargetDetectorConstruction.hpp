@@ -25,7 +25,7 @@
 #include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
-#include <GRPSDAbsorber.hpp>
+#include <GRPWorldAbsorberSD.hpp>
 
 class GRPSTDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -61,8 +61,8 @@ private:
     G4LogicalVolume *m_LogicalAbsorberWorld;
     G4LogicalVolume *m_LogicalAbsorberFoil;
     // Pointer to the sensitive detectors
-    AbsorberSD *m_SDAbsorberWorld;
-    AbsorberSD *m_SDAbsorberFoil;
+    WorldAbsorberSD *m_SDAbsorber;
+    //AbsorberSD *m_SDAbsorberFoil;
 
     // Pointer to the customized analysis manager
     HistandNTupleManager *m_HistoandNtupleManager;
