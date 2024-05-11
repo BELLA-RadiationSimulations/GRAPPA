@@ -22,7 +22,8 @@ target_sources(
             GRPPrimaryGeneratorAction.cpp
             GRPRun.cpp
             GRPRunAction.cpp
-            GRPWorldAbsorberSD.cpp
+            GRPSDWorldAbsorber.cpp
+            GRPSDTargetAbsorber.cpp
             GRPSignalHandler.cpp
             GRPTrackingAction.cpp
             grappa.cpp

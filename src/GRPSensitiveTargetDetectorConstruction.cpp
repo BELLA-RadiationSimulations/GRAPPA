@@ -78,7 +78,7 @@ G4VPhysicalVolume *GRPSTDetectorConstruction::ConstructWorldandSTarget()
         0.5 * f_dimensions[1],
         0.5 * f_dimensions[2]); // its size
     // Creation foil logical volume
-    m_LogicalAbsorberFoil = new G4LogicalVolume(
+    m_LogicalAbsorberTarget = new G4LogicalVolume(
         solidfoil, // its solid
         f_material, // its material
         f_name); // its name
@@ -86,7 +86,7 @@ G4VPhysicalVolume *GRPSTDetectorConstruction::ConstructWorldandSTarget()
     new G4PVPlacement(
         nullptr, //  no rotation
         f_position, // position
-        m_LogicalAbsorberFoil, // its logical volume
+        m_LogicalAbsorberTarget, // its logical volume
         f_name, // its name
         logicWorld, // its mother  volume
         false, // no boolean operation
@@ -138,14 +138,14 @@ void GRPSTDetectorConstruction::ConstructSDandField()
 
     m_SDAbsorberWorld = new WorldAbsorberSD(
         "/SDAbsorber/World", m_HistoandNtupleManager);
-    m_SDAbsorberFoil = new TargetAbsorberSD(
-        "/SDAbsorber/Foil", m_HistoandNtupleManager);
+    m_SDAbsorberTarget = new TargetAbsorberSD(
+        "/SDAbsorber/Target", m_HistoandNtupleManager);
 
     SDMpointer->AddNewDetector(m_SDAbsorberWorld);
-    SDMpointer->AddNewDetector(m_SDAbsorberFoil);
+    SDMpointer->AddNewDetector(m_SDAbsorberTarget);
 
     m_LogicalAbsorberWorld->SetSensitiveDetector(m_SDAbsorberWorld);
-    m_LogicalAbsorberFoil->SetSensitiveDetector(m_SDAbsorberFoil);
+    m_LogicalAbsorberTarget->SetSensitiveDetector(m_SDAbsorberTarget);
 }
 
 void GRPSTDetectorConstruction::DefineCommands()

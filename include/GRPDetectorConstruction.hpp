@@ -25,7 +25,7 @@
 #include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
-#include <GRPWorldAbsorberSD.hpp>
+#include <GRPSDWorldAbsorber.hpp>
 
 class GRPDetectorConstruction : public G4VUserDetectorConstruction
 {

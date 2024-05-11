@@ -25,7 +25,8 @@
 #include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
-#include <GRPWorldAbsorberSD.hpp>
+#include <GRPSDWorldAbsorber.hpp>
+#include <GRPSDTargetAbsorber.hpp>
 
 class GRPSTDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -53,7 +54,7 @@ private:
     G4double foil_z = 1 * cm;
     G4ThreeVector foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
     G4double absorber_thickness = 1 * mm;
-    G4String w_name = "World", f_name = "Foil", std_a_name = "Absorber";
+    G4String w_name = "World", f_name = "Target", std_a_name = "Absorber";
     G4String w_material_name = "G4_Galactic", f_material_name = "G4_W",
              a_material_name = "G4_Galactic";
 
@@ -61,10 +62,10 @@ private:
     G4VPhysicalVolume *physWorld;
     // Pointer to the logical absorbers for sensitive detectors
     G4LogicalVolume *m_LogicalAbsorberWorld;
-    G4LogicalVolume *m_LogicalAbsorberFoil;
+    G4LogicalVolume *m_LogicalAbsorberTarget;
     // Pointer to the sensitive detectors
-    WorldAbsorberSD *m_SDAbsorber;
-    //AbsorberSD *m_SDAbsorberFoil;
+    WorldAbsorberSD *m_SDAbsorberWorld;
+    TargetAbsorberSD *m_SDAbsorberTarget;
 
     // Pointer to the customized analysis manager
     HistandNTupleManager *m_HistoandNtupleManager;
