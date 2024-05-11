@@ -41,6 +41,8 @@ public:
     void ConstructSDandField() override;
 
 private:
+    void DefineCommands();
+    void PrintDetector();
     G4VPhysicalVolume *ConstructWorldandSTarget();
     void ReinitializeGeometry();
 
@@ -66,4 +68,10 @@ private:
 
     // Pointer to the customized analysis manager
     HistandNTupleManager *m_HistoandNtupleManager;
+
+    // Pointer to the generic messengers
+    std::shared_ptr<G4GenericMessenger> m_WMessenger;
+    std::shared_ptr<G4GenericMessenger> m_FMessenger;
+    std::shared_ptr<G4GenericMessenger> m_AMessenger;
+    std::shared_ptr<G4GenericMessenger> m_GenericMessenger;
 };

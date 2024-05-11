@@ -15,6 +15,7 @@ GRPSTDetectorConstruction::GRPSTDetectorConstruction(
     HistandNTupleManager *myanalysismanager)
 {
     m_HistoandNtupleManager = myanalysismanager;
+    DefineCommands();
 }
 
 GRPSTDetectorConstruction::~GRPSTDetectorConstruction() {}
@@ -144,6 +145,134 @@ void GRPSTDetectorConstruction::ConstructSDandField()
 
     m_LogicalAbsorberWorld->SetSensitiveDetector(m_SDAbsorber);
     m_LogicalAbsorberFoil->SetSensitiveDetector(m_SDAbsorber);
+}
+
+void GRPSTDetectorConstruction::DefineCommands()
+{
+    // Modifications to geometry are currently possible
+    // but they must be done in the PreInit stage.
+    // Still working or reinitializing the geometry between runs
+    //
+    // define command directory using generic messenger class
+    m_GenericMessenger = std::make_shared<G4GenericMessenger>(
+        this, "/geometry/", "Commands to configure the target");
+    m_WMessenger = std::make_shared<G4GenericMessenger>(
+        this, "/geometry/world/", "Commands to configure the target");
+    m_FMessenger = std::make_shared<G4GenericMessenger>(
+        this, "/geometry/foil/", "Commands to configure the target");
+    m_AMessenger = std::make_shared<G4GenericMessenger>(
+        this,
+        "/geometry/absorber/",
+        "Commands to configure the particles absorber");
+    // configure commands
+
+    // Print the current status of the world and foil
+    G4GenericMessenger::Command &printcommand =
+        m_GenericMessenger->DeclareMethod(
+            "list",
+            &GRPSTDetectorConstruction::PrintDetector,
+            "List the current world and detector configuration");
+    printcommand.SetGuidance(" Print world and foil status ");
+    printcommand.SetStates(G4State_PreInit, G4State_Idle);
+
+    // ===============================
+    // Reinitialization stil WIP
+    // Update the global geometry after modifications have been made
+    // G4GenericMessenger::Command& updatecommand =
+    // m_GenericMessenger->DeclareMethod("reinitialize",
+    // &GRPDetectorConstruction::ReinitializeGeometry,
+    //    "Update and reinitialize global geometry");
+    // updatecommand.SetGuidance(" Reinitializes global geometry re-constructing
+    // the detector, if it has already been constructed ");
+    // updatecommand.SetStates(G4State_Idle);
+    // ===============================
+
+    // Target foil properties
+
+    G4GenericMessenger::Command &thickcommand =
+        m_FMessenger->DeclarePropertyWithUnit(
+            "thickness",
+            "mm",
+            foil_z,
+            "Sets the foil size along z (thickness). Default unit is mm.");
+    thickcommand.SetGuidance(" Sets the foil thickness ");
+    thickcommand.SetStates(G4State_PreInit);
+    G4GenericMessenger::Command &sizecommand =
+        m_FMessenger->DeclarePropertyWithUnit(
+            "size",
+            "mm",
+            foil_x,
+            "Sets the foil size along x and y (foil is assumed squared). "
+            "Default unit is mm.");
+    sizecommand.SetGuidance(
+        " Sets the foil transverse sizes (assuming it is a square) ");
+    sizecommand.SetStates(G4State_PreInit);
+    G4GenericMessenger::Command &fmaterialcommand =
+        m_FMessenger->DeclareProperty(
+            "material", f_material_name, "Sets the foil material.");
+    fmaterialcommand.SetGuidance(" Sets the foil material ");
+    fmaterialcommand.SetStates(G4State_PreInit);
+    G4GenericMessenger::Command &centercommand =
+        m_FMessenger->DeclarePropertyWithUnit(
+            "center",
+            "mm",
+            foil_center,
+            "Sets the foil center. Default unit is mm.");
+    centercommand.SetGuidance(" Sets the foil center ");
+    centercommand.SetStates(G4State_PreInit);
+
+    // World properties
+    G4GenericMessenger::Command &wradiuscommand =
+        m_WMessenger->DeclarePropertyWithUnit(
+            "radius",
+            "mm",
+            w_radius,
+            "Sets the world radius. Default unit is mm.");
+    wradiuscommand.SetGuidance(" Sets the world radius ");
+    wradiuscommand.SetStates(G4State_PreInit);
+
+    G4GenericMessenger::Command &wmaterialcommand =
+        m_WMessenger->DeclareProperty(
+            "material", w_material_name, "Sets the world material.");
+    wmaterialcommand.SetGuidance(" Sets the world material ");
+    wmaterialcommand.SetStates(G4State_PreInit);
+
+    // Absorber thickness
+    G4GenericMessenger::Command &absthicknesscommand =
+        m_AMessenger->DeclarePropertyWithUnit(
+            "thickness",
+            "mm",
+            absorber_thickness,
+            "Sets the thickness of the absorber. Default unit is mm.");
+    absthicknesscommand.SetGuidance(
+        " Change the thickness of the final particles absorber that surrounds "
+        "the world.");
+    absthicknesscommand.SetStates(G4State_PreInit);
+}
+
+void GRPSTDetectorConstruction::PrintDetector()
+{
+    G4cout << " World and target information " << G4endl;
+    G4cout << " ------------------------------------------------------------- "
+           << G4endl;
+    G4cout << G4endl;
+    G4cout << " Name of the world: " << w_name << G4endl;
+    G4cout << " The world is a sphere centered in 0 0 0 mm" << G4endl;
+    G4cout << " Sphere radius [mm] : " << w_radius << G4endl;
+    G4cout << " World material is " << w_material_name << G4endl;
+    G4cout << G4endl;
+    G4cout << " The absorber that surrounds the world has a thickness "
+           << absorber_thickness << " mm" << G4endl;
+    G4cout << G4endl;
+    G4cout << " Name of the target: " << f_name << G4endl;
+    G4cout << " The target is a foil centered in " << foil_center[0] << " "
+           << foil_center[1] << " " << foil_center[2] << " "
+           << "mm" << G4endl;
+    G4cout << " The foil size is " << G4endl;
+    G4cout << " x [mm] : " << foil_x << G4endl;
+    G4cout << " y [mm] : " << foil_y << G4endl;
+    G4cout << " z [mm] : " << foil_z << G4endl;
+    G4cout << " Foil material is " << f_material_name << G4endl;
 }
 
 void GRPSTDetectorConstruction::ReinitializeGeometry()

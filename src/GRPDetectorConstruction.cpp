@@ -264,7 +264,7 @@ void GRPDetectorConstruction::DefineCommands()
             "deg",
             foil_angle_y,
             "Sets the foil rotation around the y axis. Default unit is deg.");
-    anglecommand.SetGuidance(" Sets the foil center ");
+    anglecommand.SetGuidance(" Sets the foil angle ");
     anglecommand.SetStates(G4State_PreInit);
 
     // World properties
