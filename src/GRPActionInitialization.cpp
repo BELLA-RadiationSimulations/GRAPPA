@@ -19,7 +19,8 @@ GRPActionInitialization::GRPActionInitialization(
 
 GRPActionInitialization::~GRPActionInitialization() {}
 
-// Defining User Run Action of Master thread (only used in multi-threaded mode)
+// Defining User Run Action of Master thread (only used in multi-threaded mode).
+// Not invoked in sequential mode.
 void GRPActionInitialization::BuildForMaster() const
 {
     GRPRunAction *runAction = new GRPRunAction(m_HistandNTupleManager);
@@ -27,6 +28,7 @@ void GRPActionInitialization::BuildForMaster() const
     runAction->SetContainer(m_myParticleContainer);
 }
 
+// Defining User Run Action in sequential mode as well as for the workers in multi-threaded mode.
 void GRPActionInitialization::Build() const
 {
     GRPPrimaryGeneratorAction *primarygeneratoraction =
