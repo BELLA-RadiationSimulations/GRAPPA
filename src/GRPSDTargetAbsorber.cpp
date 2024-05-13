@@ -49,7 +49,7 @@ void TargetAbsorberSD::Initialize(G4HCofThisEvent *) {}
 
 G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
-    /*
+    
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
     G4double kineticEnergy;
@@ -103,7 +103,6 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             momentum = aTrack->GetMomentum();
             charge = static_cast<G4float>(particle->GetPDGCharge());
             time = static_cast<G4float>(aTrack->GetGlobalTime());
-            aTrack->SetTrackStatus(fStopAndKill);
             pz = static_cast<G4float>(std::abs(momentum.z()));
             px = static_cast<G4float>(momentum.x());
             py = static_cast<G4float>(momentum.y());
@@ -271,6 +270,6 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
         return true;
     }
-    */
+    
     return false;
 }
