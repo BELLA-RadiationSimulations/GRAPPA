@@ -19,6 +19,7 @@ GRPActionInitialization::GRPActionInitialization(
 
 GRPActionInitialization::~GRPActionInitialization() {}
 
+// Defining User Run Action of Master thread (only used in multi-threaded mode)
 void GRPActionInitialization::BuildForMaster() const
 {
     GRPRunAction *runAction = new GRPRunAction(m_HistandNTupleManager);

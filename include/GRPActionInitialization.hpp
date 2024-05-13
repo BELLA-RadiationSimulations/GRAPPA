@@ -22,7 +22,7 @@ class GRPActionInitialization : public G4VUserActionInitialization
 {
 public:
     // GRPActionInitialization is constructed when the program starts, but
-    // it is only built (GRPActionInitialization::Build() called) when run is
+    // it is only built through GRPActionInitialization::Build() when run is
     // initialized.
     GRPActionInitialization(HistandNTupleManager *myanalysismanager);
     virtual ~GRPActionInitialization();
