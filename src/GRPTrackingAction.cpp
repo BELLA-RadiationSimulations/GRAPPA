@@ -31,9 +31,10 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
     // Check if analysis is active
     isanalysisactive = analysisManager->IsActive();
 
-    // fill ntuple of primary particles
+    // Fill histograms and ntuple of primary particles
     if ((pID == 0) && isanalysisactive)
     {
+        // Extracting particle values
         const G4ThreeVector vertex = track->GetPosition();
         const G4ThreeVector momentum = track->GetMomentum();
         const G4float x = static_cast<G4float>(vertex.x());
@@ -43,7 +44,9 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
         const G4float py = static_cast<G4float>(momentum.y());
         const G4float pz = static_cast<G4float>(momentum.z());
         const G4double kineticenergy = track->GetKineticEnergy();
+        const G4double pz_inv = 1 / pz;
 
+        // Getting histogram and ntuple IDs
         const G4int histoxyid = histoman->GetPrimaryInitialxyId();
         const G4int histozxid = histoman->GetPrimaryInitialzxId();
         const G4int histoEid = histoman->GetPrimaryInitialEneId();
@@ -52,9 +55,8 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
         const G4int histoypyid = histoman->GetPrimaryInitialypyId();
         const G4int ntupleid =
             m_HistandNTupleManager->GetNTupleManager()->GetPrimaryInitialId();
-        const G4double pz_inv = 1 / pz;
 
-        // Fill NTuple with initial particles
+        // Fill nuple with primary particles
         isntupleactive =
             m_HistandNTupleManager->GetNTupleManager()->GetIdActivation(
                 ntupleid);
@@ -69,7 +71,7 @@ void GRPTrackingAction::PreUserTrackingAction(const G4Track *track)
             analysisManager->AddNtupleRow(ntupleid);
         }
 
-        // Fill Histograms with initial particles
+        // Fill histograms with primary particles
         if (analysisManager->GetH2Activation(histoxyid))
         {
             analysisManager->FillH2(histoxyid, x, y);
