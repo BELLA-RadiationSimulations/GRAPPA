@@ -30,11 +30,14 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
     G4RunManager *runmanager = G4RunManager::GetRunManager();
     // inform the runManager to save random number seed
     runmanager->SetRandomNumberStore(false);
+
+    // Starting the run timer
     m_timer->Start();
 
     GRPRun *run = static_cast<GRPRun *>(runmanager->GetNonConstCurrentRun());
     run->SetContainer(m_myParticleContainer);
 
+    // Printing particle container information
     if (m_myParticleContainer->GetUseFile())
     {
         const G4int Numberofeventsthisrun =
@@ -56,6 +59,7 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
                 msg);
         }
     }
+
     // Only reset the analysis manager if the
     // analysis is not set to backward compatibility
     // i.e., Geant4 version >= 11.
@@ -63,6 +67,7 @@ void GRPRunAction::BeginOfRunAction(const G4Run *)
 #if !defined(GRAPPA_USE_BACKWARDS_ANALYSIS)
     G4AnalysisManager::Instance()->Reset();
 #endif
+
     //   Open the analysis file
     m_HistoandNtupleManager->OpenFile();
 }
@@ -76,8 +81,12 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
     // Getting the run manager
     G4RunManager *runmanager = G4RunManager::GetRunManager();
     G4AnalysisManager *analysismanager = G4AnalysisManager::Instance();
+
+    // Extracting number of events
     const G4int nofEvents = run->GetNumberOfEvent();
 
+    // Adding primary counts to NTuple
+    // Number of primaries = number of events
     if (!IsMaster())
     {
         const G4int primarycountid =
@@ -92,6 +101,7 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
             analysismanager->AddNtupleRow(primarycountid);
         }
     }
+
     // Print the run timing
     if (IsMaster())
     {
