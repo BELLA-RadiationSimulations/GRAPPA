@@ -137,7 +137,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         a_material, // its material
         std_a_name); // its name
 
-    // Creating the foil physical volume, i.e. placing foil logical volume into the world
+    // Creating the absorber physical volume, i.e. placing its logical volume into the world
     new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
