@@ -62,7 +62,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         w_material, // its material
         w_name); // its name
 
-    // Creating physics world volume, i.e. positioning world volume
+    // Creating physical world volume, i.e. positioning world volume
     physWorld = new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
