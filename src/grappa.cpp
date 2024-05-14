@@ -59,7 +59,7 @@ int main(int argc, char *argv[])
     // Mandatory user initialization class
     // Constructing the physics list
     // The last characters in the physics list represent the Electro-Magnetic
-    // component by default, FTFP_BERT constructs the standard EM.
+    // component by default, FTFP_BERT constructs the standard EM, that is Option 0.
     //
     G4PhysListFactory factory;
     G4VModularPhysicsList *physicsList =
