@@ -17,8 +17,8 @@ int main(int argc, char *argv[])
 {
     // Welcome message
     PrintWelcomeMessage();
-    // Detect interactive mode (if no arguments) and define UI session
 
+    // Detect interactive mode (if no arguments) and define UI session
     G4UIExecutive *ui = nullptr;
     if (argc == 1)
     {
@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
     //
     G4VisManager *visManager = new G4VisExecutive("Quiet");
     // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
-    // G4VisManager* visManager = new G4VisExecutive("Quiet");
     visManager->Initialize();
 
     // Getting run start time
@@ -40,6 +39,7 @@ int main(int argc, char *argv[])
     timer.Start();
     G4cout << " Program started at \t" << timer.GetClockTime() << G4endl;
 
+// Instantiating RunManager
 #ifdef G4MULTITHREADED
     G4RunManager *runManager = G4RunManagerFactory::CreateRunManager();
 #else
@@ -56,23 +56,24 @@ int main(int argc, char *argv[])
     // and ntuples in the Sensitive Detectors.
     HistandNTupleManager *myanalysismanager = new HistandNTupleManager();
 
+    // Mandatory user initialization class
     // Constructing the physics list
-    // The last characters in the physics list represent the ElectroMagnetic
-    // component By default, FTFP_BERT constructs the standard EM.
-    // "_LIV_" stands for Livermore, "_PEN" to Penelope.
+    // The last characters in the physics list represent the Electro-Magnetic
+    // component by default, FTFP_BERT constructs the standard EM, that is
+    // Option 0.
     //
     G4PhysListFactory factory;
     G4VModularPhysicsList *physicsList =
         factory.GetReferencePhysList("QGSP_BIC_EMZ");
     physicsList->SetVerboseLevel(0);
     runManager->SetUserInitialization(physicsList);
-    // FTFP_BERT should be used instead if primary articles energy is <5GeV;
+    // FTFP_BERT should be used instead if primary particle energy is <5GeV;
 
     // Introducing a particle container
     // that serves if we need to read particles from file
     GRPParticleContainer myParticleContainer = GRPParticleContainer();
 
-    // Mandatory class
+    // Mandatory user initialization class
     // Constructing actions
     // It takes as input a pointer to the custom analysis manager
     GRPActionInitialization *myActionInitialization =
@@ -80,21 +81,21 @@ int main(int argc, char *argv[])
     myActionInitialization->SetContainer(&myParticleContainer);
     runManager->SetUserInitialization(myActionInitialization);
 
-    // Mandatory class
-    // Constructing the detectors.
+    // Mandatory user initialization class
+    // Constructing the detectors
     // It takes as input a pointer to the custom analysis manager
     runManager->SetUserInitialization(
         new GRPDetectorConstruction(myanalysismanager));
 
     if (ui)
     {
-        // interactive mode
+        // Interactive mode
         ui->SessionStart();
         delete ui;
     }
     else
     {
-        // batch mode
+        // Batch mode
         const G4String command = "/control/execute ";
         const G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
