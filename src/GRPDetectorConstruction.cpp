@@ -322,7 +322,8 @@ void GRPDetectorConstruction::PrintDetector()
     G4cout << G4endl;
     G4cout << " Name of the target: " << f_name << G4endl;
     G4cout << " The target is a foil centered in " << foil_center[0] << " "
-           << foil_center[1] << " " << foil_center[2] << " " << "mm" << G4endl;
+           << foil_center[1] << " " << foil_center[2] << " "
+           << "mm" << G4endl;
     G4cout << " The foil size is " << G4endl;
     G4cout << " x [mm] : " << foil_x << G4endl;
     G4cout << " y [mm] : " << foil_y << G4endl;
