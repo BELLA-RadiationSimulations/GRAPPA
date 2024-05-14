@@ -17,28 +17,26 @@ int main(int argc, char *argv[])
 {
     // Welcome message
     PrintWelcomeMessage();
-    // Detect interactive mode (if no arguments) and define UI session
 
+    // Detect interactive mode (if no arguments) and define UI session
     G4UIExecutive *ui = nullptr;
     if (argc == 1)
     {
         ui = new G4UIExecutive(argc, argv);
     }
-
     // Get the pointer to the User Interface manager
     G4UImanager *UImanager = G4UImanager::GetUIpointer();
 
     // Initialize visualization
-    //
     G4VisManager *visManager = new G4VisExecutive("Quiet");
     // G4VisExecutive can take a verbosity argument - see /vis/verbose guidance.
     // G4VisManager* visManager = new G4VisExecutive("Quiet");
     visManager->Initialize();
 
-    // Getting run start time
+    // Starting run timer
     G4Timer timer = G4Timer();
     timer.Start();
-    G4cout << " Program started at \t" << timer.GetClockTime() << G4endl;
+    PrintStartMessage(timer);
 
 #ifdef G4MULTITHREADED
     G4RunManager *runManager = G4RunManagerFactory::CreateRunManager();
@@ -88,19 +86,19 @@ int main(int argc, char *argv[])
 
     if (ui)
     {
-        // interactive mode
+        // Interactive mode
         ui->SessionStart();
         delete ui;
     }
     else
     {
-        // batch mode
+        // Batch mode
         const G4String command = "/control/execute ";
         const G4String fileName = argv[1];
         UImanager->ApplyCommand(command + fileName);
     }
 
-    // Getting run end time
+    // Stopping run timer
     timer.Stop();
 
     // Final cleanup

@@ -22,4 +22,6 @@
 
 void PrintWelcomeMessage();
 
+void PrintStartMessage(const G4Timer &timer = G4Timer());
+
 void PrintFinalMessage(const G4Timer &timer = G4Timer());
