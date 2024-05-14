@@ -103,7 +103,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         f_material, // its material
         f_name); // its name
 
-    // Creating physics foil volume, i.e. positioning foil volume into world volume
+    // Creating physical foil volume, i.e. positioning foil volume into world volume
     new G4PVPlacement(
         G4Transform3D(rotm, f_position), // G4Transform3D(rotm,G4threevec);
         logicfoil, // its logical volume
