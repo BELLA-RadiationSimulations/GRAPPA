@@ -28,18 +28,14 @@ AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
 {
     m_HistoandNtupleManager = myanalysismanager;
 
+    // Storing particles of interest in a vector
+    // Particle IDs are defined in GRPParticlePDGID.hpp
     m_ParticleList.push_back(ParticleID::electronID);
-
     m_ParticleList.push_back(ParticleID::positronID);
-
     m_ParticleList.push_back(ParticleID::gammaID);
-
     m_ParticleList.push_back(ParticleID::muonminusID);
-
     m_ParticleList.push_back(ParticleID::muonplusID);
-
     m_ParticleList.push_back(ParticleID::pionminusID);
-
     m_ParticleList.push_back(ParticleID::pionplusID);
 }
 
@@ -58,15 +54,19 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     // Access track information
     G4Track *aTrack = step->GetTrack();
 
-    // Getting pre step point information and volume name
+    // Access pre-step point information
     G4StepPoint *preStepPoint = step->GetPreStepPoint();
+
+    // Get volume name
     const G4String thisVolumename = aTrack->GetVolume()->GetName();
+
+    // Get particle information
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     const G4int particleID = particle->GetPDGEncoding();
     const G4int pID = aTrack->GetParentID();
     G4String creatorprocessname = "";
 
-    // Check if particle is in the particle list
+    // Check if particle is of interest, i.e. listed in m_ParticleList
     const G4bool particleinvector =
         (std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) !=
          m_ParticleList.end());
@@ -86,22 +86,28 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     constexpr G4double MinPositronEnergy = 1 * MeV;
     constexpr G4double pi = CLHEP::pi;
 
+    // Return if analysis is disabled
     if (!analysisManager->IsActive())
     {
         return false;
     }
+
+
     if (CurrentProcess)
     {
-        // Getting process name (it should match "Transportation")
+        // Getting process name
+        // For the world absorber we want the 'transportation' type process, 
+        // which ensures that the particle is only counted onces in a detector
         const G4String &StepProcessName = CurrentProcess->GetProcessName();
         if (StepProcessName == "Transportation")
         {
-            // processing hit when entering the volume
+            // Processing hit when entering the volume
             kineticEnergy = aTrack->GetKineticEnergy();
             position = aTrack->GetPosition();
             momentum = aTrack->GetMomentum();
             charge = static_cast<G4float>(particle->GetPDGCharge());
             time = static_cast<G4float>(aTrack->GetGlobalTime());
+            // Killing particle tracking after hitting the detector
             aTrack->SetTrackStatus(fStopAndKill);
             pz = static_cast<G4float>(std::abs(momentum.z()));
             px = static_cast<G4float>(momentum.x());
@@ -142,7 +148,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         }
         else
         {
-
+            // Getting histogram and ntuple IDs
+            // Positrons
             if (particleID == ParticleID::positronID)
             {
                 histeneid = histomanager->GetPositronEneId();
@@ -153,6 +160,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()
                                ->GetPositronId();
             }
+            // Gamma
             else if (particleID == ParticleID::gammaID)
             {
                 histeneid = histomanager->GetGammaEneId();
@@ -163,6 +171,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid =
                     m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
             }
+            // Electrons
             else if (particleID == ParticleID::electronID)
             {
 
@@ -174,7 +183,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid = m_HistoandNtupleManager->GetNTupleManager()
                                ->GetElectronId();
             }
-            // Pions are collected in a single ntuple
+            // Pions
+            // Pions of both charges are collected in one ntuple
             else if (
                 particleID == ParticleID::pionminusID ||
                 particleID == ParticleID::pionplusID)
@@ -187,7 +197,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid =
                     m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
             }
-            // Muons are collected in a single ntuple
+            // Muons            
+            // Muons of both charges are collected in one ntuple
             else if (
                 particleID == ParticleID::muonminusID ||
                 particleID == ParticleID::muonplusID)
@@ -206,7 +217,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             }
         }
 
-        // Filling the correct histogram
+        // Filling histograms
         if (analysisManager->GetH1Activation(histeneid))
         {
             analysisManager->FillH1(histeneid, kineticEnergy);
@@ -229,6 +240,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
         }
 
+        // Filling NTuples
         NTupleManager *ntuplemanager =
             m_HistoandNtupleManager->GetNTupleManager();
         const G4bool analysisactive = analysisManager->IsActive();
@@ -239,7 +251,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         if (activationstatus && analysisactive)
         {
             G4int ncol = 0;
-            // Filling the correct Ntuple
+            // Filling the Ntuples
             analysisManager->FillNtupleFColumn(
                 ntupleid, 0, static_cast<G4float>(position.x()));
             analysisManager->FillNtupleFColumn(
