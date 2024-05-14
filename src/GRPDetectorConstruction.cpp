@@ -103,7 +103,8 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         f_material, // its material
         f_name); // its name
 
-    // Creating physical foil volume, i.e. positioning foil volume into world volume
+    // Creating physical foil volume, i.e. positioning foil volume into world
+    // volume
     new G4PVPlacement(
         G4Transform3D(rotm, f_position), // G4Transform3D(rotm,G4threevec);
         logicfoil, // its logical volume
@@ -121,7 +122,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     const G4double a_dimensions = w_radius;
     G4Material *a_material = w_material;
 
-    // Creating sensitive detector solid 
+    // Creating sensitive detector solid
     G4Sphere *StdsolidAbsorber = new G4Sphere(
         std_a_name, // its name
         a_dimensions - absorber_thickness,
@@ -137,7 +138,8 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         a_material, // its material
         std_a_name); // its name
 
-    // Creating the absorber physical volume, i.e. placing its logical volume into the world
+    // Creating the absorber physical volume, i.e. placing its logical volume
+    // into the world
     new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
@@ -320,8 +322,7 @@ void GRPDetectorConstruction::PrintDetector()
     G4cout << G4endl;
     G4cout << " Name of the target: " << f_name << G4endl;
     G4cout << " The target is a foil centered in " << foil_center[0] << " "
-           << foil_center[1] << " " << foil_center[2] << " "
-           << "mm" << G4endl;
+           << foil_center[1] << " " << foil_center[2] << " " << "mm" << G4endl;
     G4cout << " The foil size is " << G4endl;
     G4cout << " x [mm] : " << foil_x << G4endl;
     G4cout << " y [mm] : " << foil_y << G4endl;
