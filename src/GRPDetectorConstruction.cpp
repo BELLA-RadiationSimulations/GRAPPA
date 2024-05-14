@@ -80,7 +80,8 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     // detector material from command line
 
     // Defining foil dimension and material
-    foil_y = foil_x; // Foil is a square
+    // Foil is a square
+    foil_y = foil_x;
     G4Material *f_material = nist->FindOrBuildMaterial(f_material_name);
     G4ThreeVector f_dimensions(foil_x, foil_y, foil_z);
     const G4ThreeVector f_position(
