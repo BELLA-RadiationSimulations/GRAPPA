@@ -23,7 +23,8 @@
 //  Name: pi-, id: -211
 
 // Primaries, electrons, positrons and photons absorbing layer
-TargetAbsorberSD::TargetAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
+TargetAbsorberSD::TargetAbsorberSD(
+    G4String name, HistandNTupleManager *myanalysismanager)
     : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
@@ -49,7 +50,7 @@ void TargetAbsorberSD::Initialize(G4HCofThisEvent *) {}
 
 G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
-    
+
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
     G4double kineticEnergy;
@@ -68,9 +69,12 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4String creatorprocessname = "";
     G4int DetectorID = -1;
 
-    if (thisVolumename == "Absorber") {
+    if (thisVolumename == "Absorber")
+    {
         DetectorID = 0;
-    } else if (thisVolumename == "Target") {
+    }
+    else if (thisVolumename == "Target")
+    {
         // This becomes the copy number later on
         DetectorID = 1;
     }
@@ -103,7 +107,7 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     {
         // Getting process name (it should match "Transportation")
         // const G4String &StepProcessName = CurrentProcess->GetProcessName();
-        //if (StepProcessName == "Transportation")
+        // if (StepProcessName == "Transportation")
         if (step->IsLastStepInVolume())
         {
             // processing hit when exiting the volume
@@ -262,7 +266,7 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(
                 ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            //analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
+            // analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
             analysisManager->FillNtupleSColumn(ntupleid, 7, thisVolumename);
             ncol = 8;
             if (isMuorPi)
@@ -281,6 +285,6 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 
         return true;
     }
-    
+
     return false;
 }

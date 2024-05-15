@@ -70,7 +70,8 @@ G4VPhysicalVolume *GRPSTDetectorConstruction::ConstructWorldandSTarget()
     // Defining dimension
     G4ThreeVector f_dimensions(foil_x, foil_y, foil_z);
     // Defining position
-    const G4ThreeVector f_position(foil_center[0], foil_center[1], foil_center[2]);
+    const G4ThreeVector f_position(
+        foil_center[0], foil_center[1], foil_center[2]);
     // Creating foil solid
     G4Box *solidfoil = new G4Box(
         f_name, // its name
@@ -136,10 +137,10 @@ void GRPSTDetectorConstruction::ConstructSDandField()
 
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
-    m_SDAbsorberWorld = new WorldAbsorberSD(
-        "/SDAbsorber/World", m_HistoandNtupleManager);
-    m_SDAbsorberTarget = new TargetAbsorberSD(
-        "/SDAbsorber/Target", m_HistoandNtupleManager);
+    m_SDAbsorberWorld =
+        new WorldAbsorberSD("/SDAbsorber/World", m_HistoandNtupleManager);
+    m_SDAbsorberTarget =
+        new TargetAbsorberSD("/SDAbsorber/Target", m_HistoandNtupleManager);
 
     SDMpointer->AddNewDetector(m_SDAbsorberWorld);
     SDMpointer->AddNewDetector(m_SDAbsorberTarget);

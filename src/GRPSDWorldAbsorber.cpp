@@ -23,7 +23,8 @@
 //  Name: pi-, id: -211
 
 // Primaries, electrons, positrons and photons absorbing layer
-WorldAbsorberSD::WorldAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
+WorldAbsorberSD::WorldAbsorberSD(
+    G4String name, HistandNTupleManager *myanalysismanager)
     : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
@@ -67,9 +68,12 @@ G4bool WorldAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     G4String creatorprocessname = "";
     G4int DetectorID = -1;
 
-    if (thisVolumename == "Absorber") {
+    if (thisVolumename == "Absorber")
+    {
         DetectorID = 0;
-    } else if (thisVolumename == "Target") {
+    }
+    else if (thisVolumename == "Target")
+    {
         // This becomes the copy number later on
         DetectorID = 1;
     }
@@ -261,7 +265,7 @@ G4bool WorldAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(
                 ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            //analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
+            // analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
             analysisManager->FillNtupleSColumn(ntupleid, 7, thisVolumename);
             ncol = 8;
             if (isMuorPi)
