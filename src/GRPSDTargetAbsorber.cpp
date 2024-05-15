@@ -105,9 +105,6 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     }
     if (CurrentProcess)
     {
-        // Getting process name (it should match "Transportation")
-        // const G4String &StepProcessName = CurrentProcess->GetProcessName();
-        // if (StepProcessName == "Transportation")
         if (step->IsLastStepInVolume())
         {
             // processing hit when exiting the volume
