@@ -65,6 +65,14 @@ G4bool WorldAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     const G4int particleID = particle->GetPDGEncoding();
     const G4int pID = aTrack->GetParentID();
     G4String creatorprocessname = "";
+    G4int DetectorID = -1;
+
+    if (thisVolumename == "Absorber") {
+        DetectorID = 0;
+    } else if (thisVolumename == "Target") {
+        // This becomes the copy number later on
+        DetectorID = 1;
+    }
 
     // Check if particle is in the particle list
     const G4bool particleinvector =
@@ -253,7 +261,9 @@ G4bool WorldAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(
                 ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            ncol = 7;
+            //analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
+            analysisManager->FillNtupleSColumn(ntupleid, 7, thisVolumename);
+            ncol = 8;
             if (isMuorPi)
             {
                 analysisManager->FillNtupleFColumn(ntupleid, ncol, charge);
