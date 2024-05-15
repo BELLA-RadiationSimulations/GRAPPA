@@ -133,7 +133,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         180 * deg); // its theta initial and final angles
 
     // Creating sensitive detector logical volume (with the shape of a sphere)
-    m_LogicalAbsorber = new G4LogicalVolume(
+    m_LogicalWorldAbsorber = new G4LogicalVolume(
         StdsolidAbsorber, // its solid
         a_material, // its material
         std_a_name); // its name

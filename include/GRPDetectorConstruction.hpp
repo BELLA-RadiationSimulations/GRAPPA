@@ -69,9 +69,9 @@ private:
     // Sensitive detectors
     // Pointer to the logical absorber for sensitive detectors
 
-    G4LogicalVolume *m_LogicalAbsorber;
+    G4LogicalVolume *m_LogicalWorldAbsorber;
     // Pointer to the standard sensitive detector
-    AbsorberSD *m_StandardAbsorber;
+    WorldAbsorberSD *m_StandardWorldAbsorber;
 
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;
