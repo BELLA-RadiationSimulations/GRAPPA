@@ -14,9 +14,12 @@
 void PrintWelcomeMessage()
 {
     G4cout << " =================================================== " << G4endl;
-    G4cout << "                        GRAPPA                       " << G4endl;
+    G4cout << "\033[1;32m"
+           << "                        GRAPPA       "
+           << "\033[0m" << G4endl;
     G4cout << " =================================================== " << G4endl;
 #if defined(GRAPPA_VERSION)
+    G4cout << G4endl;
     G4cout << " Running GRAPPA version " << MAKE_STR(GRAPPA_VERSION)
            << ", compiled using Geant4 version " << MAKE_STR(Geant4_VERSION)
            << G4endl;
@@ -25,16 +28,27 @@ void PrintWelcomeMessage()
 #if defined(GRAPPA_DESCRIPTION) && defined(GRAPPA_URL)
     G4cout << " GRAPPA: " << MAKE_STR(GRAPPA_DESCRIPTION) << G4endl;
     G4cout << " More info at " << MAKE_STR(GRAPPA_URL) << G4endl;
+    G4cout << G4endl;
 #endif
+}
+
+void PrintStartMessage(const G4Timer &timer)
+{
+    G4cout << " ================================================== " << G4endl;
+    G4cout << "\033[0;32m"
+           << "  > Program started at:  " << timer.GetClockTime() << "\033[0m"
+           << G4endl;
+    G4cout << " ================================================== " << G4endl;
 }
 
 void PrintFinalMessage(const G4Timer &timer)
 {
 
-    G4cout
-        << "==================================================================="
-        << G4endl;
-    G4cout << " Simulation timing: " << G4endl;
+    G4cout << G4endl;
+    G4cout << " ================================================== " << G4endl;
+    G4cout << "\033[0;32m"
+           << "  > Simulation timing: "
+           << "\033[0m" << G4endl;
     G4cout << "    User elapsed time   => "
            << timer.GetUserElapsed() * (CLHEP::second / CLHEP::hour)
            << " h   = "
@@ -52,14 +66,8 @@ void PrintFinalMessage(const G4Timer &timer)
            << " min   = " << timer.GetSystemElapsed() << " s." << G4endl;
 
     G4cout << " ================================================== " << G4endl;
-    G4cout << "        Program GRAPPA ran successfully  " << G4endl;
-    G4cout << " ================================================== " << G4endl;
-}
-
-void PrintFinalMessage()
-{
-
-    G4cout << " ================================================== " << G4endl;
-    G4cout << "        Program GRAPPA ran successfully  " << G4endl;
+    G4cout << "\033[0;32m"
+           << "  GRAPPA ran successfully  "
+           << "\033[0m" << G4endl;
     G4cout << " ================================================== " << G4endl;
 }
