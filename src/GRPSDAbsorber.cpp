@@ -92,11 +92,10 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         return false;
     }
 
-
     if (CurrentProcess)
     {
         // Getting process name
-        // For the world absorber we want the 'transportation' type process, 
+        // For the world absorber we want the 'transportation' type process,
         // which ensures that the particle is only counted onces in a detector
         const G4String &StepProcessName = CurrentProcess->GetProcessName();
         if (StepProcessName == "Transportation")
@@ -197,7 +196,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid =
                     m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
             }
-            // Muons            
+            // Muons
             // Muons of both charges are collected in one ntuple
             else if (
                 particleID == ParticleID::muonminusID ||

@@ -28,7 +28,8 @@ void GRPActionInitialization::BuildForMaster() const
     runAction->SetContainer(m_myParticleContainer);
 }
 
-// Defining User Run Action in sequential mode as well as for the workers in multi-threaded mode.
+// Defining User Run Action in sequential mode as well as for the workers in
+// multi-threaded mode.
 void GRPActionInitialization::Build() const
 {
     // Mandatory user action class
