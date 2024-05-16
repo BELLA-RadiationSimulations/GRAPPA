@@ -306,7 +306,7 @@ that sets the activation status of the `ntupleID` ntuple.
 
 ### Modification to the Physics Package
 
-GRAPPA defaults to the use of the `FTFP_BERT_EMZ` physics reference.
+GRAPPA defaults to the use of the `QGSP_BIC_EMZ` physics reference.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
 An example of modification to the physics package is the activation (or deactivation) of new processes 
 

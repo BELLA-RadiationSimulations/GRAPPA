@@ -31,15 +31,12 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     G4NistManager *nist = G4NistManager::Instance();
 
     // Option to switch on/off checking of volumes overlaps
-    //
     const G4bool checkOverlaps = true;
 
     // ================================================ //
-    // First, we create the world
-    G4Material *w_material = nist->FindOrBuildMaterial(w_material_name);
-    // Instead of G4_AIR, G4_Galactic has 1e-25g/cm3 and 21.8 eV
+    // Creating the world
+    // Creating the world solid: optional a box or a sphere
 
-    // Creation of a world box or sphere
     /*
     G4Box* solidWorld =
         new G4Box(w_name, //its name
@@ -56,13 +53,16 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         0.,
         360 * deg); // its theta initial and final angles
 
-    // Creation of the logical volume (with the shape of the box)
+    // Defining material of the world volume
+    G4Material *w_material = nist->FindOrBuildMaterial(w_material_name);
+
+    // Creating world logical volume
     G4LogicalVolume *logicWorld = new G4LogicalVolume(
         solidWorld, // its solid
         w_material, // its material
         w_name); // its name
 
-    // Creation of the physical volume associated with the logical volume
+    // Creating physical world volume, i.e. positioning world volume
     physWorld = new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
@@ -74,14 +74,14 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         checkOverlaps); // overlaps checking
 
     // ================================================ //
-    // Now, we create the solid target
+    // Creating foil target
     //
     // In Testcommon there is an example on how to define a command to change
     // detector material from command line
 
-    // Foil is assumed a square
+    // Defining foil dimension and material
+    // Foil is a square
     foil_y = foil_x;
-
     G4Material *f_material = nist->FindOrBuildMaterial(f_material_name);
     G4ThreeVector f_dimensions(foil_x, foil_y, foil_z);
     const G4ThreeVector f_position(
@@ -90,20 +90,21 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     // Foil rotation by a given angle
     rotm.rotateY(foil_angle_y);
 
-    // Foil box
+    // Creating foil solid
     G4Box *solidfoil = new G4Box(
         f_name, // its name
         0.5 * f_dimensions[0],
         0.5 * f_dimensions[1],
         0.5 * f_dimensions[2]); // its size
 
-    // Creation of the logical volume (with the shape of the box)
+    // Creating foil logical volume
     G4LogicalVolume *logicfoil = new G4LogicalVolume(
         solidfoil, // its solid
         f_material, // its material
         f_name); // its name
 
-    // Creation of the phisical foil
+    // Creating physical foil volume, i.e. positioning foil volume into world
+    // volume
     new G4PVPlacement(
         G4Transform3D(rotm, f_position), // G4Transform3D(rotm,G4threevec);
         logicfoil, // its logical volume
@@ -114,14 +115,14 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         checkOverlaps); // overlaps checking
 
     // ================================================ //
-    // We create an absorbing layer that coincides with the world
-    // that makes us detect particles
+    // Creating a thin absorbing layer that coincides with the world
+    // to detect particles
 
     // First absorber is for e+, e- and gamma
-    //
     const G4double a_dimensions = w_radius;
     G4Material *a_material = w_material;
 
+    // Creating sensitive detector solid
     G4Sphere *StdsolidAbsorber = new G4Sphere(
         std_a_name, // its name
         a_dimensions - absorber_thickness,
@@ -131,13 +132,14 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         0.,
         180 * deg); // its theta initial and final angles
 
-    // Creation of the logical volume (with the shape of the sphere)
+    // Creating sensitive detector logical volume (with the shape of a sphere)
     m_LogicalAbsorber = new G4LogicalVolume(
         StdsolidAbsorber, // its solid
         a_material, // its material
         std_a_name); // its name
 
-    // Creation of the physical volume associated with the logical volume
+    // Creating the absorber physical volume, i.e. placing its logical volume
+    // into the world
     new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
@@ -149,7 +151,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         checkOverlaps); // overlaps checking
 
     // ================================================ //
-    // Set Visualization attributes
+    // Setting visualization attributes
 
     G4VisAttributes *worldVisAtt =
         new G4VisAttributes(false); // Setting world visible
@@ -174,7 +176,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 void GRPDetectorConstruction::ConstructSDandField()
 {
     // ================================================ //
-    // Link and activate Sensitive Detectors
+    // Link and activate sensitive detectors
 
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
@@ -193,15 +195,15 @@ void GRPDetectorConstruction::DefineCommands()
     //
     // define command directory using generic messenger class
     m_GenericMessenger = std::make_shared<G4GenericMessenger>(
-        this, "/geometry/", "Commands to configure the target");
+        this, "/geometry/", "Commands to configure the geometry");
     m_WMessenger = std::make_shared<G4GenericMessenger>(
-        this, "/geometry/world/", "Commands to configure the target");
+        this, "/geometry/world/", "Commands to configure the world");
     m_FMessenger = std::make_shared<G4GenericMessenger>(
         this, "/geometry/foil/", "Commands to configure the target");
     m_AMessenger = std::make_shared<G4GenericMessenger>(
         this,
         "/geometry/absorber/",
-        "Commands to configure the particles absorber");
+        "Commands to configure the particle absorber");
     // configure commands
 
     // Print the current status of the world and foil
@@ -225,8 +227,7 @@ void GRPDetectorConstruction::DefineCommands()
     // updatecommand.SetStates(G4State_Idle);
     // ===============================
 
-    // Target foil properties
-
+    // Target foil thickness
     G4GenericMessenger::Command &thickcommand =
         m_FMessenger->DeclarePropertyWithUnit(
             "thickness",
@@ -235,6 +236,8 @@ void GRPDetectorConstruction::DefineCommands()
             "Sets the foil size along z (thickness). Default unit is mm.");
     thickcommand.SetGuidance(" Sets the foil thickness ");
     thickcommand.SetStates(G4State_PreInit);
+
+    // Target foil transverse size
     G4GenericMessenger::Command &sizecommand =
         m_FMessenger->DeclarePropertyWithUnit(
             "size",
@@ -245,11 +248,15 @@ void GRPDetectorConstruction::DefineCommands()
     sizecommand.SetGuidance(
         " Sets the foil transverse sizes (assuming it is a square) ");
     sizecommand.SetStates(G4State_PreInit);
+
+    // Target foil material
     G4GenericMessenger::Command &fmaterialcommand =
         m_FMessenger->DeclareProperty(
             "material", f_material_name, "Sets the foil material.");
     fmaterialcommand.SetGuidance(" Sets the foil material ");
     fmaterialcommand.SetStates(G4State_PreInit);
+
+    // Target foil positioning
     G4GenericMessenger::Command &centercommand =
         m_FMessenger->DeclarePropertyWithUnit(
             "center",
@@ -258,6 +265,8 @@ void GRPDetectorConstruction::DefineCommands()
             "Sets the foil center. Default unit is mm.");
     centercommand.SetGuidance(" Sets the foil center ");
     centercommand.SetStates(G4State_PreInit);
+
+    // Target foil rotation
     G4GenericMessenger::Command &anglecommand =
         m_FMessenger->DeclarePropertyWithUnit(
             "rotation",
@@ -267,7 +276,7 @@ void GRPDetectorConstruction::DefineCommands()
     anglecommand.SetGuidance(" Sets the foil center ");
     anglecommand.SetStates(G4State_PreInit);
 
-    // World properties
+    // World dimension
     G4GenericMessenger::Command &wradiuscommand =
         m_WMessenger->DeclarePropertyWithUnit(
             "radius",
@@ -277,6 +286,7 @@ void GRPDetectorConstruction::DefineCommands()
     wradiuscommand.SetGuidance(" Sets the world radius ");
     wradiuscommand.SetStates(G4State_PreInit);
 
+    // World material
     G4GenericMessenger::Command &wmaterialcommand =
         m_WMessenger->DeclareProperty(
             "material", w_material_name, "Sets the world material.");

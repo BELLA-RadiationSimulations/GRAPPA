@@ -31,6 +31,8 @@ void GRPActionInitialization::BuildForMaster() const
 // Defining User Run Action in sequential mode as well as for the workers in multi-threaded mode.
 void GRPActionInitialization::Build() const
 {
+    // Mandatory user action class
+    // Instantiating primary particle generator
     GRPPrimaryGeneratorAction *primarygeneratoraction =
         new GRPPrimaryGeneratorAction(m_myParticleContainer->GetUseFile());
     SetUserAction(primarygeneratoraction);
