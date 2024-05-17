@@ -67,32 +67,34 @@ G4VPhysicalVolume *GRPSTDetectorConstruction::ConstructWorldandSTarget()
     // Creating FOIL ABSORBER volume
     // Defining material
     G4Material *f_material = nist->FindOrBuildMaterial(f_material_name);
-    // Defining dimension
-    G4ThreeVector f_dimensions(foil_x, foil_y, foil_z);
-    // Defining position
-    const G4ThreeVector f_position(
-        foil_center[0], foil_center[1], foil_center[2]);
     // Creating foil solid
-    G4Box *solidfoil = new G4Box(
+    G4Box *solidfoillayer = new G4Box(
         f_name, // its name
-        0.5 * f_dimensions[0],
-        0.5 * f_dimensions[1],
-        0.5 * f_dimensions[2]); // its size
+        0.5 * foil_x,
+        0.5 * foil_y,
+        0.5 * foil_z/n_layers); // its size
     // Creation foil logical volume
     m_LogicalAbsorberTarget = new G4LogicalVolume(
-        solidfoil, // its solid
+        solidfoillayer, // its solid
         f_material, // its material
         f_name); // its name
-    // Creating foil physical volume
-    new G4PVPlacement(
-        nullptr, //  no rotation
-        f_position, // position
-        m_LogicalAbsorberTarget, // its logical volume
-        f_name, // its name
-        logicWorld, // its mother  volume
-        false, // no boolean operation
-        0, // copy number
-        checkOverlaps); // overlaps checking
+    // Defining stack of target layers that form the whole target
+    for ( G4int i=0; i<n_layers; i++ )
+    {
+        // Defining position
+        const G4ThreeVector f_position(foil_center[0], foil_center[1], foil_center[2]+i*foil_z/n_layers);
+        // Creating foil physical volume
+        new G4PVPlacement(
+            nullptr, //  no rotation
+            f_position, // position
+            m_LogicalAbsorberTarget, // its logical volume
+            f_name, // its name
+            logicWorld, // its mother  volume
+            false, // no boolean operation
+            i, // copy number starting at 1. Copy number 0 is reserved for world volume.
+            checkOverlaps); // overlaps checking
+    }
+
 
     // ================================================ //
     // Creating WOLRD SHEATH ABSORBER volume
@@ -178,7 +180,7 @@ void GRPSTDetectorConstruction::DefineCommands()
     printcommand.SetStates(G4State_PreInit, G4State_Idle);
 
     // ===============================
-    // Reinitialization stil WIP
+    // Reinitialization still WIP
     // Update the global geometry after modifications have been made
     // G4GenericMessenger::Command& updatecommand =
     // m_GenericMessenger->DeclareMethod("reinitialize",
@@ -190,7 +192,14 @@ void GRPSTDetectorConstruction::DefineCommands()
     // ===============================
 
     // Target foil properties
-
+    G4GenericMessenger::Command &layercommand =
+        m_FMessenger->DeclarePropertyWithUnit(
+            "layers",
+            "#",
+            n_layers,
+            "Number of sensitive layers constituting the foil.");
+    layercommand.SetGuidance(" Sets the number of foil layers ");
+    layercommand.SetStates(G4State_PreInit);
     G4GenericMessenger::Command &thickcommand =
         m_FMessenger->DeclarePropertyWithUnit(
             "thickness",
@@ -274,12 +283,14 @@ void GRPSTDetectorConstruction::PrintDetector()
     G4cout << " x [mm] : " << foil_x << G4endl;
     G4cout << " y [mm] : " << foil_y << G4endl;
     G4cout << " z [mm] : " << foil_z << G4endl;
+    G4cout << " number of layers : " << n_layers << G4endl;
     G4cout << " Foil material is " << f_material_name << G4endl;
 }
 
-void GRPSTDetectorConstruction::ReinitializeGeometry()
-{
-    G4RunManager *runmanager = G4RunManager::GetRunManager();
-    runmanager->DefineWorldVolume(ConstructWorldandSTarget());
-    runmanager->ReinitializeGeometry();
-}
+// Functionality doesn't work yet. WIP
+//void GRPSTDetectorConstruction::ReinitializeGeometry()
+//{
+//   G4RunManager *runmanager = G4RunManager::GetRunManager();
+//    runmanager->DefineWorldVolume(ConstructWorldandSTarget());
+//    runmanager->ReinitializeGeometry();
+//}
