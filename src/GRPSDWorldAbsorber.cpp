@@ -265,8 +265,7 @@ G4bool WorldAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(
                 ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            // analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
-            analysisManager->FillNtupleSColumn(ntupleid, 7, thisVolumename);
+            analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
             ncol = 8;
             if (isMuorPi)
             {
