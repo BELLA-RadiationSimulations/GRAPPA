@@ -574,7 +574,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_primaryid, "py");
     analysisManager->CreateNtupleFColumn(m_primaryid, "pz");
     analysisManager->CreateNtupleFColumn(m_primaryid, "t");
-    analysisManager->CreateNtupleSColumn(m_primaryid, "detector");
+    analysisManager->CreateNtupleFColumn(m_primaryid, "detector");
     analysisManager->FinishNtuple(m_primaryid);
     analysisManager->SetNtupleActivation(m_primaryid, m_primaryactive);
 
@@ -588,7 +588,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_posiid, "py");
     analysisManager->CreateNtupleFColumn(m_posiid, "pz");
     analysisManager->CreateNtupleFColumn(m_posiid, "t");
-    analysisManager->CreateNtupleSColumn(m_posiid, "detector");
+    analysisManager->CreateNtupleFColumn(m_posiid, "detector");
     analysisManager->CreateNtupleSColumn(m_posiid, "process");
     analysisManager->FinishNtuple(m_posiid);
     analysisManager->SetNtupleActivation(m_posiid, m_posiactive);
@@ -603,7 +603,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_electronid, "py");
     analysisManager->CreateNtupleFColumn(m_electronid, "pz");
     analysisManager->CreateNtupleFColumn(m_electronid, "t");
-    analysisManager->CreateNtupleSColumn(m_electronid, "detector");
+    analysisManager->CreateNtupleFColumn(m_electronid, "detector");
     analysisManager->CreateNtupleSColumn(m_electronid, "process");
     analysisManager->FinishNtuple(m_electronid);
     analysisManager->SetNtupleActivation(m_electronid, m_electronactive);
@@ -618,7 +618,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_gammaid, "py");
     analysisManager->CreateNtupleFColumn(m_gammaid, "pz");
     analysisManager->CreateNtupleFColumn(m_gammaid, "t");
-    analysisManager->CreateNtupleSColumn(m_gammaid, "detector");
+    analysisManager->CreateNtupleFColumn(m_gammaid, "detector");
     analysisManager->FinishNtuple(m_gammaid);
     analysisManager->SetNtupleActivation(m_gammaid, m_gammaactive);
 
@@ -632,7 +632,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_pionid, "py");
     analysisManager->CreateNtupleFColumn(m_pionid, "pz");
     analysisManager->CreateNtupleFColumn(m_pionid, "t");
-    analysisManager->CreateNtupleSColumn(m_pionid, "detector");
+    analysisManager->CreateNtupleFColumn(m_pionid, "detector");
     analysisManager->CreateNtupleFColumn(m_pionid, "q");
     analysisManager->CreateNtupleSColumn(m_pionid, "process");
     analysisManager->FinishNtuple(m_pionid);
@@ -648,7 +648,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_muonid, "py");
     analysisManager->CreateNtupleFColumn(m_muonid, "pz");
     analysisManager->CreateNtupleFColumn(m_muonid, "t");
-    analysisManager->CreateNtupleSColumn(m_muonid, "detector");
+    analysisManager->CreateNtupleFColumn(m_muonid, "detector");
     analysisManager->CreateNtupleFColumn(m_muonid, "q");
     analysisManager->CreateNtupleSColumn(m_muonid, "process");
     analysisManager->FinishNtuple(m_muonid);
