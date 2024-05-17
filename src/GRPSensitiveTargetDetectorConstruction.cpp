@@ -82,7 +82,7 @@ G4VPhysicalVolume *GRPSTDetectorConstruction::ConstructWorldandSTarget()
     for ( G4int i=0; i<n_layers; i++ )
     {
         // Defining position
-        const G4ThreeVector f_position(foil_center[0], foil_center[1], foil_center[2]+i*foil_z/n_layers);
+        const G4ThreeVector f_position(foil_center[0], foil_center[1], foil_center[2]-i*foil_z/n_layers);
         // Creating foil physical volume
         new G4PVPlacement(
             nullptr, //  no rotation
