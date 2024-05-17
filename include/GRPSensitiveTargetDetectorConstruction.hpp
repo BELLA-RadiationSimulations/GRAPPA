@@ -47,6 +47,8 @@ private:
     G4VPhysicalVolume *ConstructWorldandSTarget();
     void ReinitializeGeometry();
 
+    G4int n_layers = 1;
+
     // Some useful parameters to construct the world and the detectors
     G4double w_radius = 100 * cm;
     G4double foil_x = 5 * cm;
