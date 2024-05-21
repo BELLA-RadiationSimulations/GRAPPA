@@ -26,27 +26,28 @@
 #include <G4VUserDetectorConstruction.hh>
 
 #include <GRPSDWorldAbsorber.hpp>
+#include <GRPSDTargetAbsorber.hpp>
 
-class GRPDetectorConstruction : public G4VUserDetectorConstruction
+class GRPSTDetectorConstruction : public G4VUserDetectorConstruction
 {
 
 public:
     // Constructor
-    GRPDetectorConstruction(HistandNTupleManager *myanalysismanager);
-
+    GRPSTDetectorConstruction(HistandNTupleManager *myanalysismanager);
     // Destructor
-    virtual ~GRPDetectorConstruction();
+    virtual ~GRPSTDetectorConstruction();
     virtual G4VPhysicalVolume *Construct() override;
 
     // Sensitive Detector Construction
     void ConstructSDandField() override;
 
 private:
-    // Function to define the custom commands for the UI
     void DefineCommands();
     void PrintDetector();
-    G4VPhysicalVolume *ConstructWorldandTarget();
+    G4VPhysicalVolume *ConstructWorldandSTarget();
     void ReinitializeGeometry();
+
+    G4int n_layers = 1;
 
     // Some useful parameters to construct the world and the detectors
     G4double w_radius = 100 * cm;
@@ -54,24 +55,22 @@ private:
     G4double foil_y = 5 * cm;
     G4double foil_z = 1 * cm;
     G4ThreeVector foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
-    G4double foil_angle_y = 0 * rad;
     G4double absorber_thickness = 1 * mm;
-    G4String w_name = "World", f_name = "Foil", std_a_name = "Absorber";
+    G4String w_name = "World", f_name = "Target", std_a_name = "Absorber";
     G4String w_material_name = "G4_Galactic", f_material_name = "G4_W",
              a_material_name = "G4_Galactic";
 
     // Pointer to the physical world
     G4VPhysicalVolume *physWorld;
+    // Pointer to the logical absorbers for sensitive detectors
+    G4LogicalVolume *m_LogicalAbsorberWorld;
+    G4LogicalVolume *m_LogicalAbsorberTarget;
+    // Pointer to the sensitive detectors
+    WorldAbsorberSD *m_SDAbsorberWorld;
+    TargetAbsorberSD *m_SDAbsorberTarget;
 
     // Pointer to the customized analysis manager
     HistandNTupleManager *m_HistoandNtupleManager;
-
-    // Sensitive detectors
-    // Pointer to the logical absorber for sensitive detectors
-
-    G4LogicalVolume *m_LogicalWorldAbsorber;
-    // Pointer to the standard sensitive detector
-    WorldAbsorberSD *m_StandardWorldAbsorber;
 
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;

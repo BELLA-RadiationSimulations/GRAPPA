@@ -13,6 +13,7 @@ target_sources(
     GRAPPA
     PRIVATE GRPActionInitialization.cpp
             GRPASCIIReader.cpp
+            GRPSensitiveTargetDetectorConstruction.cpp
             GRPDetectorConstruction.cpp
             GRPHistandNTupleManager.cpp
             GRPMessages.cpp
@@ -21,7 +22,8 @@ target_sources(
             GRPPrimaryGeneratorAction.cpp
             GRPRun.cpp
             GRPRunAction.cpp
-            GRPSDAbsorber.cpp
+            GRPSDWorldAbsorber.cpp
+            GRPSDTargetAbsorber.cpp
             GRPSignalHandler.cpp
             GRPTrackingAction.cpp
             grappa.cpp

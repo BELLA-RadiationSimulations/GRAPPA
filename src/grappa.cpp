@@ -82,8 +82,10 @@ int main(int argc, char *argv[])
     // Mandatory user initialization class
     // Constructing the detectors
     // It takes as input a pointer to the custom analysis manager
+    // runManager->SetUserInitialization(
+    //    new GRPDetectorConstruction(myanalysismanager));
     runManager->SetUserInitialization(
-        new GRPDetectorConstruction(myanalysismanager));
+        new GRPSTDetectorConstruction(myanalysismanager));
 
     if (ui)
     {

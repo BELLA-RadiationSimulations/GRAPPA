@@ -9,7 +9,7 @@
 //
 // License: BSD-3-Clause
 
-#include <GRPSDAbsorber.hpp>
+#include <GRPSDTargetAbsorber.hpp>
 
 //
 //  Here we use the Particle Data Group (PDG) convention
@@ -23,7 +23,8 @@
 //  Name: pi-, id: -211
 
 // Primaries, electrons, positrons and photons absorbing layer
-AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
+TargetAbsorberSD::TargetAbsorberSD(
+    G4String name, HistandNTupleManager *myanalysismanager)
     : G4VSensitiveDetector(name)
 {
     m_HistoandNtupleManager = myanalysismanager;
@@ -43,12 +44,13 @@ AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
     m_ParticleList.push_back(ParticleID::pionplusID);
 }
 
-AbsorberSD::~AbsorberSD() {}
+TargetAbsorberSD::~TargetAbsorberSD() {}
 
-void AbsorberSD::Initialize(G4HCofThisEvent *) {}
+void TargetAbsorberSD::Initialize(G4HCofThisEvent *) {}
 
-G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
+G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
+
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
     G4double kineticEnergy;
@@ -65,6 +67,16 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     const G4int particleID = particle->GetPDGEncoding();
     const G4int pID = aTrack->GetParentID();
     G4String creatorprocessname = "";
+    G4int DetectorID = -1;
+
+    if (thisVolumename == "Absorber")
+    {
+        DetectorID = 0;
+    }
+    else if (thisVolumename == "Target")
+    {
+        DetectorID = step->GetPostStepPoint()->GetTouchable()->GetCopyNumber();
+    }
 
     // Check if particle is in the particle list
     const G4bool particleinvector =
@@ -92,17 +104,14 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     }
     if (CurrentProcess)
     {
-        // Getting process name (it should match "Transportation")
-        const G4String &StepProcessName = CurrentProcess->GetProcessName();
-        if (StepProcessName == "Transportation")
+        if (step->IsLastStepInVolume())
         {
-            // processing hit when entering the volume
+            // processing hit when exiting the volume
             kineticEnergy = aTrack->GetKineticEnergy();
             position = aTrack->GetPosition();
             momentum = aTrack->GetMomentum();
             charge = static_cast<G4float>(particle->GetPDGCharge());
             time = static_cast<G4float>(aTrack->GetGlobalTime());
-            aTrack->SetTrackStatus(fStopAndKill);
             pz = static_cast<G4float>(std::abs(momentum.z()));
             px = static_cast<G4float>(momentum.x());
             py = static_cast<G4float>(momentum.y());
@@ -253,7 +262,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             analysisManager->FillNtupleFColumn(
                 ntupleid, 5, static_cast<G4float>(momentum.z()));
             analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            ncol = 7;
+            analysisManager->FillNtupleFColumn(ntupleid, 7, DetectorID);
+            ncol = 8;
             if (isMuorPi)
             {
                 analysisManager->FillNtupleFColumn(ntupleid, ncol, charge);

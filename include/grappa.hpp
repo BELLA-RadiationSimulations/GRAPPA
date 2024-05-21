@@ -18,6 +18,7 @@
 #include <G4UImanager.hh>
 #include <G4VisExecutive.hh>
 
+#include <GRPSensitiveTargetDetectorConstruction.hpp>
 #include <GRPDetectorConstruction.hpp>
 #include <GRPParticleContainer.hpp>
 #include <GRPActionInitialization.hpp>

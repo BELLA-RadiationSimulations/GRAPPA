@@ -37,11 +37,11 @@
 // We treat it as a Sensitive Detector in order to be able to count and manage
 // the incoming particles hits. This absorber counts primary particles,
 // electrons, positrons, photons, pions and muons
-class AbsorberSD : public G4VSensitiveDetector
+class WorldAbsorberSD : public G4VSensitiveDetector
 {
 public:
-    AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager);
-    ~AbsorberSD();
+    WorldAbsorberSD(G4String name, HistandNTupleManager *myanalysismanager);
+    ~WorldAbsorberSD();
     void Initialize(G4HCofThisEvent *HCE) override;
     G4bool ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist) override;
 
