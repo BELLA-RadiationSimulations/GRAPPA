@@ -91,7 +91,7 @@ G4VPhysicalVolume *GRPSTDetectorConstruction::ConstructWorldandSTarget()
             f_name, // its name
             logicWorld, // its mother  volume
             false, // no boolean operation
-            i, // copy number starting at 1. Copy number 0 is reserved for world volume.
+            i+1, // copy number starting at 1. Copy number 0 is reserved for world volume.
             checkOverlaps); // overlaps checking
     }
 

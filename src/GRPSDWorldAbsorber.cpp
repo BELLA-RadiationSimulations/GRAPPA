@@ -74,7 +74,7 @@ G4bool WorldAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     }
     else if (thisVolumename == "Target")
     {
-        DetectorID = step->GetPostStepPoint()->GetTouchable()->GetCopyNumber()+1;
+        DetectorID = step->GetPostStepPoint()->GetTouchable()->GetCopyNumber();
     }
 
     // Check if particle is in the particle list
