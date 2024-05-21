@@ -75,7 +75,6 @@ G4bool TargetAbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     }
     else if (thisVolumename == "Target")
     {
-        // This becomes the copy number later on
         DetectorID = step->GetPostStepPoint()->GetTouchable()->GetCopyNumber()+1;
     }
 
