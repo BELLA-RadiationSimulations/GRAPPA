@@ -36,8 +36,8 @@ class ReferenceVariable
 {
 
 public:
-    ReferenceVariable(){};
-    ~ReferenceVariable(){};
+    ReferenceVariable() {};
+    ~ReferenceVariable() {};
     void AddEntry(double entry);
     void ComputeStatistics();
     inline double Cutoff() { return this->cutoff; }

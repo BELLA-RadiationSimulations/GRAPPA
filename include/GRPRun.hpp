@@ -18,7 +18,7 @@
 class GRPRun : public G4Run
 {
 public:
-    GRPRun(){};
+    GRPRun() {};
     ~GRPRun() override = default;
 
     void RecordEvent(const G4Event *anEvent) override;

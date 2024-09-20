@@ -22,11 +22,11 @@ jobs:
           wget https://apt.llvm.org/llvm.sh
           sudo apt-get update
           chmod u+x llvm.sh
-          sudo ./llvm.sh 17 all
+          sudo ./llvm.sh 18 all
           echo "The basic installed version of clang-format is $(clang-format --version)"
-          echo "The installed version of clang-format-17 is $(clang-format-17 --version)"
+          echo "The installed version of clang-format-18 is $(clang-format-18 --version)"
           sudo update-alternatives --remove-all clang-format
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-17 17
+          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-18 18
           echo "default clang-format has been updated to $(clang-format --version)"
       - name: Run clang-format
         run: |
