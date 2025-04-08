@@ -80,10 +80,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     const G4VProcess *CurrentProcess = preStepPoint->GetProcessDefinedStep();
 
     // Energy filters for particles
-    constexpr G4double MinPrimaryEnergy = 4 * MeV;
-    constexpr G4double MinPhotonEnergy = 4 * MeV;
-    constexpr G4double MinElectronEnergy = 1 * MeV;
-    constexpr G4double MinPositronEnergy = 1 * MeV;
     constexpr G4double pi = CLHEP::pi;
 
     if (!analysisManager->IsActive())
