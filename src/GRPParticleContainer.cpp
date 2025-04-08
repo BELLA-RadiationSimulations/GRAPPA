@@ -1,4 +1,4 @@
-// Copyright 2021-2024
+// Copyright 2021-2025
 //
 // Authors:
 // Stanimir Kisyov, Sarah Schröder, Davide Terzani
@@ -38,8 +38,7 @@ void GRPParticleContainer::DefineCommands()
     m_CMDpartsfromfile = std::make_shared<G4GenericMessenger>(
         this, "/particlesource/", "Set if GRAPPA reads particles from file.");
 
-    G4GenericMessenger::Command ifpartsfromfile, isfromfile, setpart, filename,
-        list;
+    G4GenericMessenger::Command ifpartsfromfile, setpart, filename, list;
 
     ifpartsfromfile = m_CMDpartsfromfile->DeclareProperty(
         "particlesFromFile", m_useFile, "Read particles from a file.");
