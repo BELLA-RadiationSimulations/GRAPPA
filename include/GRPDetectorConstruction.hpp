@@ -26,6 +26,7 @@
 #include <G4VUserDetectorConstruction.hh>
 
 #include <GRPSDAbsorber.hpp>
+#include <GRPSplittingOperator.hpp>
 
 class GRPDetectorConstruction : public G4VUserDetectorConstruction
 {

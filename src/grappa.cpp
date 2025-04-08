@@ -62,10 +62,23 @@ int main(int argc, char *argv[])
     //
     G4PhysListFactory factory;
     G4VModularPhysicsList *physicsList =
-        factory.GetReferencePhysList("QGSP_BIC_EMZ");
+        factory.GetReferencePhysList("QGSP_BIC");
     physicsList->SetVerboseLevel(0);
     runManager->SetUserInitialization(physicsList);
     // FTFP_BERT should be used instead if primary particle energy is <5GeV;
+
+    // Introduce biasing
+    G4GenericBiasingPhysics *biasingPhysics = new G4GenericBiasingPhysics();
+    // We need to bias GammaGeneralProc because it's the only process explicitly
+    // declared. Selection is then performed in the biasing operation.
+    std::vector<G4String> processToBias{"GammaGeneralProc"};
+    biasingPhysics->PhysicsBias("gamma", processToBias);
+    // Bias pion decay
+    processToBias = {"Decay"};
+    biasingPhysics->PhysicsBias("pi+", processToBias);
+    biasingPhysics->PhysicsBias("pi-", processToBias);
+
+    physicsList->RegisterPhysics(biasingPhysics);
 
     // Introducing a particle container
     // that serves if we need to read particles from file

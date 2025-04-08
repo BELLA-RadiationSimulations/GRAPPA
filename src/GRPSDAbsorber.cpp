@@ -48,7 +48,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
     G4double kineticEnergy;
-    G4float time, pz, px, py, theta_mrad, phi, charge;
+    G4float time, pz, px, py, theta_mrad, phi, charge, weight;
     G4ThreeVector position, momentum;
 
     // Access track information
@@ -102,6 +102,7 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
             momentum = aTrack->GetMomentum();
             charge = static_cast<G4float>(particle->GetPDGCharge());
             time = static_cast<G4float>(aTrack->GetGlobalTime());
+            weight = static_cast<G4float>(aTrack->GetWeight());
             // Killing particle tracking after hitting the detector
             aTrack->SetTrackStatus(fStopAndKill);
             pz = static_cast<G4float>(std::abs(momentum.z()));
@@ -215,24 +216,24 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         // Filling histograms
         if (analysisManager->GetH1Activation(histeneid))
         {
-            analysisManager->FillH1(histeneid, kineticEnergy);
+            analysisManager->FillH1(histeneid, kineticEnergy, weight);
         }
         if (analysisManager->GetH1Activation(histthetaid))
         {
-            analysisManager->FillH1(histthetaid, theta_mrad);
+            analysisManager->FillH1(histthetaid, theta_mrad, weight);
         }
         if (analysisManager->GetH1Activation(histphiid))
         {
-            analysisManager->FillH1(histphiid, phi);
+            analysisManager->FillH1(histphiid, phi, weight);
         }
         if (analysisManager->GetH2Activation(histoxyid))
         {
-            analysisManager->FillH2(histoxyid, position.x(), position.y());
+            analysisManager->FillH2(histoxyid, position.x(), position.y(), weight);
         }
         if (analysisManager->GetH2Activation(histotxtyid))
         {
             analysisManager->FillH2(
-                histotxtyid, std::atan2(px, pz), std::atan2(py, pz));
+                histotxtyid, std::atan2(px, pz), std::atan2(py, pz), weight);
         }
 
         // Filling NTuples
@@ -259,8 +260,10 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
                 ntupleid, 4, static_cast<G4float>(momentum.y()));
             analysisManager->FillNtupleFColumn(
                 ntupleid, 5, static_cast<G4float>(momentum.z()));
-            analysisManager->FillNtupleFColumn(ntupleid, 6, time);
-            ncol = 7;
+            analysisManager->FillNtupleFColumn(
+                ntupleid, 6, static_cast<G4float>(weight));
+            analysisManager->FillNtupleFColumn(ntupleid, 7, time);
+            ncol = 8;
             if (isMuorPi)
             {
                 analysisManager->FillNtupleFColumn(ntupleid, ncol, charge);

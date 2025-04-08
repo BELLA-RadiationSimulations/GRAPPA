@@ -106,8 +106,8 @@ void GRPRunAction::EndOfRunAction(const G4Run *run)
     if (IsMaster())
     {
         m_myParticleContainer->AddTotalParticlesSimulated(nofEvents);
-        G4cout << " Finished Run " << runmanager->GetCurrentRun()->GetRunID()
-               << G4endl;
+        G4cout << " Finished Run " << run->GetRunID() << " after processing "
+               << nofEvents << " events." << G4endl;
         G4cout << "============================================================"
                   "=============="
                << G4endl;
