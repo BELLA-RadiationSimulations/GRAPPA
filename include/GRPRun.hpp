@@ -1,4 +1,4 @@
-// Copyright 2021-2024
+// Copyright 2021-2025
 //
 // Authors:
 // Stanimir Kisyov, Sarah Schröder, Davide Terzani
@@ -18,7 +18,7 @@
 class GRPRun : public G4Run
 {
 public:
-    GRPRun(){};
+    GRPRun() {};
     ~GRPRun() override = default;
 
     void RecordEvent(const G4Event *anEvent) override;

@@ -1,4 +1,4 @@
-// Copyright 2021-2024
+// Copyright 2021-2025
 //
 // Authors:
 // Stanimir Kisyov, Sarah Schröder, Davide Terzani
@@ -26,7 +26,7 @@ public:
 
     // method to access particle gun
     virtual G4VPrimaryGenerator *GetGun() = 0;
-    virtual void LoadNextParticle(const GRPParticleContainer &, G4int){};
+    virtual void LoadNextParticle(const GRPParticleContainer &, G4int) {};
 };
 
 class GRPParticleSourceGPS : public GRPParticleSource

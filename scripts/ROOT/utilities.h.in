@@ -1,4 +1,4 @@
-// Copyright 2021-2024
+// Copyright 2021-2025
 //
 // Authors:
 // Stanimir Kisyov, Sarah Schröder, Davide Terzani
@@ -36,8 +36,8 @@ class ReferenceVariable
 {
 
 public:
-    ReferenceVariable(){};
-    ~ReferenceVariable(){};
+    ReferenceVariable() {};
+    ~ReferenceVariable() {};
     void AddEntry(double entry);
     void ComputeStatistics();
     inline double Cutoff() { return this->cutoff; }
