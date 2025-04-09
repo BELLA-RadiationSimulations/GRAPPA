@@ -228,7 +228,8 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         }
         if (analysisManager->GetH2Activation(histoxyid))
         {
-            analysisManager->FillH2(histoxyid, position.x(), position.y(), weight);
+            analysisManager->FillH2(
+                histoxyid, position.x(), position.y(), weight);
         }
         if (analysisManager->GetH2Activation(histotxtyid))
         {

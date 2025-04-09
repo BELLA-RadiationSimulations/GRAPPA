@@ -204,10 +204,9 @@ void GRPDetectorConstruction::ConstructSDandField()
         G4LogicalVolumeStore::GetInstance()->GetVolume(w_name);
     G4LogicalVolume *logicalFoil =
         G4LogicalVolumeStore::GetInstance()->GetVolume(f_name);
-    
+
     splittingOperator->AttachTo(logicalWorld);
     splittingOperator->AttachTo(logicalFoil);
-
 }
 
 void GRPDetectorConstruction::DefineCommands()
