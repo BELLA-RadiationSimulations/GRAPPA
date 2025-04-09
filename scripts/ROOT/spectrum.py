@@ -22,6 +22,7 @@ _m_e = physical_constants["electron mass energy equivalent in MeV"][0] * MeV
 _m_mu = physical_constants["muon mass energy equivalent in MeV"][0] * MeV
 up.default_library = "np"
 
+
 def particlespectrum(file: Path, particle: str, muonfactor: float):
     from uproot import open
     from numpy import sum, histogram
@@ -35,7 +36,7 @@ def particlespectrum(file: Path, particle: str, muonfactor: float):
         muonfactor = 1
     else:
         raise NameError("Particle name {} incorrect".format(particle))
-    
+
     ntuple = open(file)["ntuple"]
     part = ntuple[ntuplename]
     cp = ntuple["PrimaryCount"]
@@ -58,6 +59,7 @@ def particlespectrum(file: Path, particle: str, muonfactor: float):
     hist, bin_edges = histogram(ekin, bins=200)
     hist = hist / (Nprimaries * muonfactor)
     return hist, bin_edges
+
 
 def plotspectrum(file: Path, particle: str, muonfactor: float):
     import matplotlib as mpl
@@ -83,13 +85,14 @@ def plotspectrum(file: Path, particle: str, muonfactor: float):
 
     hist, bin_edges = particlespectrum(file, particle, muonfactor)
 
-    edges = 0.5*(bin_edges[1:] + bin_edges[:-1])
+    edges = 0.5 * (bin_edges[1:] + bin_edges[:-1])
     fig, ax = subplots(layout="constrained")
     ax.plot(edges / GeV, hist, color="black", linewidth=3)
     ax.set_xlabel("$E_{kin} [GeV]$")
     ax.set_ylabel("$1/N_0 dN / dE [1/GeV]$")
     ax.set_yscale("log")
     fig.savefig("spectrum_{}_{}.png".format(file.stem, particle), dpi=200)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -98,7 +101,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "particle",
-        metavar="muon", 
+        metavar="muon",
         type=str,
         nargs=1,
         help="Particle type",
@@ -128,8 +131,12 @@ if __name__ == "__main__":
 
     _expected_particles = ["muon", "positron"]
     if particle not in _expected_particles:
-        raise NameError("Particle name {} incorrect. Particle must be one of {}".format(particle, _expected_particles))
-    
+        raise NameError(
+            "Particle name {} incorrect. Particle must be one of {}".format(
+                particle, _expected_particles
+            )
+        )
+
     for ff in inputfiles:
         print("Working on file", ff)
         pathff = Path(ff)
