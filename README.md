@@ -165,7 +165,7 @@ the initialization and even between runs
 
 > :warning: If you request particles from a file, the particle type must be changed via the command `/particlesource/setParticle <particlename>` and not via the `/gun` command. The `/gun` command is not aware of the request to read particles from a file and therefore cannot update the particle container consistently.
 
-If the file contains less particles than the ones requested for a run,
+If the file contains fewer particles than the ones requested for a run,
 GRAPPA will keep looping through the file relying on the fact that the random seed will be constantly updated.
 
 ### Modify the target geometry
@@ -306,7 +306,7 @@ that sets the activation status of the `ntupleID` ntuple.
 
 ### Modification to the Physics Package
 
-GRAPPA defaults to the use of the `QGSP_BIC_EMZ` physics reference.
+GRAPPA defaults to the use of the `QGSP_BIC` physics reference.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
 An example of modification to the physics package is the activation (or deactivation) of new processes 
 
@@ -316,6 +316,27 @@ An example of modification to the physics package is the activation (or deactiva
 ```
 
 In this case the production of muons from photon-pair decay and from positron annihilation is activated. The modification of the physics_list **must** be performed before the run initialization.
+
+## Biasing
+
+The code provides biasing capabilities for muon production. In particular, we bias the muon pair production and pion decay by splitting the created particles in certain volumes. The user can provide independent biasing factors for the two processes using dedicated macro commands. When a process is biased, the weight of the products is reduced by a factor `1/splittingFactor` to maintain a correct physical description *on average*.
+> [!IMPORTANT]
+> Since it is possible to increase the cross section of muon pair production, the biasing takes that into account and reduces the muon weight by the corresponding factor. This finally returns correct results on average and solves the need to manually adjust the muon weight in post-processing. However, since the weighting is now left to the system, we have to make sure that all the volumes where a significant number of muon pairs are generated are included in the biasing process. Otherwise, in some of this volumes the muon weight is not adjusted corrispondingly and the results can become unphysical.
+
+We introduced a few new commands:
+
+`/GRAPPA/biasing/pionDecay/setSplittingFactor factor` Sets the splitting factor for pion decay biasing
+
+`/GRAPPA/biasing/pionDecay/getSplittingFactor` Prints the current splitting factor for pion decay biasing
+
+`/GRAPPA/biasing/muonPair/setSplittingFactor factor` Sets the splitting factor for muon pair production biasing
+
+`/GRAPPA/biasing/muonPair/getSplittingFactor` Prints the current splitting factor for muon pair production biasing
+
+`/GRAPPA/biasing/muonPair/setScaleMuonWeigthWithCrossSection true/false` Set if the weight of the muons produced via pair production must be scaled with the artificial increase in cross section. This will violate the total energy conservation but it will return particle numbers proportional to the initial number of primaries. Warning, the scaling is only performed in biased volumes.
+
+`/GRAPPA/biasing/muonPair/getScaleMuonWeigthWithCrossSection` Returns if the muon weights are scaled with the artificial cross section
+
 
 ### Visualization
 
@@ -410,3 +431,8 @@ You can copy them in your output folder and execute them in `ROOT` as
 
 For more insights and to learn how to customize the scripts, visit the
 [ROOT manual](https://root.cern/manual/).
+
+> [!IMPORTANT]
+> We will slowly drop support for pure ROOT scripts. We found that python scripts based on the `uproot` package are much more agile to write and easy to support.
+> Previous scripts may become out-of-date, not supporting newer changes in the ntuple structure and they are left as a base for future record.
+> We will slowly add new python scripts over time.
