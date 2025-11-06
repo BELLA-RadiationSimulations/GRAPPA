@@ -32,7 +32,7 @@
 # Introduce the muon pair production from photons and increase artificially its probability
 /physics_lists/em/GammaToMuons true
 /physics_lists/em/PositronToMuons false
-/physics_lists/em/GammaToMuonsFactor 50
+/physics_lists/em/GammaToMuonsFactor 200
 
 # Initialize run
 /run/initialize
@@ -67,7 +67,7 @@
 # Energy distribution of the beam
 /gps/ene/mono 10 GeV
 /gps/ene/type Gauss
-/gps/ene/sigma 10 MeV
+/gps/ene/sigma 0 MeV
 
 # =/=/=/=/= End particle source section =/=/=/=/=
 
@@ -182,6 +182,14 @@
 /ntuplecontrol/setDump 0 1
 
 # =/=/=/=/= End Ntuple control section =/=/=/=/=
+
+# =/=/=/=/= Biasing section =/=/=/=/=
+
+/GRAPPA/biasing/muonPair/setSplittingFactor 500
+/GRAPPA/biasing/muonPair/setScaleMuonWeigthWithCrossSection true
+/GRAPPA/biasing/pionDecay/setSplittingFactor 50
+
+# =/=/=/=/= End biasing section =/=/=/=/=
 
 ## Run
 /run/beamOn 100000

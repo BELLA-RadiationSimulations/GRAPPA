@@ -26,3 +26,5 @@ target_sources(
             GRPTrackingAction.cpp
             grappa.cpp
 )
+add_subdirectory(GRPBiasing)
+target_link_libraries(GRAPPA PRIVATE GRPBiasing)

@@ -9,6 +9,8 @@
 //
 // License: BSD-3-Clause
 
+#include <G4LogicalVolumeStore.hh>
+
 #include <GRPDetectorConstruction.hpp>
 
 GRPDetectorConstruction::GRPDetectorConstruction(
@@ -185,6 +187,26 @@ void GRPDetectorConstruction::ConstructSDandField()
 
     SDMpointer->AddNewDetector(m_StandardAbsorber);
     m_LogicalAbsorber->SetSensitiveDetector(m_StandardAbsorber);
+
+    // ===================================================
+    // Attach biasing operator to the beam dump, the world,
+    // the magnet and the power optics.
+    // The world is needed for pion decay mainly, the other element for
+    // pair production.
+    // WARNING: with the current implementation of biasing, the new weight
+    // of the particle also takes into account the artificial cross section
+    // of the muon pair production. This means that we have to be careful
+    // to include all the regions where a significant number of muon pairs
+    // is generated, otherwise in some regions the number of muon generated,
+    // artificially increased, is not appropriately compensated by their weight
+    GRPSplittingOperator *splittingOperator = new GRPSplittingOperator();
+    G4LogicalVolume *logicalWorld =
+        G4LogicalVolumeStore::GetInstance()->GetVolume(w_name);
+    G4LogicalVolume *logicalFoil =
+        G4LogicalVolumeStore::GetInstance()->GetVolume(f_name);
+
+    splittingOperator->AttachTo(logicalWorld);
+    splittingOperator->AttachTo(logicalFoil);
 }
 
 void GRPDetectorConstruction::DefineCommands()

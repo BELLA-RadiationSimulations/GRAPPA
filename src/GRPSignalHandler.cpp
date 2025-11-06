@@ -29,6 +29,9 @@ void SignalHandler::HandleSignals(G4int signum)
     case SIGINT:
         CleanTerminationSigInt();
         break;
+    case SIGHUP:
+        CleanTerminationSigHup();
+        break;
     case SIGTERM:
         CleanTerminationSigTerm();
         break;
@@ -49,7 +52,18 @@ void SignalHandler::HandleSignals(G4int signum)
 
 void SignalHandler::CleanTerminationSigInt()
 {
-    G4cout << " Interrupting run after finishing the current events and saving "
+    G4cout << " Received SIGINT. Interrupting run after finishing the current "
+              "events and saving "
+              "data "
+           << G4endl;
+    G4RunManager *rman = G4RunManager::GetRunManager();
+    rman->AbortRun(true);
+}
+
+void SignalHandler::CleanTerminationSigHup()
+{
+    G4cout << " Received SIGHUP. Interrupting run after finishing the current "
+              "events and saving "
               "data "
            << G4endl;
     G4RunManager *rman = G4RunManager::GetRunManager();
@@ -58,7 +72,8 @@ void SignalHandler::CleanTerminationSigInt()
 
 void SignalHandler::CleanTerminationSigTerm()
 {
-    G4cout << " Aborting the current event, interrupting run and saving data "
+    G4cout << " Received SIGTERM. Aborting the current event, interrupting run "
+              "and saving data "
            << G4endl;
     G4RunManager *rman = G4RunManager::GetRunManager();
     rman->AbortRun(false);

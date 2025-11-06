@@ -560,6 +560,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_primaryinitialid, "px");
     analysisManager->CreateNtupleFColumn(m_primaryinitialid, "py");
     analysisManager->CreateNtupleFColumn(m_primaryinitialid, "pz");
+    analysisManager->CreateNtupleFColumn(m_primaryinitialid, "w");
     analysisManager->FinishNtuple(m_primaryinitialid);
     analysisManager->SetNtupleActivation(
         m_primaryinitialid, m_primaryinitialidactive);
@@ -573,6 +574,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_primaryid, "px");
     analysisManager->CreateNtupleFColumn(m_primaryid, "py");
     analysisManager->CreateNtupleFColumn(m_primaryid, "pz");
+    analysisManager->CreateNtupleFColumn(m_primaryid, "w");
     analysisManager->CreateNtupleFColumn(m_primaryid, "t");
     analysisManager->FinishNtuple(m_primaryid);
     analysisManager->SetNtupleActivation(m_primaryid, m_primaryactive);
@@ -586,6 +588,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_posiid, "px");
     analysisManager->CreateNtupleFColumn(m_posiid, "py");
     analysisManager->CreateNtupleFColumn(m_posiid, "pz");
+    analysisManager->CreateNtupleFColumn(m_posiid, "w");
     analysisManager->CreateNtupleFColumn(m_posiid, "t");
     analysisManager->CreateNtupleSColumn(m_posiid, "process");
     analysisManager->FinishNtuple(m_posiid);
@@ -600,6 +603,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_electronid, "px");
     analysisManager->CreateNtupleFColumn(m_electronid, "py");
     analysisManager->CreateNtupleFColumn(m_electronid, "pz");
+    analysisManager->CreateNtupleFColumn(m_electronid, "w");
     analysisManager->CreateNtupleFColumn(m_electronid, "t");
     analysisManager->CreateNtupleSColumn(m_electronid, "process");
     analysisManager->FinishNtuple(m_electronid);
@@ -614,6 +618,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_gammaid, "px");
     analysisManager->CreateNtupleFColumn(m_gammaid, "py");
     analysisManager->CreateNtupleFColumn(m_gammaid, "pz");
+    analysisManager->CreateNtupleFColumn(m_gammaid, "w");
     analysisManager->CreateNtupleFColumn(m_gammaid, "t");
     analysisManager->FinishNtuple(m_gammaid);
     analysisManager->SetNtupleActivation(m_gammaid, m_gammaactive);
@@ -627,6 +632,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_pionid, "px");
     analysisManager->CreateNtupleFColumn(m_pionid, "py");
     analysisManager->CreateNtupleFColumn(m_pionid, "pz");
+    analysisManager->CreateNtupleFColumn(m_pionid, "w");
     analysisManager->CreateNtupleFColumn(m_pionid, "t");
     analysisManager->CreateNtupleFColumn(m_pionid, "q");
     analysisManager->CreateNtupleSColumn(m_pionid, "process");
@@ -642,6 +648,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_muonid, "px");
     analysisManager->CreateNtupleFColumn(m_muonid, "py");
     analysisManager->CreateNtupleFColumn(m_muonid, "pz");
+    analysisManager->CreateNtupleFColumn(m_muonid, "w");
     analysisManager->CreateNtupleFColumn(m_muonid, "t");
     analysisManager->CreateNtupleFColumn(m_muonid, "q");
     analysisManager->CreateNtupleSColumn(m_muonid, "process");
