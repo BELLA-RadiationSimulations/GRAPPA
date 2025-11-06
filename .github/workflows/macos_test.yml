@@ -1,0 +1,103 @@
+name: MacOs compilation
+
+on:
+  pull_request:
+    branches:
+      - dev
+    types: [opened, synchronize, reopened]
+  push:
+    branches:
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DEPENDENCY_INSTALL: ${{ github.workspace }}/dependency_install
+
+jobs:
+  dependency-install:
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+    steps:
+      - name: Cache Geant4 Install
+        id: geant4-cache
+        uses: actions/cache@v4
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          # The directory where Geant4 will be installed (in this example: geant4-install).
+          path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
+          # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
+          key: ${{ runner.os }}-geant4-v11.3.0-${{ env.CACHE_NUMBER }}
+          
+      - name: Install prerequisite build tools
+        if: steps.geant4-cache.outputs.cache-hit != 'true'
+        run: |
+          echo "Installing prerequisites"
+          brew update
+          brew install cmake llvm
+
+      - name: Checkout Geant4 source
+        if: steps.geant4-cache.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth=1 --branch v11.3.0 https://github.com/Geant4/geant4.git
+
+      - name: Install Geant4
+        if: steps.geant4-cache.outputs.cache-hit != 'true'
+        run: |
+          cmake \
+          -S geant4 -B build-geant4 \
+          -DCMAKE_INSTALL_PREFIX=${{ env.DEPENDENCY_INSTALL }}/geant4-install \
+          -DCMAKE_BUILD_TYPE=Release \
+          -DGEANT4_INSTALL_DATA=ON \
+          -DGEANT4_USE_SYSTEM_EXPAT=OFF \
+          -DBUILD_STATIC_LIBS=OFF \
+          -DGEANT4_INSTALL_EXAMPLES=OFF \
+          -DCMAKE_CXX_STANDARD=17 
+          cmake --build build-geant4 --target install -j2
+              
+  build-and-test:
+    needs: dependency-install
+    runs-on: macos-latest
+    defaults:
+      run:
+        shell: bash -el {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Geant4 Install
+        uses: actions/cache@v4
+        env:
+          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          CACHE_NUMBER: 0
+        with:
+          # The directory where Geant4 will be installed (in this example: geant4-install).
+          path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
+          # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
+          key: ${{ runner.os }}-geant4-v11.3.0-${{ env.CACHE_NUMBER }}
+
+      - name: Install Build tools
+        run: |
+          set +e
+          echo "Updating packages"
+          brew update
+          brew upgrade || true
+          echo "Installing requisites"
+          brew install cmake llvm
+
+      - name: Compile Project
+        run: |
+          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow"
+
+          cmake -S . -B build --log-level=VERBOSE \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DGeant4_DIR=${{ env.DEPENDENCY_INSTALL }}/geant4-install/lib/cmake/Geant4 \
+            -DCMAKE_INSTALL_PREFIX=.
+          cmake --build build --target install -j 2
