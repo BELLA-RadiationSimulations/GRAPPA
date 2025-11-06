@@ -92,8 +92,7 @@ jobs:
       
       - name: Compile Project
         run: |
-          source ${{ env.DEPENDENCY_INSTALL }}/venvs/radiationsafety/bin/activate
-          export CXXFLAGS="-Wall -Wextra -Werror"
+          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow"
 
           cmake -S . -B build --log-level=VERBOSE \
             -DCMAKE_BUILD_TYPE=Release \
