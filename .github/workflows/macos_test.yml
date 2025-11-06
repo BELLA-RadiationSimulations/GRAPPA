@@ -40,7 +40,7 @@ jobs:
         run: |
           echo "Installing prerequisites"
           brew update
-          brew install cmake llvm
+          brew install cmake llvm zlib
 
       - name: Checkout Geant4 source
         if: steps.geant4-cache.outputs.cache-hit != 'true'
@@ -58,7 +58,8 @@ jobs:
           -DGEANT4_USE_SYSTEM_EXPAT=OFF \
           -DBUILD_STATIC_LIBS=OFF \
           -DGEANT4_INSTALL_EXAMPLES=OFF \
-          -DCMAKE_CXX_STANDARD=17 
+          -DCMAKE_CXX_STANDARD=17 \
+          -DGEANT4_USE_SYSTEM_ZLIB=ON
           cmake --build build-geant4 --target install -j2
               
   build-and-test:
