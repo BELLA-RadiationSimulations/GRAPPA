@@ -39,6 +39,7 @@ private:
     SignalHandler(const SignalHandler &) = delete;
     SignalHandler &operator=(const SignalHandler &) = delete;
     static void CleanTerminationSigInt();
+    static void CleanTerminationSigHup();
     static void CleanTerminationSigTerm();
 
     static G4ThreadLocal SignalHandler *m_SHpointer;
