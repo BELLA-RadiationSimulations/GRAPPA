@@ -1,5 +1,8 @@
 # GRAPPA (Geant4 RApid Pair Production Application)
 
+[![MacOs build](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/macos_test.yml/badge.svg)](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/macos_test.yml)
+[![Ubuntu build](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/ubuntu_test.yml/badge.svg)](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/ubuntu_test.yml)
+
 ![Beam on target](media/GRAPPA_setup_transparent_background.png)
 
 ---

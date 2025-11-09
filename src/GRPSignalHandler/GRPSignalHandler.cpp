@@ -15,9 +15,10 @@ G4ThreadLocal SignalHandler *SignalHandler::m_SHpointer = nullptr;
 
 void RegisterSignals()
 {
+    static_cast<void>(std::signal(SIGCONT, SignalHandler::HandleSignals));
+    static_cast<void>(std::signal(SIGHUP, SignalHandler::HandleSignals));
     static_cast<void>(std::signal(SIGINT, SignalHandler::HandleSignals));
     static_cast<void>(std::signal(SIGTERM, SignalHandler::HandleSignals));
-    static_cast<void>(std::signal(SIGCONT, SignalHandler::HandleSignals));
 }
 
 void SignalHandler::HandleSignals(G4int signum)
