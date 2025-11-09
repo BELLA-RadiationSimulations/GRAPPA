@@ -12,19 +12,24 @@
 target_sources(
     GRAPPA
     PRIVATE GRPActionInitialization.cpp
-            GRPASCIIReader.cpp
             GRPDetectorConstruction.cpp
             GRPHistandNTupleManager.cpp
-            GRPMessages.cpp
-            GRPParticleContainer.cpp
-            GRPParticleSource.cpp
             GRPPrimaryGeneratorAction.cpp
             GRPRun.cpp
             GRPRunAction.cpp
             GRPSDAbsorber.cpp
-            GRPSignalHandler.cpp
             GRPTrackingAction.cpp
             grappa.cpp
 )
+
 add_subdirectory(GRPBiasing)
 target_link_libraries(GRAPPA PRIVATE GRPBiasing)
+
+add_subdirectory(GRPMessages)
+target_link_libraries(GRAPPA PRIVATE GRPMessages)
+
+add_subdirectory(GRPParticleSource)
+target_link_libraries(GRAPPA PRIVATE GRPParticleSource)
+
+add_subdirectory(GRPSignalHandler)
+target_link_libraries(GRAPPA PRIVATE GRPSignalHandler)
