@@ -165,6 +165,11 @@ public:
     G4bool GetMuonActivation() const { return m_muonactive; }
     // Get if the Ntuple for the primary count is active
     G4bool GetPrimaryCountActivation() const { return m_primarycountactive; }
+    // Get if the Ntuple for the rest of the particles is active
+    G4bool GetOtherParticlesActivation() const
+    {
+        return m_otherparticlesactive;
+    }
     // Get if the Ntuple with ID is active
     G4bool GetIdActivation(const G4int ID) const;
     void Book();
@@ -188,6 +193,8 @@ private:
     G4int m_muonid;
     // Events executed by each thread
     G4int m_primarycountid;
+    // Phase space of other particles
+    G4int m_otherparticlesid;
 
     G4bool m_primaryinitialidactive = true;
     G4bool m_primaryactive = true;
@@ -197,6 +204,7 @@ private:
     G4bool m_pionactive = true;
     G4bool m_muonactive = true;
     G4bool m_primarycountactive = true;
+    G4bool m_otherparticlesactive = true;
 };
 
 class HistandNTupleManager

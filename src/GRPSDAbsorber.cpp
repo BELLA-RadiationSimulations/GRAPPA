@@ -81,14 +81,6 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         return false;
     }
 
-    // Check if particle is of interest, i.e. listed in m_ParticleList
-    const G4bool particleinvector =
-        (std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) !=
-         m_ParticleList.end());
-    if (!particleinvector && (parentID != 0))
-    {
-        return false;
-    }
     // Loop where we check if the particle has already hit the SD.
     // In that case we skip the count and we return from the function
     // If the loop goes through it means that the particle is hitting
@@ -176,6 +168,12 @@ void AbsorberSD::EndOfEvent(G4HCofThisEvent *HCE)
                  particleID == ParticleID::muonplusID);
             const bool isPrimary = parentID == 0;
 
+            // Check if particle is of interest, i.e. listed in m_ParticleList
+            const G4bool particleinvector =
+                (std::find(
+                     m_ParticleList.begin(),
+                     m_ParticleList.end(),
+                     particleID) != m_ParticleList.end());
             if (isPrimary)
             {
                 const G4int histeneid = myhistomanager->GetPrimaryEneId();
@@ -226,41 +224,50 @@ void AbsorberSD::EndOfEvent(G4HCofThisEvent *HCE)
             }
             else
             {
-                const G4int histeneid = myhistomanager->GetEneID(particleID);
-                const G4int histoxyid = myhistomanager->GetxyID(particleID);
-                const G4int histotxtyid =
-                    myhistomanager->GetthetaxtehtayID(particleID);
-                const G4int histthetaid =
-                    myhistomanager->GetthetaID(particleID);
-                const G4int histphiid = myhistomanager->GetphiID(particleID);
-                const G4int ntupleid = myntuplemanager->GetNtupleID(particleID);
+                // We only define histograms for particles of interest
+                if (particleinvector)
+                {
+                    const G4int histeneid =
+                        myhistomanager->GetEneID(particleID);
+                    const G4int histoxyid = myhistomanager->GetxyID(particleID);
+                    const G4int histotxtyid =
+                        myhistomanager->GetthetaxtehtayID(particleID);
+                    const G4int histthetaid =
+                        myhistomanager->GetthetaID(particleID);
+                    const G4int histphiid =
+                        myhistomanager->GetphiID(particleID);
 
-                // Filling histograms
-                if (analysisManager->GetH1Activation(histeneid))
-                {
-                    analysisManager->FillH1(histeneid, kineticEnergy, weight);
-                }
-                if (analysisManager->GetH1Activation(histthetaid))
-                {
-                    analysisManager->FillH1(histthetaid, theta_mrad, weight);
-                }
-                if (analysisManager->GetH1Activation(histphiid))
-                {
-                    analysisManager->FillH1(histphiid, phi, weight);
-                }
-                if (analysisManager->GetH2Activation(histoxyid))
-                {
-                    analysisManager->FillH2(histoxyid, x, y, weight);
-                }
-                if (analysisManager->GetH2Activation(histotxtyid))
-                {
-                    analysisManager->FillH2(
-                        histotxtyid,
-                        std::atan2(px, pz),
-                        std::atan2(py, pz),
-                        weight);
+                    // Filling histograms
+                    if (analysisManager->GetH1Activation(histeneid))
+                    {
+                        analysisManager->FillH1(
+                            histeneid, kineticEnergy, weight);
+                    }
+                    if (analysisManager->GetH1Activation(histthetaid))
+                    {
+                        analysisManager->FillH1(
+                            histthetaid, theta_mrad, weight);
+                    }
+                    if (analysisManager->GetH1Activation(histphiid))
+                    {
+                        analysisManager->FillH1(histphiid, phi, weight);
+                    }
+                    if (analysisManager->GetH2Activation(histoxyid))
+                    {
+                        analysisManager->FillH2(histoxyid, x, y, weight);
+                    }
+                    if (analysisManager->GetH2Activation(histotxtyid))
+                    {
+                        analysisManager->FillH2(
+                            histotxtyid,
+                            std::atan2(px, pz),
+                            std::atan2(py, pz),
+                            weight);
+                    }
                 }
                 // Filling Ntuple
+                const G4int ntupleid = myntuplemanager->GetNtupleID(particleID);
+
                 if (myntuplemanager->GetIdActivation(ntupleid))
                 {
                     // Filling the Ntuples
@@ -281,8 +288,12 @@ void AbsorberSD::EndOfEvent(G4HCofThisEvent *HCE)
                                 (particleID == ParticleID::pionminusID)
                             ? -1
                             : 1;
-                        analysisManager->FillNtupleFColumn(
-                            ntupleid, 9, charge);
+                        analysisManager->FillNtupleFColumn(ntupleid, 9, charge);
+                    }
+                    else if (!particleinvector)
+                    {
+                        analysisManager->FillNtupleIColumn(
+                            ntupleid, 9, particleID);
                     }
                     analysisManager->AddNtupleRow(ntupleid);
                 }

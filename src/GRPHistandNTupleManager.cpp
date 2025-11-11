@@ -709,7 +709,7 @@ G4int NTupleManager::GetNtupleID(G4int particleID) const
         return m_pionid;
 
     default:
-        return -1;
+        return m_otherparticlesid;
     }
 }
 void NTupleManager::Book()
@@ -831,6 +831,23 @@ void NTupleManager::Book()
     analysisManager->FinishNtuple(m_primarycountid);
     analysisManager->SetNtupleActivation(
         m_primarycountid, m_primarycountactive);
+
+    // NTuple 8: Phase space of other particles
+    m_otherparticlesid = analysisManager->CreateNtuple(
+        "OtherParticles", "Final particle phase space");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "x");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "y");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "z");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "px");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "py");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "pz");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "w");
+    analysisManager->CreateNtupleFColumn(m_otherparticlesid, "t");
+    analysisManager->CreateNtupleSColumn(m_otherparticlesid, "process");
+    analysisManager->CreateNtupleIColumn(m_otherparticlesid, "id");
+    analysisManager->FinishNtuple(m_otherparticlesid);
+    analysisManager->SetNtupleActivation(
+        m_otherparticlesid, m_otherparticlesactive);
 }
 
 void NTupleManager::ListNtuples()
@@ -861,6 +878,9 @@ void NTupleManager::ListNtuples()
     G4cout << " " << m_primarycountid << "  "
            << "PrimaryCount"
            << "  " << m_primarycountactive << G4endl;
+    G4cout << " " << m_otherparticlesid << "  "
+           << "OtherParticles"
+           << "  " << m_otherparticlesactive << G4endl;
 }
 
 void NTupleManager::SetNtupleDump(G4int ID, G4bool ifdump)
@@ -896,6 +916,10 @@ void NTupleManager::SetNtupleDump(G4int ID, G4bool ifdump)
     else if (ID == m_primarycountid)
     {
         m_primarycountactive = ifdump;
+    }
+    else if (ID == m_otherparticlesid)
+    {
+        m_otherparticlesactive = ifdump;
     }
     else
     {
@@ -942,6 +966,10 @@ G4bool NTupleManager::GetIdActivation(const G4int ID) const
     else if (ID == m_primarycountid)
     {
         return GetPrimaryCountActivation();
+    }
+    else if (ID == m_otherparticlesid)
+    {
+        return GetOtherParticlesActivation();
     }
     else
     {
