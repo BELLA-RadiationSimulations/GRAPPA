@@ -97,9 +97,9 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
     }
 
     const G4float kineticEnergy =
-        static_cast<G4float>(aTrack->GetKineticEnergy());
-    const G4ThreeVector position = aTrack->GetPosition();
-    const G4ThreeVector momentum = aTrack->GetMomentum();
+        static_cast<G4float>(preStepPoint->GetKineticEnergy());
+    const G4ThreeVector position = preStepPoint->GetPosition();
+    const G4ThreeVector momentum = preStepPoint->GetMomentum();
     const G4float time = static_cast<G4float>(aTrack->GetGlobalTime());
     const G4float weight = static_cast<G4float>(aTrack->GetWeight());
 
