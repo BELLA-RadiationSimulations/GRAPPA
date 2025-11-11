@@ -64,6 +64,151 @@ HistoManager::HistoManager() {}
 
 HistoManager::~HistoManager() {}
 
+G4int HistoManager::GetEneID(G4int particleID) const
+{
+    switch (particleID)
+    {
+    case ParticleID::electronID:
+        return m_electroneneid;
+
+    case ParticleID::positronID:
+        return m_posieneid;
+
+    case ParticleID::gammaID:
+        return m_gammaeneid;
+
+    case ParticleID::muonminusID:
+        return m_muoneneid;
+
+    case ParticleID::muonplusID:
+        return m_muoneneid;
+
+    case ParticleID::pionminusID:
+        return m_pioneneid;
+
+    case ParticleID::pionplusID:
+        return m_pioneneid;
+    default:
+        return -1;
+    }
+}
+
+G4int HistoManager::GetxyID(G4int particleID) const
+{
+    switch (particleID)
+    {
+    case ParticleID::electronID:
+        return m_finalelectronxyid;
+
+    case ParticleID::positronID:
+        return m_finalpositronxyid;
+
+    case ParticleID::gammaID:
+        return m_finalgammaxyid;
+
+    case ParticleID::muonminusID:
+        return m_finalmuonxyid;
+
+    case ParticleID::muonplusID:
+        return m_finalmuonxyid;
+
+    case ParticleID::pionminusID:
+        return m_finalpionxyid;
+
+    case ParticleID::pionplusID:
+        return m_finalpionxyid;
+    default:
+        return -1;
+    }
+}
+
+G4int HistoManager::GetthetaxtehtayID(G4int particleID) const
+{
+    switch (particleID)
+    {
+    case ParticleID::electronID:
+        return m_finalelectrontxtyid;
+
+    case ParticleID::positronID:
+        return m_finalpositrontxtyid;
+
+    case ParticleID::gammaID:
+        return m_finalgammatxtyid;
+
+    case ParticleID::muonminusID:
+        return m_finalmuontxtyid;
+
+    case ParticleID::muonplusID:
+        return m_finalmuontxtyid;
+
+    case ParticleID::pionminusID:
+        return m_finalpiontxtyid;
+
+    case ParticleID::pionplusID:
+        return m_finalpiontxtyid;
+    default:
+        return -1;
+    }
+}
+
+G4int HistoManager::GetthetaID(G4int particleID) const
+{
+    switch (particleID)
+    {
+    case ParticleID::electronID:
+        return m_electrontheta;
+
+    case ParticleID::positronID:
+        return m_positrontheta;
+
+    case ParticleID::gammaID:
+        return m_gammatheta;
+
+    case ParticleID::muonminusID:
+        return m_muontheta;
+
+    case ParticleID::muonplusID:
+        return m_muontheta;
+
+    case ParticleID::pionminusID:
+        return m_piontheta;
+
+    case ParticleID::pionplusID:
+        return m_piontheta;
+    default:
+        return -1;
+    }
+}
+
+G4int HistoManager::GetphiID(G4int particleID) const
+{
+    switch (particleID)
+    {
+    case ParticleID::electronID:
+        return m_electronphi;
+
+    case ParticleID::positronID:
+        return m_positronphi;
+
+    case ParticleID::gammaID:
+        return m_gammaphi;
+
+    case ParticleID::muonminusID:
+        return m_muonphi;
+
+    case ParticleID::muonplusID:
+        return m_muonphi;
+
+    case ParticleID::pionminusID:
+        return m_pionphi;
+
+    case ParticleID::pionplusID:
+        return m_pionphi;
+    default:
+        return -1;
+    }
+}
+
 void HistoManager::Book()
 {
     // Introduce an analysis manager for histogram generation
@@ -544,6 +689,29 @@ NTupleManager::NTupleManager() {}
 
 NTupleManager::~NTupleManager() {}
 
+G4int NTupleManager::GetNtupleID(G4int particleID) const
+{
+    switch (particleID)
+    {
+    case ParticleID::electronID:
+        return m_electronid;
+    case ParticleID::positronID:
+        return m_posiid;
+    case ParticleID::gammaID:
+        return m_gammaid;
+    case ParticleID::muonminusID:
+        return m_muonid;
+    case ParticleID::muonplusID:
+        return m_muonid;
+    case ParticleID::pionminusID:
+        return m_pionid;
+    case ParticleID::pionplusID:
+        return m_pionid;
+
+    default:
+        return -1;
+    }
+}
 void NTupleManager::Book()
 {
     // Introduce an analysis manager for Ntuple generation
@@ -620,6 +788,7 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_gammaid, "pz");
     analysisManager->CreateNtupleFColumn(m_gammaid, "w");
     analysisManager->CreateNtupleFColumn(m_gammaid, "t");
+    analysisManager->CreateNtupleSColumn(m_gammaid, "process");
     analysisManager->FinishNtuple(m_gammaid);
     analysisManager->SetNtupleActivation(m_gammaid, m_gammaactive);
 
@@ -634,8 +803,8 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_pionid, "pz");
     analysisManager->CreateNtupleFColumn(m_pionid, "w");
     analysisManager->CreateNtupleFColumn(m_pionid, "t");
-    analysisManager->CreateNtupleFColumn(m_pionid, "q");
     analysisManager->CreateNtupleSColumn(m_pionid, "process");
+    analysisManager->CreateNtupleFColumn(m_pionid, "q");
     analysisManager->FinishNtuple(m_pionid);
     analysisManager->SetNtupleActivation(m_pionid, m_pionactive);
 
@@ -650,8 +819,8 @@ void NTupleManager::Book()
     analysisManager->CreateNtupleFColumn(m_muonid, "pz");
     analysisManager->CreateNtupleFColumn(m_muonid, "w");
     analysisManager->CreateNtupleFColumn(m_muonid, "t");
-    analysisManager->CreateNtupleFColumn(m_muonid, "q");
     analysisManager->CreateNtupleSColumn(m_muonid, "process");
+    analysisManager->CreateNtupleFColumn(m_muonid, "q");
     analysisManager->FinishNtuple(m_muonid);
     analysisManager->SetNtupleActivation(m_muonid, m_muonactive);
 

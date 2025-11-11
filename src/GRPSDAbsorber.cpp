@@ -37,50 +37,43 @@ AbsorberSD::AbsorberSD(G4String name, HistandNTupleManager *myanalysismanager)
     m_ParticleList.push_back(ParticleID::muonplusID);
     m_ParticleList.push_back(ParticleID::pionminusID);
     m_ParticleList.push_back(ParticleID::pionplusID);
+
+    const G4String HCname = "AbsorberHC";
+    collectionName.insert(HCname);
 }
 
 AbsorberSD::~AbsorberSD() {}
 
-void AbsorberSD::Initialize(G4HCofThisEvent *) {}
+void AbsorberSD::Initialize(G4HCofThisEvent *HCE)
+{
+
+    // Create hit collection
+    m_HitCollection =
+        new GRPAbsorberHitCollection(this->GetName(), collectionName[0]);
+
+    // Add this collection in hce
+
+    m_hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+    HCE->AddHitsCollection(m_hcID, m_HitCollection);
+}
 
 G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
 {
     // Analysis manager for histograms
     auto analysisManager = G4AnalysisManager::Instance();
-    G4double kineticEnergy;
-    G4float time, pz, px, py, theta_mrad, phi, charge, weight;
-    G4ThreeVector position, momentum;
 
     // Access track information
     G4Track *aTrack = step->GetTrack();
+    const G4int trackID = aTrack->GetTrackID();
+    G4String CreatorProcessName = "Primary";
 
     // Access pre-step point information
     G4StepPoint *preStepPoint = step->GetPreStepPoint();
 
-    // Get volume name
-    const G4String thisVolumename = aTrack->GetVolume()->GetName();
-
     // Get particle information
     const G4ParticleDefinition *particle = aTrack->GetParticleDefinition();
     const G4int particleID = particle->GetPDGEncoding();
-    const G4int pID = aTrack->GetParentID();
-    G4String creatorprocessname = "";
-
-    // Check if particle is of interest, i.e. listed in m_ParticleList
-    const G4bool particleinvector =
-        (std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) !=
-         m_ParticleList.end());
-    if (!particleinvector && (pID != 0))
-    {
-        return false;
-    }
-    G4int histeneid, histoxyid, histotxtyid, histthetaid, histphiid, ntupleid;
-
-    // Pointer to current process
-    const G4VProcess *CurrentProcess = preStepPoint->GetProcessDefinedStep();
-
-    // Energy filters for particles
-    constexpr G4double pi = CLHEP::pi;
+    const G4int parentID = aTrack->GetParentID();
 
     // Return if analysis is disabled
     if (!analysisManager->IsActive())
@@ -88,199 +81,356 @@ G4bool AbsorberSD::ProcessHits(G4Step *step, G4TouchableHistory *)
         return false;
     }
 
-    if (CurrentProcess)
+    // Check if particle is of interest, i.e. listed in m_ParticleList
+    const G4bool particleinvector =
+        (std::find(m_ParticleList.begin(), m_ParticleList.end(), particleID) !=
+         m_ParticleList.end());
+    if (!particleinvector && (parentID != 0))
     {
-        // Getting process name
-        // For the world absorber we want the 'transportation' type process,
-        // which ensures that the particle is only counted onces in a detector
-        const G4String &StepProcessName = CurrentProcess->GetProcessName();
-        if (StepProcessName == "Transportation")
-        {
-            // Processing hit when entering the volume
-            kineticEnergy = aTrack->GetKineticEnergy();
-            position = aTrack->GetPosition();
-            momentum = aTrack->GetMomentum();
-            charge = static_cast<G4float>(particle->GetPDGCharge());
-            time = static_cast<G4float>(aTrack->GetGlobalTime());
-            weight = static_cast<G4float>(aTrack->GetWeight());
-            // Killing particle tracking after hitting the detector
-            aTrack->SetTrackStatus(fStopAndKill);
-            pz = static_cast<G4float>(std::abs(momentum.z()));
-            px = static_cast<G4float>(momentum.x());
-            py = static_cast<G4float>(momentum.y());
-            theta_mrad = static_cast<G4float>(pi - momentum.theta());
-            phi = static_cast<G4float>(momentum.phi());
-        }
-        else
+        return false;
+    }
+    // Loop where we check if the particle has already hit the SD.
+    // In that case we skip the count and we return from the function
+    // If the loop goes through it means that the particle is hitting
+    // the SD for the first time
+    const std::vector<GRPAbsorberHit *> &HCVector =
+        (*m_HitCollection->GetVector());
+
+    for (GRPAbsorberHit *aPreviousHit : HCVector)
+    {
+        if (aPreviousHit->GetTrackID() == trackID)
         {
             return false;
         }
+    }
 
-        HistoManager *histomanager = m_HistoandNtupleManager->GetHistoManager();
+    const G4float kineticEnergy =
+        static_cast<G4float>(aTrack->GetKineticEnergy());
+    const G4ThreeVector position = aTrack->GetPosition();
+    const G4ThreeVector momentum = aTrack->GetMomentum();
+    const G4float time = static_cast<G4float>(aTrack->GetGlobalTime());
+    const G4float weight = static_cast<G4float>(aTrack->GetWeight());
 
-        const bool isMuorPi =
-            (particleID == ParticleID::pionminusID ||
-             particleID == ParticleID::pionplusID ||
-             particleID == ParticleID::muonminusID ||
-             particleID == ParticleID::muonplusID);
-        const bool hasCreatorProcess = isMuorPi ||
-            particleID == ParticleID::positronID ||
-            (particleID == ParticleID::electronID && pID != 0);
+    const G4VProcess *creatorprocess = aTrack->GetCreatorProcess();
 
-        if (hasCreatorProcess)
+    if (creatorprocess)
+    {
+        CreatorProcessName = creatorprocess->GetProcessName();
+    }
+
+    GRPAbsorberHit *aNewHit = new GRPAbsorberHit(
+        kineticEnergy,
+        position,
+        momentum,
+        weight,
+        particleID,
+        time,
+        trackID,
+        parentID,
+        CreatorProcessName);
+
+    m_HitCollection->insert(aNewHit);
+
+    return true;
+}
+
+void AbsorberSD::EndOfEvent(G4HCofThisEvent *HCE)
+{
+
+    auto analysisManager = G4AnalysisManager::Instance();
+    HistoManager *myhistomanager = m_HistoandNtupleManager->GetHistoManager();
+    NTupleManager *myntuplemanager =
+        m_HistoandNtupleManager->GetNTupleManager();
+
+    GRPAbsorberHitCollection *aHC =
+        static_cast<GRPAbsorberHitCollection *>(HCE->GetHC(m_hcID));
+
+    constexpr G4float pi = static_cast<G4float>(CLHEP::pi);
+
+    if (analysisManager->IsActive() && aHC)
+    {
+        for (unsigned int j = 0; j < aHC->entries(); j++)
         {
-            const G4VProcess *creatorprocess = aTrack->GetCreatorProcess();
-            creatorprocessname = creatorprocess->GetProcessName();
-        }
-        if (pID == 0)
-        {
-            histeneid = histomanager->GetPrimaryEneId();
-            histoxyid = histomanager->GetPrimaryxyId();
-            histotxtyid = histomanager->GetPrimarytxtyId();
-            histthetaid = histomanager->GetPrimaryThetaId();
-            histphiid = histomanager->GetPrimaryPhiId();
-            ntupleid =
-                m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryId();
-        }
-        else
-        {
-            // Getting histogram and ntuple IDs
-            // Positrons
-            if (particleID == ParticleID::positronID)
-            {
-                histeneid = histomanager->GetPositronEneId();
-                histoxyid = histomanager->GetPositronxyId();
-                histotxtyid = histomanager->GetPositrontxtyId();
-                histthetaid = histomanager->GetPositronThetaId();
-                histphiid = histomanager->GetPositronPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()
-                               ->GetPositronId();
-            }
-            // Gamma
-            else if (particleID == ParticleID::gammaID)
-            {
-                histeneid = histomanager->GetGammaEneId();
-                histoxyid = histomanager->GetGammaxyId();
-                histotxtyid = histomanager->GetGammatxtyId();
-                histthetaid = histomanager->GetGammaThetaId();
-                histphiid = histomanager->GetGammaPhiId();
-                ntupleid =
-                    m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
-            }
-            // Electrons
-            else if (particleID == ParticleID::electronID)
-            {
+            GRPAbsorberHit *thisHit = (*aHC)[j];
+            const G4int particleID = thisHit->GetPartID();
+            const G4int parentID = thisHit->GetParentID();
+            const G4float kineticEnergy = thisHit->GetEkin();
+            const G4float weight = thisHit->GetWeight();
+            const G4float x = thisHit->GetX();
+            const G4float y = thisHit->GetY();
+            const G4float z = thisHit->GetZ();
+            const G4ThreeVector momentum = thisHit->GetMomentum();
+            const G4float px = thisHit->GetPX();
+            const G4float py = thisHit->GetPY();
+            const G4float pz = thisHit->GetPZ();
+            const G4float hittime = thisHit->GetGlobalTime();
+            const G4float theta_mrad =
+                static_cast<G4float>(pi - momentum.theta());
+            const G4float phi = static_cast<G4float>(momentum.phi());
+            const G4String creatorprocessname = thisHit->GetCreatorProcess();
 
-                histeneid = histomanager->GetElectronEneId();
-                histoxyid = histomanager->GetElectronxyId();
-                histotxtyid = histomanager->GetElectrontxtyId();
-                histthetaid = histomanager->GetElectronThetaId();
-                histphiid = histomanager->GetElectronPhiId();
-                ntupleid = m_HistoandNtupleManager->GetNTupleManager()
-                               ->GetElectronId();
-            }
-            // Pions
-            // Pions of both charges are collected in one ntuple
-            else if (
-                particleID == ParticleID::pionminusID ||
-                particleID == ParticleID::pionplusID)
+            const bool isMuorPi =
+                (particleID == ParticleID::pionminusID ||
+                 particleID == ParticleID::pionplusID ||
+                 particleID == ParticleID::muonminusID ||
+                 particleID == ParticleID::muonplusID);
+            const bool isPrimary = parentID == 0;
+
+            if (isPrimary)
             {
-                histeneid = histomanager->GetPionEneId();
-                histoxyid = histomanager->GetPionxyId();
-                histotxtyid = histomanager->GetPiontxtyId();
-                histthetaid = histomanager->GetPionThetaId();
-                histphiid = histomanager->GetPionPhiId();
-                ntupleid =
-                    m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
-            }
-            // Muons
-            // Muons of both charges are collected in one ntuple
-            else if (
-                particleID == ParticleID::muonminusID ||
-                particleID == ParticleID::muonplusID)
-            {
-                histeneid = histomanager->GetMuonEneId();
-                histoxyid = histomanager->GetMuonxyId();
-                histotxtyid = histomanager->GetMuontxtyId();
-                histthetaid = histomanager->GetMuonThetaId();
-                histphiid = histomanager->GetMuonPhiId();
-                ntupleid =
-                    m_HistoandNtupleManager->GetNTupleManager()->GetMuonId();
+                const G4int histeneid = myhistomanager->GetPrimaryEneId();
+                const G4int histoxyid = myhistomanager->GetPrimaryxyId();
+                const G4int histotxtyid = myhistomanager->GetPrimarytxtyId();
+                const G4int histthetaid = myhistomanager->GetPrimaryThetaId();
+                const G4int histphiid = myhistomanager->GetPrimaryPhiId();
+                const G4int ntupleid = myntuplemanager->GetPrimaryId();
+                // Filling histograms
+                if (analysisManager->GetH1Activation(histeneid))
+                {
+                    analysisManager->FillH1(histeneid, kineticEnergy, weight);
+                }
+                if (analysisManager->GetH1Activation(histthetaid))
+                {
+                    analysisManager->FillH1(histthetaid, theta_mrad, weight);
+                }
+                if (analysisManager->GetH1Activation(histphiid))
+                {
+                    analysisManager->FillH1(histphiid, phi, weight);
+                }
+                if (analysisManager->GetH2Activation(histoxyid))
+                {
+                    analysisManager->FillH2(histoxyid, x, y, weight);
+                }
+                if (analysisManager->GetH2Activation(histotxtyid))
+                {
+                    analysisManager->FillH2(
+                        histotxtyid,
+                        std::atan2(px, pz),
+                        std::atan2(py, pz),
+                        weight);
+                }
+                // Filling Ntuple
+                if (myntuplemanager->GetIdActivation(ntupleid))
+                {
+                    // Filling the Ntuples
+                    analysisManager->FillNtupleFColumn(ntupleid, 0, x);
+                    analysisManager->FillNtupleFColumn(ntupleid, 1, y);
+                    analysisManager->FillNtupleFColumn(ntupleid, 2, z);
+                    analysisManager->FillNtupleFColumn(ntupleid, 3, px);
+                    analysisManager->FillNtupleFColumn(ntupleid, 4, py);
+                    analysisManager->FillNtupleFColumn(ntupleid, 5, pz);
+                    analysisManager->FillNtupleFColumn(ntupleid, 6, weight);
+                    analysisManager->FillNtupleFColumn(ntupleid, 7, hittime);
+                    analysisManager->AddNtupleRow(ntupleid);
+                }
             }
             else
             {
-                return false;
+                const G4int histeneid = myhistomanager->GetEneID(particleID);
+                const G4int histoxyid = myhistomanager->GetxyID(particleID);
+                const G4int histotxtyid =
+                    myhistomanager->GetthetaxtehtayID(particleID);
+                const G4int histthetaid =
+                    myhistomanager->GetthetaID(particleID);
+                const G4int histphiid = myhistomanager->GetphiID(particleID);
+                const G4int ntupleid = myntuplemanager->GetNtupleID(particleID);
+
+                // Filling histograms
+                if (analysisManager->GetH1Activation(histeneid))
+                {
+                    analysisManager->FillH1(histeneid, kineticEnergy, weight);
+                }
+                if (analysisManager->GetH1Activation(histthetaid))
+                {
+                    analysisManager->FillH1(histthetaid, theta_mrad, weight);
+                }
+                if (analysisManager->GetH1Activation(histphiid))
+                {
+                    analysisManager->FillH1(histphiid, phi, weight);
+                }
+                if (analysisManager->GetH2Activation(histoxyid))
+                {
+                    analysisManager->FillH2(histoxyid, x, y, weight);
+                }
+                if (analysisManager->GetH2Activation(histotxtyid))
+                {
+                    analysisManager->FillH2(
+                        histotxtyid,
+                        std::atan2(px, pz),
+                        std::atan2(py, pz),
+                        weight);
+                }
+                // Filling Ntuple
+                if (myntuplemanager->GetIdActivation(ntupleid))
+                {
+                    // Filling the Ntuples
+                    analysisManager->FillNtupleFColumn(ntupleid, 0, x);
+                    analysisManager->FillNtupleFColumn(ntupleid, 1, y);
+                    analysisManager->FillNtupleFColumn(ntupleid, 2, z);
+                    analysisManager->FillNtupleFColumn(ntupleid, 3, px);
+                    analysisManager->FillNtupleFColumn(ntupleid, 4, py);
+                    analysisManager->FillNtupleFColumn(ntupleid, 5, pz);
+                    analysisManager->FillNtupleFColumn(ntupleid, 6, weight);
+                    analysisManager->FillNtupleFColumn(ntupleid, 7, hittime);
+                    analysisManager->FillNtupleSColumn(
+                        ntupleid, 8, creatorprocessname);
+                    if (isMuorPi)
+                    {
+                        const G4float charge =
+                            (particleID == ParticleID::muonminusID) ||
+                                (particleID == ParticleID::pionminusID)
+                            ? -1
+                            : 1;
+                        analysisManager->FillNtupleFColumn(
+                            ntupleid, 9, charge);
+                    }
+                    analysisManager->AddNtupleRow(ntupleid);
+                }
             }
         }
-
-        // Filling histograms
-        if (analysisManager->GetH1Activation(histeneid))
-        {
-            analysisManager->FillH1(histeneid, kineticEnergy, weight);
-        }
-        if (analysisManager->GetH1Activation(histthetaid))
-        {
-            analysisManager->FillH1(histthetaid, theta_mrad, weight);
-        }
-        if (analysisManager->GetH1Activation(histphiid))
-        {
-            analysisManager->FillH1(histphiid, phi, weight);
-        }
-        if (analysisManager->GetH2Activation(histoxyid))
-        {
-            analysisManager->FillH2(
-                histoxyid, position.x(), position.y(), weight);
-        }
-        if (analysisManager->GetH2Activation(histotxtyid))
-        {
-            analysisManager->FillH2(
-                histotxtyid, std::atan2(px, pz), std::atan2(py, pz), weight);
-        }
-
-        // Filling NTuples
-        NTupleManager *ntuplemanager =
-            m_HistoandNtupleManager->GetNTupleManager();
-        const G4bool analysisactive = analysisManager->IsActive();
-
-        const G4bool activationstatus =
-            ntuplemanager->GetIdActivation(ntupleid);
-
-        if (activationstatus && analysisactive)
-        {
-            G4int ncol = 0;
-            // Filling the Ntuples
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 0, static_cast<G4float>(position.x()));
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 1, static_cast<G4float>(position.y()));
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 2, static_cast<G4float>(position.z()));
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 3, static_cast<G4float>(momentum.x()));
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 4, static_cast<G4float>(momentum.y()));
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 5, static_cast<G4float>(momentum.z()));
-            analysisManager->FillNtupleFColumn(
-                ntupleid, 6, static_cast<G4float>(weight));
-            analysisManager->FillNtupleFColumn(ntupleid, 7, time);
-            ncol = 8;
-            if (isMuorPi)
-            {
-                analysisManager->FillNtupleFColumn(ntupleid, ncol, charge);
-                ncol += 1;
-            }
-            if (hasCreatorProcess)
-            {
-                analysisManager->FillNtupleSColumn(
-                    ntupleid, ncol, creatorprocessname);
-                ncol += 1;
-            }
-            analysisManager->AddNtupleRow(ntupleid);
-        }
-
-        return true;
     }
-
-    return false;
 }
+
+//     theta_mrad = static_cast<G4float>(pi - momentum.theta());
+// phi = static_cast<G4float>(momentum.phi());
+// if (pID == 0)
+// {
+//     histeneid = histomanager->GetPrimaryEneId();
+//     histoxyid = histomanager->GetPrimaryxyId();
+//     histotxtyid = histomanager->GetPrimarytxtyId();
+//     histthetaid = histomanager->GetPrimaryThetaId();
+//     histphiid = histomanager->GetPrimaryPhiId();
+//     ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPrimaryId();
+// }
+// else
+// {
+//     // Getting histogram and ntuple IDs
+//     // Positrons
+//     if (particleID == ParticleID::positronID)
+//     {
+//         histeneid = histomanager->GetPositronEneId();
+//         histoxyid = histomanager->GetPositronxyId();
+//         histotxtyid = histomanager->GetPositrontxtyId();
+//         histthetaid = histomanager->GetPositronThetaId();
+//         histphiid = histomanager->GetPositronPhiId();
+//         ntupleid =
+//             m_HistoandNtupleManager->GetNTupleManager()->GetPositronId();
+//     }
+//     // Gamma
+//     else if (particleID == ParticleID::gammaID)
+//     {
+//         histeneid = histomanager->GetGammaEneId();
+//         histoxyid = histomanager->GetGammaxyId();
+//         histotxtyid = histomanager->GetGammatxtyId();
+//         histthetaid = histomanager->GetGammaThetaId();
+//         histphiid = histomanager->GetGammaPhiId();
+//         ntupleid =
+//             m_HistoandNtupleManager->GetNTupleManager()->GetGammaId();
+//     }
+//     // Electrons
+//     else if (particleID == ParticleID::electronID)
+//     {
+
+//         histeneid = histomanager->GetElectronEneId();
+//         histoxyid = histomanager->GetElectronxyId();
+//         histotxtyid = histomanager->GetElectrontxtyId();
+//         histthetaid = histomanager->GetElectronThetaId();
+//         histphiid = histomanager->GetElectronPhiId();
+//         ntupleid =
+//             m_HistoandNtupleManager->GetNTupleManager()->GetElectronId();
+//     }
+//     // Pions
+//     // Pions of both charges are collected in one ntuple
+//     else if (
+//         particleID == ParticleID::pionminusID ||
+//         particleID == ParticleID::pionplusID)
+//     {
+//         histeneid = histomanager->GetPionEneId();
+//         histoxyid = histomanager->GetPionxyId();
+//         histotxtyid = histomanager->GetPiontxtyId();
+//         histthetaid = histomanager->GetPionThetaId();
+//         histphiid = histomanager->GetPionPhiId();
+//         ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetPionId();
+//     }
+//     // Muons
+//     // Muons of both charges are collected in one ntuple
+//     else if (
+//         particleID == ParticleID::muonminusID ||
+//         particleID == ParticleID::muonplusID)
+//     {
+//         histeneid = histomanager->GetMuonEneId();
+//         histoxyid = histomanager->GetMuonxyId();
+//         histotxtyid = histomanager->GetMuontxtyId();
+//         histthetaid = histomanager->GetMuonThetaId();
+//         histphiid = histomanager->GetMuonPhiId();
+//         ntupleid = m_HistoandNtupleManager->GetNTupleManager()->GetMuonId();
+//     }
+//     else
+//     {
+//         return false;
+//     }
+// }
+
+// // Filling histograms
+// if (analysisManager->GetH1Activation(histeneid))
+// {
+//     analysisManager->FillH1(histeneid, kineticEnergy, weight);
+// }
+// if (analysisManager->GetH1Activation(histthetaid))
+// {
+//     analysisManager->FillH1(histthetaid, theta_mrad, weight);
+// }
+// if (analysisManager->GetH1Activation(histphiid))
+// {
+//     analysisManager->FillH1(histphiid, phi, weight);
+// }
+// if (analysisManager->GetH2Activation(histoxyid))
+// {
+//     analysisManager->FillH2(histoxyid, position.x(), position.y(), weight);
+// }
+// if (analysisManager->GetH2Activation(histotxtyid))
+// {
+//     analysisManager->FillH2(
+//         histotxtyid, std::atan2(px, pz), std::atan2(py, pz), weight);
+// }
+
+// // Filling NTuples
+// NTupleManager *ntuplemanager = m_HistoandNtupleManager->GetNTupleManager();
+// const G4bool analysisactive = analysisManager->IsActive();
+
+// const G4bool activationstatus = ntuplemanager->GetIdActivation(ntupleid);
+
+// if (activationstatus && analysisactive)
+// {
+//     G4int ncol = 0;
+//     // Filling the Ntuples
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 0, static_cast<G4float>(position.x()));
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 1, static_cast<G4float>(position.y()));
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 2, static_cast<G4float>(position.z()));
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 3, static_cast<G4float>(momentum.x()));
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 4, static_cast<G4float>(momentum.y()));
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 5, static_cast<G4float>(momentum.z()));
+//     analysisManager->FillNtupleFColumn(
+//         ntupleid, 6, static_cast<G4float>(weight));
+//     analysisManager->FillNtupleFColumn(ntupleid, 7, time);
+//     ncol = 8;
+//     if (isMuorPi)
+//     {
+//         analysisManager->FillNtupleFColumn(ntupleid, ncol, charge);
+//         ncol += 1;
+//     }
+//     if (hasCreatorProcess)
+//     {
+//         analysisManager->FillNtupleSColumn(
+//             ntupleid, ncol, creatorprocessname);
+//         ncol += 1;
+//     }
+//     analysisManager->AddNtupleRow(ntupleid);
+//     }
+// }

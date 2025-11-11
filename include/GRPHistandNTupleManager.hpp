@@ -19,6 +19,8 @@ using G4AnalysisManager = G4GenericAnalysisManager;
 #endif
 #include <G4SystemOfUnits.hh>
 
+#include <GRPParticlePDGID.hpp>
+
 class HistoManager
 {
 public:
@@ -26,23 +28,8 @@ public:
     ~HistoManager();
 
     G4int GetPrimaryEneId() const { return m_primaryeneid; }
-    G4int GetPositronEneId() const { return m_posieneid; }
-    G4int GetElectronEneId() const { return m_electroneneid; }
-    G4int GetGammaEneId() const { return m_gammaeneid; }
-    G4int GetPionEneId() const { return m_pioneneid; }
-    G4int GetMuonEneId() const { return m_muoneneid; }
     G4int GetPrimaryxyId() const { return m_finalprimaryxyid; }
-    G4int GetPositronxyId() const { return m_finalpositronxyid; }
-    G4int GetElectronxyId() const { return m_finalelectronxyid; }
-    G4int GetGammaxyId() const { return m_finalgammaxyid; }
-    G4int GetPionxyId() const { return m_finalpionxyid; }
-    G4int GetMuonxyId() const { return m_finalmuonxyid; }
     G4int GetPrimarytxtyId() const { return m_finalprimarytxtyid; }
-    G4int GetPositrontxtyId() const { return m_finalpositrontxtyid; }
-    G4int GetElectrontxtyId() const { return m_finalelectrontxtyid; }
-    G4int GetGammatxtyId() const { return m_finalgammatxtyid; }
-    G4int GetPiontxtyId() const { return m_finalpiontxtyid; }
-    G4int GetMuontxtyId() const { return m_finalmuontxtyid; }
     G4int GetPrimaryInitialxyId() const { return m_initialprimaryxyid; }
     G4int GetPrimaryInitialzxId() const { return m_initialprimaryzxid; }
     G4int GetPrimaryInitialEneId() const { return m_initialprimaryeneid; }
@@ -50,17 +37,12 @@ public:
     G4int GetPrimaryInitialxpxId() const { return m_initialprimaryxpxid; }
     G4int GetPrimaryInitialypyId() const { return m_initialprimaryypyid; }
     G4int GetPrimaryThetaId() const { return m_primarytheta; }
-    G4int GetElectronThetaId() const { return m_electrontheta; }
-    G4int GetPositronThetaId() const { return m_positrontheta; }
-    G4int GetGammaThetaId() const { return m_gammatheta; }
-    G4int GetPionThetaId() const { return m_piontheta; }
-    G4int GetMuonThetaId() const { return m_muontheta; }
     G4int GetPrimaryPhiId() const { return m_primaryphi; }
-    G4int GetElectronPhiId() const { return m_electronphi; }
-    G4int GetPositronPhiId() const { return m_positronphi; }
-    G4int GetGammaPhiId() const { return m_gammaphi; }
-    G4int GetPionPhiId() const { return m_pionphi; }
-    G4int GetMuonPhiId() const { return m_muonphi; }
+    G4int GetEneID(G4int particleID) const;
+    G4int GetxyID(G4int particleID) const;
+    G4int GetthetaxtehtayID(G4int particleID) const;
+    G4int GetthetaID(G4int particleID) const;
+    G4int GetphiID(G4int particleID) const;
     void Book();
 
 private:
@@ -139,8 +121,8 @@ private:
     // Final muons transverse angle
     G4int m_finalmuontxtyid;
     // Flag to default activate the histograms
-    // This needs to be set to 'true' for (what I believe is) a bug in Geant4,
-    // but it may require additional investigation.
+    // This needs to be set to 'true' for an implementation issue
+    // that requires additional investigation.
     // The analysis manager activation depends on the *histograms*
     // activation, regardless the activation status of the ntuples.
     // Therefore, if the histograms are not activated, the ntuples are also not
@@ -160,16 +142,8 @@ public:
     G4int GetPrimaryInitialId() const { return m_primaryinitialid; }
     // Get index for the final primaries Ntuple
     G4int GetPrimaryId() const { return m_primaryid; }
-    // Get index for the positrons Ntuple
-    G4int GetPositronId() const { return m_posiid; }
-    // Get index for the electrons Ntuple
-    G4int GetElectronId() const { return m_electronid; }
-    // Get index for the photons Ntuple
-    G4int GetGammaId() const { return m_gammaid; }
-    // Get index for the pions Ntuple
-    G4int GetPionId() const { return m_pionid; }
-    // Get index for the muons Ntuple
-    G4int GetMuonId() const { return m_muonid; }
+    // Get Ntuple index
+    G4int GetNtupleID(G4int particleID) const;
     // Get index for the primary count Ntuple
     G4int GetPrimaryCountId() const { return m_primarycountid; }
     // Get if the Ntuple for the initial primaries is active

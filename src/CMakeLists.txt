@@ -11,7 +11,10 @@
 
 target_sources(
     GRAPPA
-    PRIVATE GRPActionInitialization.cpp
+    PRIVATE # cmake-format: sortable
+            grappa.cpp
+            GRPAbsorberHit.cpp
+            GRPActionInitialization.cpp
             GRPDetectorConstruction.cpp
             GRPHistandNTupleManager.cpp
             GRPPrimaryGeneratorAction.cpp
@@ -19,7 +22,6 @@ target_sources(
             GRPRunAction.cpp
             GRPSDAbsorber.cpp
             GRPTrackingAction.cpp
-            grappa.cpp
 )
 
 add_subdirectory(GRPBiasing)
