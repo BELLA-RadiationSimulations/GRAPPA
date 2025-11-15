@@ -16,7 +16,7 @@ GRAPPA is a Geant4 application that simulates the interaction of an incoming par
 - Muons
 - Photons
 
-The output of a GRAPPA simulation consists of a _histogram plot_ file with pe-analyzed particle statistics,
+The output of a GRAPPA simulation consists of a _histogram plot_ file with pre-analyzed particle statistics,
 a _histogram ROOT_ file and an _Ntuple_ ROOT file. In Geant4, an Ntuple represents a file where each column stores particular data (for example x coordinate or y momentum) of a given particle.
 
 # Installation guide
@@ -278,6 +278,7 @@ The complete list of generated ntuples is the following:
 # - 5  Final pions
 # - 6  Final muons
 # - 7  Number of primaries evolved
+# - 8  Final particles (all particles not captured by the previous ntuples)
 ```
 
 The name of the file containing the output can be changed too,
@@ -436,6 +437,6 @@ For more insights and to learn how to customize the scripts, visit the
 [ROOT manual](https://root.cern/manual/).
 
 > [!IMPORTANT]
-> We will slowly drop support for pure ROOT scripts. We found that python scripts based on the `uproot` package are much more agile to write and easy to support.
+> We will slowly drop support for pure ROOT scripts. We found that python scripts based on the `uproot` package are much more agile to write and easier to support.
 > Previous scripts may become out-of-date, not supporting newer changes in the ntuple structure and they are left as a base for future record.
 > We will slowly add new python scripts over time.

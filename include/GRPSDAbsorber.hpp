@@ -19,6 +19,7 @@
 #include <G4VSensitiveDetector.hh>
 #include <G4SDManager.hh>
 
+#include <GRPAbsorberHit.hpp>
 #include <GRPHistandNTupleManager.hpp>
 #include <GRPParticlePDGID.hpp>
 
@@ -44,9 +45,12 @@ public:
     ~AbsorberSD();
     void Initialize(G4HCofThisEvent *HCE) override;
     G4bool ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist) override;
+    void EndOfEvent(G4HCofThisEvent *HCE) override final;
 
 private:
+    G4int m_hcID = 0;
     HistandNTupleManager *m_HistoandNtupleManager;
     // Set containing the particles included in this absorber
     std::vector<G4int> m_ParticleList;
+    GRPAbsorberHitCollection *m_HitCollection = nullptr;
 };
