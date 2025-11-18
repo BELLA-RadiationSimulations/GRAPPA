@@ -5,9 +5,21 @@ on:
     branches:
       - dev
     types: [opened, synchronize, reopened]
+    paths:
+      - src/**
+      - include/**
+      - CMakeLists.txt
+      - scripts/CMakeLists.txt
+      - .github/workflows/macos_test.yml
   push:
     branches:
       - dev
+    paths:
+      - src/**
+      - include/**
+      - CMakeLists.txt
+      - scripts/CMakeLists.txt
+      - .github/workflows/macos_test.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -27,7 +39,7 @@ jobs:
         id: geant4-cache
         uses: actions/cache@v4
         env:
-          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          # Increase this value to reset cache
           CACHE_NUMBER: 0
         with:
           # The directory where Geant4 will be installed (in this example: geant4-install).
@@ -76,7 +88,7 @@ jobs:
       - name: Cache Geant4 Install
         uses: actions/cache@v4
         env:
-          # Increase this value to reset cache if etc/example-environment.yml has not changed
+          # Increase this value to reset cache
           CACHE_NUMBER: 0
         with:
           # The directory where Geant4 will be installed (in this example: geant4-install).
