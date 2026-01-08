@@ -44,7 +44,7 @@ jobs:
           CACHE_NUMBER: 0
         with:
           path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
-          key: ${{ runner.os }}-geant4-v11.3.0-precompiled-${{ env.CACHE_NUMBER }}
+          key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
           
       - name: Download and Install Geant4 Binaries
         if: steps.geant4-cache.outputs.cache-hit != 'true'
@@ -80,7 +80,7 @@ jobs:
           # The directory where Geant4 will be installed (in this example: geant4-install).
           path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
           # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
-          key: ${{ runner.os }}-geant4-v11.3.0-precompiled-${{ env.CACHE_NUMBER }}
+          key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
 
       - name: Install Build tools
         run: |
