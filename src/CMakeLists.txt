@@ -33,5 +33,8 @@ target_link_libraries(GRAPPA PRIVATE GRPMessages)
 add_subdirectory(GRPParticleSource)
 target_link_libraries(GRAPPA PRIVATE GRPParticleSource)
 
+add_subdirectory(GRPPhysicsList)
+target_link_libraries(GRAPPA PRIVATE GRPPhysicsList)
+
 add_subdirectory(GRPSignalHandler)
 target_link_libraries(GRAPPA PRIVATE GRPSignalHandler)
