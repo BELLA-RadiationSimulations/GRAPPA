@@ -36,41 +36,43 @@
 //----------------------------------------------------------------------------
 //
 
+#include <G4BuilderType.hh>
 #include <G4ComptonScattering.hh>
-#include <G4eplusTo2or3GammaModel.hh>
+#include <G4CoulombScattering.hh>
+#include <G4eBremsstrahlung.hh>
+#include <G4eCoulombScatteringModel.hh>
+#include <G4eIonisation.hh>
+#include <G4Electron.hh>
 #include <G4EmBuilder.hh>
+#include <G4EmModelActivator.hh>
 #include <G4EmParameters.hh>
+#include <G4eplusAnnihilation.hh>
+#include <G4eplusTo2or3GammaModel.hh>
+#include <G4Gamma.hh>
 #include <G4GammaConversion.hh>
 #include <G4GammaConversionToMuons.hh>
+#include <G4GammaGeneralProcess.hh>
+#include <G4GenericIon.hh>
+#include <G4hIonisation.hh>
 #include <G4hMultipleScattering.hh>
+#include <G4ionIonisation.hh>
 #include <G4KleinNishinaModel.hh>
 #include <G4LivermorePhotoElectricModel.hh>
 #include <G4LivermorePolarizedRayleighModel.hh>
 #include <G4LossTableManager.hh>
+#include <G4MuonMinus.hh>
+#include <G4MuonPlus.hh>
+#include <G4NuclearStopping.hh>
 #include <G4ParticleDefinition.hh>
 #include <G4PhotoElectricAngularGeneratorPolarized.hh>
 #include <G4PhotoElectricEffect.hh>
+#include <G4PhysicsListHelper.hh>
+#include <G4Positron.hh>
+#include <G4ProcessManager.hh>
 #include <G4RayleighScattering.hh>
 #include <G4SystemOfUnits.hh>
-#include <G4CoulombScattering.hh>
-#include <G4eCoulombScatteringModel.hh>
-#include <G4WentzelVIModel.hh>
 #include <G4UrbanMscModel.hh>
-#include <G4eIonisation.hh>
-#include <G4eBremsstrahlung.hh>
-#include <G4eplusAnnihilation.hh>
-#include <G4hIonisation.hh>
-#include <G4ionIonisation.hh>
-#include <G4NuclearStopping.hh>
-#include <G4Gamma.hh>
-#include <G4Electron.hh>
-#include <G4Positron.hh>
-#include <G4GenericIon.hh>
-#include <G4PhysicsListHelper.hh>
-#include <G4BuilderType.hh>
-#include <G4EmModelActivator.hh>
-#include <G4GammaGeneralProcess.hh>
-#include <G4ProcessManager.hh>
+#include <G4WentzelVIModel.hh>
 
 #include <GRPEmPhysics.hpp>
 
@@ -181,7 +183,9 @@ void GRPEmPhysics::ConstructProcess()
 
     G4ProcessManager *pmanager = particle->GetProcessManager();
 
-    pmanager->AddDiscreteProcess(new G4GammaConversionToMuons);
+    G4GammaConversionToMuons *gmumu = new G4GammaConversionToMuons();
+    gmumu->SetCrossSecFactor(m_gmumuxsfactor);
+    pmanager->AddDiscreteProcess(gmumu);
 
     // e-
     particle = G4Electron::Electron();
@@ -241,11 +245,31 @@ void GRPEmPhysics::ConstructProcess()
         ph->RegisterProcess(pnuc, particle);
     }
 
-    // muons, hadrons ions
+    // This function construct the basic processes (ionization, scattering,
+    // bremsstrahlung) for muons, hadrons and ions
     G4EmBuilder::ConstructCharged(hmsc, pnuc);
 
     // extra configuration
     G4EmModelActivator mact(GetPhysicsName());
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
+void GRPEmPhysics::SetMuPairCrossSection(G4double newcrosssection)
+{
+    if (newcrosssection <= 0)
+    {
+        G4ExceptionDescription msg;
+        msg << "Cross section factor for muon pair production cannot be <= 0."
+            << G4endl;
+        msg << "The provided value is " << newcrosssection
+            << ". Ignoring the value.";
+        G4Exception(
+            "GRPEmPhysics::SetMuPairCrossSection",
+            "GRAPPA::INCORRECT_CROSS_SECTION",
+            JustWarning,
+            msg);
+    }
+    else
+    {
+        m_gmumuxsfactor = newcrosssection;
+    }
+}

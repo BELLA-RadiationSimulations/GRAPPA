@@ -13,7 +13,11 @@ public:
     explicit GRPPhysicsList();
     ~GRPPhysicsList();
     void AddPhysicsList(const G4String &name);
+    void SetAddBiasing(G4bool ifaddbiasing) { m_biasing = ifaddbiasing; }
+    G4bool GetAddBiasing() const { return m_biasing; }
 
 private:
     std::unique_ptr<GRPPhysicsListMessenger> m_pl_messenger;
+    GRPEmPhysics *m_em_physics;
+    G4bool m_biasing;
 };

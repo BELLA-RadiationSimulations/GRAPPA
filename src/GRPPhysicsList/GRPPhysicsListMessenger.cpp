@@ -1,24 +1,42 @@
 
 
+#include <GRPEmPhysics.hpp>
 #include <GRPPhysicsListMessenger.hpp>
 #include <GRPPhysicsList.hpp>
 
-GRPPhysicsListMessenger::GRPPhysicsListMessenger(GRPPhysicsList *physics_list)
+GRPPhysicsListMessenger::GRPPhysicsListMessenger(
+    GRPPhysicsList *physics_list, GRPEmPhysics *em_physics)
     : G4UImessenger()
     , m_physics_list(physics_list)
-    , m_physics_directory(nullptr)
-    , m_add_cmd(nullptr)
+    , m_em_physics(em_physics)
 {
 
     m_physics_directory =
         std::make_unique<G4UIdirectory>("/GRAPPA/physics_list/");
     m_physics_directory->SetGuidance("Personalize the GRAPPA physics list");
 
-    m_add_cmd = std::make_unique<G4UIcmdWithAString>(
-        "/GRAPPA/physics_list/addPhysics", this);
-    m_add_cmd->SetGuidance("Add physics list.");
-    m_add_cmd->SetParameterName("Plist", false);
-    m_add_cmd->AvailableForStates(G4State_PreInit);
+    // Command to add the biasing physics
+    m_add_biasing_cmd = std::make_unique<G4UIcmdWithABool>(
+        "/GRAPPA/physics_list/addBiasing", this);
+    m_add_biasing_cmd->SetGuidance("Add biasing to the physics list.");
+    m_add_biasing_cmd->SetParameterName("ifbiasing", false);
+    m_add_biasing_cmd->AvailableForStates(G4State_PreInit);
+
+    // Command to change the biasing cross section
+    m_muonxs_cmd = std::make_unique<G4UIcmdWithADouble>(
+        "/GRAPPA/physics_list/muonPairCrossSectionFactor", this);
+    m_muonxs_cmd->SetGuidance(
+        "Change the cross section factor to the muon pair production.");
+    m_muonxs_cmd->SetParameterName("cross_section_factor", false);
+    m_muonxs_cmd->AvailableForStates(G4State_PreInit);
+
+    // Command to list the current physics list status
+    m_list_physics_cmd = std::make_unique<G4UIcmdWithoutParameter>(
+        "/GRAPPA/physics_list/list", this
+    );
+    m_list_physics_cmd->SetGuidance("List the current status of the custom physics list");
+    m_list_physics_cmd->SetToBeBroadcasted(false);
+    m_list_physics_cmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle, G4State_GeomClosed);
 }
 
 GRPPhysicsListMessenger::~GRPPhysicsListMessenger() = default;
@@ -26,7 +44,7 @@ GRPPhysicsListMessenger::~GRPPhysicsListMessenger() = default;
 void GRPPhysicsListMessenger::SetNewValue(
     G4UIcommand *command, G4String newValue)
 {
-    if (command == m_add_cmd.get())
+    if (command == m_add_biasing_cmd.get())
     {
         if (!m_physics_list)
         {
@@ -38,6 +56,69 @@ void GRPPhysicsListMessenger::SetNewValue(
                 FatalException,
                 msg);
         }
-        m_physics_list->AddPhysicsList(newValue);
+        const G4bool ifaddbiasing = m_add_biasing_cmd->GetNewBoolValue(newValue);
+        m_physics_list->SetAddBiasing(ifaddbiasing);
+    }
+
+    if (command == m_muonxs_cmd.get())
+    {
+        if (!m_em_physics)
+        {
+            G4ExceptionDescription msg;
+            msg << "No electromagnetic physics is defined!";
+            G4Exception(
+                "GRPPhysicsListMessenger::SetNewValue()",
+                "GRAPPA::PHYSICS_LIST_UNDEFINED",
+                FatalException,
+                msg);
+        }
+        const G4double newxs = m_muonxs_cmd->GetNewDoubleValue(newValue);
+        m_em_physics->SetMuPairCrossSection(newxs);
+    }
+    if (command == m_list_physics_cmd.get())
+    {
+        if (!m_physics_list)
+        {
+            G4ExceptionDescription msg;
+            msg << "No physics list is defined!";
+            G4Exception(
+                "GRPPhysicsListMessenger::SetNewValue()",
+                "GRAPPA::PHYSICS_LIST_UNDEFINED",
+                FatalException,
+                msg);
+        }
+        if (!m_em_physics)
+        {
+            G4ExceptionDescription msg;
+            msg << "No electromagnetic physics is defined!";
+            G4Exception(
+                "GRPPhysicsListMessenger::SetNewValue()",
+                "GRAPPA::PHYSICS_LIST_UNDEFINED",
+                FatalException,
+                msg);
+        }
+        const G4bool ifaddbiasing = m_physics_list->GetAddBiasing();
+        const G4double muonxs = m_em_physics->GetMuPairCrossSection();
+
+        G4cout << "GRAPPA is using a custom physics list. The list components are:" << G4endl;
+        G4cout << G4endl;
+        G4cout << "- Electromagnetic list (option 0) including muon pair production" << G4endl;
+        if (muonxs > 1)
+        {
+            G4cout << "\t(Muon production is increased artificially by a factor " << muonxs << ")" << G4endl;
+        }
+        G4cout << "- G4MuonicAtomDecayPhysics for decay of muonic atoms" << G4endl;
+        G4cout << "- G4DecayPhysics for decay of general ions" << G4endl;
+        G4cout << "- G4HadronElasticPhysicsHP high precision elastic scattering model" << G4endl;
+        G4cout << "- G4StoppingPhysics without muon capture (this would shadow the G4MuonicAtomDecayPhysics model)" << G4endl;
+        G4cout << "- G4IonPhysics to model generic ions" << G4endl;
+        G4cout << "- G4NeutronTrackingCut to enable tracking cuts on neutrons" << G4endl;
+        G4cout << "- G4StepLimiterPhysics to enable general production cuts" << G4endl;
+        if (ifaddbiasing)
+        {
+            G4cout << "- Biasing physics for muon production via Bethe-Heitler and pion decay" << G4endl;
+            G4cout << "  Both biasings are performed via production splitting." << G4endl;
+            G4cout << "  More information about the biasing can be found in the /GRAPPA/biasing/ commands." << G4endl;
+        }
     }
 }
