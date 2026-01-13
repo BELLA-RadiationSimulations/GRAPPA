@@ -14,7 +14,9 @@ target_sources(
     GRPBiasing
     PRIVATE # cmake-format: sortable
             GRPMuonPairSplittingOperation.cpp
-            GRPPionDecaySplittingOperation.cpp GRPSplittingOperator.cpp GRPSplittingOperatorMessenger.cpp
+            GRPPionDecaySplittingOperation.cpp
+            GRPSplittingOperator.cpp
+            GRPSplittingOperatorMessenger.cpp
 )
 
 target_include_directories(GRPBiasing PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
