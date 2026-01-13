@@ -41,7 +41,8 @@ G4VParticleChange *GRPMuonPairSplittingOperation::ApplyFinalStateBiasing(
     constexpr G4bool verbose = false;
 
     // Collect wrapped process (muon pair production) final state:
-    G4VParticleChange *processFinalState = callingProcess->GetWrappedProcess()->PostStepDoIt(*track, *step);
+    G4VParticleChange *processFinalState =
+        callingProcess->GetWrappedProcess()->PostStepDoIt(*track, *step);
 
     // Only act if the particle is a photon
     if (track->GetDefinition() != G4Gamma::Gamma())
@@ -52,7 +53,8 @@ G4VParticleChange *GRPMuonPairSplittingOperation::ApplyFinalStateBiasing(
     // Only bias GammaToMuPair (process Type=2 (electromagnetic), process
     // SubType=15)
     const G4GammaConversionToMuons *gammaToMuPair =
-        dynamic_cast<const G4GammaConversionToMuons *>(callingProcess->GetWrappedProcess());
+        dynamic_cast<const G4GammaConversionToMuons *>(
+            callingProcess->GetWrappedProcess());
     if (!gammaToMuPair)
     {
         return processFinalState;
@@ -133,10 +135,12 @@ G4VParticleChange *GRPMuonPairSplittingOperation::ApplyFinalStateBiasing(
         // every time in the loop.
         // This way new secondaries are created at every iteration.
         // Since this implementation does not rely on GammaGeneralProc,
-        // We are always calling the muon production process directly and therefore
-        // do not need to sample it among other gamma processe.
-        // We leave sanity checks here, but do not need to delete "incorrect" secondaries.
-        processFinalState = callingProcess->GetWrappedProcess()->PostStepDoIt(*track, *step);
+        // We are always calling the muon production process directly and
+        // therefore do not need to sample it among other gamma processe. We
+        // leave sanity checks here, but do not need to delete "incorrect"
+        // secondaries.
+        processFinalState =
+            callingProcess->GetWrappedProcess()->PostStepDoIt(*track, *step);
 
         // Check if the process was the correct one (GammaToMuPair)
         const G4int nSec = processFinalState->GetNumberOfSecondaries();

@@ -48,13 +48,14 @@ GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList(), m_biasing(true)
 
     // Hadron Elastic scattering
     RegisterPhysics(new G4HadronElasticPhysicsHP());
-#if defined (GRAPPA_ENABLED_BERTINI_ROLLBACK)
+#if defined(GRAPPA_ENABLED_BERTINI_ROLLBACK)
     G4HadronicParameters::Instance()->SetBertiniAs11_2(true);
 #endif
     // Stopping Physics
     // This include the capture of muon minus (mu- + p -> n + nu_mu)
-    // We set it to false because it otherwise shadows the more detailed muonic atom decay physics
-    G4StoppingPhysics * stoppingphysics= new G4StoppingPhysics();
+    // We set it to false because it otherwise shadows the more detailed muonic
+    // atom decay physics
+    G4StoppingPhysics *stoppingphysics = new G4StoppingPhysics();
     stoppingphysics->SetMuonMinusCapture(false);
     RegisterPhysics(stoppingphysics);
 
@@ -106,7 +107,8 @@ void GRPPhysicsList::RemoveBiasing()
     }
 }
 
-void GRPPhysicsList::SetAddBiasing(G4bool ifaddbiasing){
+void GRPPhysicsList::SetAddBiasing(G4bool ifaddbiasing)
+{
     if (ifaddbiasing)
     {
         AddBiasing();
