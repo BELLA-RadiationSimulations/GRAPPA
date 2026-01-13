@@ -1,4 +1,4 @@
-// Copyright 2021-2025
+// Copyright 2021-2026
 //
 // Authors:
 // Stanimir Kisyov, Sarah Schröder, Davide Terzani
