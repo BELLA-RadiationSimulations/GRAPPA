@@ -62,19 +62,13 @@ GRPEmPhysics::GRPEmPhysics(G4int ver, const G4String &)
     SetPhysicsType(bElectromagnetic);
 }
 
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
-
 GRPEmPhysics::~GRPEmPhysics() = default;
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void GRPEmPhysics::ConstructParticle()
 {
     // minimal set of particles for EM physics
     G4EmBuilder::ConstructMinimalEmSet();
 }
-
-//....oooOO0OOooo........oooOO0OOooo........oooOO0OOooo........oooOO0OOooo......
 
 void GRPEmPhysics::ConstructProcess()
 {
