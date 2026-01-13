@@ -1,3 +1,13 @@
+// Copyright 2021-2026
+//
+// Authors:
+// Stanimir Kisyov, Sarah Schröder, Davide Terzani
+//
+// Creator: Davide Terzani
+//
+// This file is part of GRAPPA.
+//
+// License: BSD-3-Clause
 
 #include <G4DecayPhysics.hh>
 #include <G4GenericBiasingPhysics.hh>
@@ -51,7 +61,7 @@ GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList()
 
     // Ion Physics
     RegisterPhysics(new G4IonPhysics());
-    
+
     // Neutron tracking cut
     RegisterPhysics(new G4NeutronTrackingCut());
 

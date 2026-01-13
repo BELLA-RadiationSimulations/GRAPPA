@@ -68,25 +68,6 @@ def find_written_copyright(file: Path, language="cpp"):
     # Strip initial newlines
     lines = list(dropwhile(lambda line: line == "\n", lines))
 
-    # Check for and preserve special first lines
-    special_prefix = []
-    if lines and lines[0].startswith("#!"):
-        # Shebang line (Python scripts)
-        special_prefix.append(lines[0])
-        lines = lines[1:]
-        # Strip any newlines after shebang
-        lines = list(dropwhile(lambda line: line == "\n", lines))
-    elif lines and lines[0].strip().startswith("#pragma once"):
-        # C++ pragma once
-        special_prefix.append(lines[0])
-        lines = lines[1:]
-        lines = list(dropwhile(lambda line: line == "\n", lines))
-    elif lines and lines[0].strip().startswith("cmake_minimum_required"):
-        # CMake minimum version requirement
-        special_prefix.append(lines[0])
-        lines = lines[1:]
-        lines = list(dropwhile(lambda line: line == "\n", lines))
-
     # Take all lines starting with comment character
     previous_copyright = list(takewhile(lambda line: line.startswith(c), lines))
 
@@ -96,7 +77,7 @@ def find_written_copyright(file: Path, language="cpp"):
     # Strip newlines between copyright and content
     newlines = list(dropwhile(lambda line: line == "\n", newlines))
 
-    return (special_prefix, previous_copyright, newlines)
+    return (previous_copyright, newlines)
 
 
 def populate_files(source_dir="."):
@@ -129,7 +110,7 @@ def populate_files(source_dir="."):
 
 
 def update_copyright(file: Path, language="cpp", only_diff=False):
-    special_prefix, previous, nocopyright = find_written_copyright(file, language)
+    previous, nocopyright = find_written_copyright(file, language)
     newcopyright = generate_copyright(language)
 
     updated = False
@@ -137,14 +118,10 @@ def update_copyright(file: Path, language="cpp", only_diff=False):
         updated = True
         if not only_diff:
             with open(file, "w") as fp:
-                # Write special prefix first (shebang, pragma, etc.)
-                fp.writelines(special_prefix)
-                if special_prefix:
-                    fp.write("\n")
-                # Then copyright
+                # Copyright first
                 fp.writelines(newcopyright)
                 fp.write("\n")
-                # Then rest of file
+                # Then everything else (including #pragma once, shebangs, etc.)
                 fp.writelines(nocopyright)
     return updated
 
