@@ -12,9 +12,9 @@
 import argparse
 from datetime import date
 from pathlib import Path
-from numpy import any
+from itertools import takewhile, dropwhile
 
-_FILE_CHANGED_CODE = -1
+_FILE_CHANGED_CODE = 1
 authors = ["Stanimir Kisyov", "Sarah Schröder", "Davide Terzani"]
 authors.sort(key=lambda x: x.split()[-1])
 
@@ -65,21 +65,38 @@ def find_written_copyright(file: Path, language="cpp"):
     with open(file, "r") as fp:
         lines = fp.readlines()
 
-    previous_copyright = list()
-    # Stripping all the initial newlines
-    nonewlinesindex = lines.index(next(elem for elem in lines if elem != "\n"))
-    lines = lines[nonewlinesindex:]
-    for i, line in enumerate(lines):
-        if len(line) < len(c) or line[: len(c)] != c:
-            break
-        previous_copyright.append(line)
+    # Strip initial newlines
+    lines = list(dropwhile(lambda line: line == "\n", lines))
 
-    newlines = lines[i:]
-    # Stripping all the newlines between header copyright and file
-    newindex = newlines.index(next(elem for elem in newlines if elem != "\n"))
-    newlines = newlines[newindex:]
+    # Check for and preserve special first lines
+    special_prefix = []
+    if lines and lines[0].startswith("#!"):
+        # Shebang line (Python scripts)
+        special_prefix.append(lines[0])
+        lines = lines[1:]
+        # Strip any newlines after shebang
+        lines = list(dropwhile(lambda line: line == "\n", lines))
+    elif lines and lines[0].strip().startswith("#pragma once"):
+        # C++ pragma once
+        special_prefix.append(lines[0])
+        lines = lines[1:]
+        lines = list(dropwhile(lambda line: line == "\n", lines))
+    elif lines and lines[0].strip().startswith("cmake_minimum_required"):
+        # CMake minimum version requirement
+        special_prefix.append(lines[0])
+        lines = lines[1:]
+        lines = list(dropwhile(lambda line: line == "\n", lines))
 
-    return (previous_copyright, newlines)
+    # Take all lines starting with comment character
+    previous_copyright = list(takewhile(lambda line: line.startswith(c), lines))
+
+    # Drop the copyright lines to get the rest
+    newlines = lines[len(previous_copyright) :]
+
+    # Strip newlines between copyright and content
+    newlines = list(dropwhile(lambda line: line == "\n", newlines))
+
+    return (special_prefix, previous_copyright, newlines)
 
 
 def populate_files(source_dir="."):
@@ -112,7 +129,7 @@ def populate_files(source_dir="."):
 
 
 def update_copyright(file: Path, language="cpp", only_diff=False):
-    previous, nocopyright = find_written_copyright(file, language)
+    special_prefix, previous, nocopyright = find_written_copyright(file, language)
     newcopyright = generate_copyright(language)
 
     updated = False
@@ -120,8 +137,14 @@ def update_copyright(file: Path, language="cpp", only_diff=False):
         updated = True
         if not only_diff:
             with open(file, "w") as fp:
+                # Write special prefix first (shebang, pragma, etc.)
+                fp.writelines(special_prefix)
+                if special_prefix:
+                    fp.write("\n")
+                # Then copyright
                 fp.writelines(newcopyright)
-                fp.writelines("\n")
+                fp.write("\n")
+                # Then rest of file
                 fp.writelines(nocopyright)
     return updated
 
@@ -151,14 +174,12 @@ if __name__ == "__main__":
 
     if Nfileschanged > 0 and only_diff:
         print(
-            "     Program run with the --diff option. {} files would be changed.".format(
-                Nfileschanged
-            )
+            f"     Program run with the --diff option. {Nfileschanged} files would be changed."
         )
         exit(_FILE_CHANGED_CODE)
     if Nfileschanged > 0 and not only_diff:
-        print("     {} files changed.".format(Nfileschanged))
-        exit(_FILE_CHANGED_CODE)
+        print(f"     {Nfileschanged} files changed.")
+        exit(0)
     if Nfileschanged == 0:
         print("     All the files were already up-to-date.")
         exit(0)
