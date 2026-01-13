@@ -12,7 +12,6 @@ class GRPPhysicsList : public G4VModularPhysicsList
 public:
     explicit GRPPhysicsList();
     ~GRPPhysicsList();
-    void AddPhysicsList(const G4String &name);
     void SetAddBiasing(G4bool ifaddbiasing) { m_biasing = ifaddbiasing; }
     G4bool GetAddBiasing() const { return m_biasing; }
 

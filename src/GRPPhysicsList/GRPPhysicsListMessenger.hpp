@@ -36,6 +36,7 @@ private:
     GRPEmPhysics *m_em_physics;
     std::unique_ptr<G4UIdirectory> m_physics_directory;
     std::unique_ptr<G4UIcmdWithABool> m_add_biasing_cmd;
-    std::unique_ptr<G4UIcmdWithADouble> m_muonxs_cmd;
+    std::unique_ptr<G4UIcmdWithADouble> m_set_muonxs_cmd;
+    std::unique_ptr<G4UIcmdWithoutParameter> m_get_muonxs_cmd;
     std::unique_ptr<G4UIcmdWithoutParameter> m_list_physics_cmd;
 };

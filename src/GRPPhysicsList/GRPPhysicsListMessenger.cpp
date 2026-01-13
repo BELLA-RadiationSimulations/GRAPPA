@@ -12,27 +12,34 @@ GRPPhysicsListMessenger::GRPPhysicsListMessenger(
 {
 
     m_physics_directory =
-        std::make_unique<G4UIdirectory>("/GRAPPA/physics_list/");
+        std::make_unique<G4UIdirectory>("/GRAPPA/physicsList/");
     m_physics_directory->SetGuidance("Personalize the GRAPPA physics list");
 
     // Command to add the biasing physics
     m_add_biasing_cmd = std::make_unique<G4UIcmdWithABool>(
-        "/GRAPPA/physics_list/addBiasing", this);
+        "/GRAPPA/physicsList/addBiasing", this);
     m_add_biasing_cmd->SetGuidance("Add biasing to the physics list.");
     m_add_biasing_cmd->SetParameterName("ifbiasing", false);
     m_add_biasing_cmd->AvailableForStates(G4State_PreInit);
 
     // Command to change the biasing cross section
-    m_muonxs_cmd = std::make_unique<G4UIcmdWithADouble>(
-        "/GRAPPA/physics_list/muonPairCrossSectionFactor", this);
-    m_muonxs_cmd->SetGuidance(
+    m_set_muonxs_cmd = std::make_unique<G4UIcmdWithADouble>(
+        "/GRAPPA/physicsList/setMuonPairCrossSectionFactor", this);
+    m_set_muonxs_cmd->SetGuidance(
         "Change the cross section factor to the muon pair production.");
-    m_muonxs_cmd->SetParameterName("cross_section_factor", false);
-    m_muonxs_cmd->AvailableForStates(G4State_PreInit);
+    m_set_muonxs_cmd->SetParameterName("crossSectionFactor", false);
+    m_set_muonxs_cmd->AvailableForStates(G4State_PreInit);
+
+    // Command to check the biasing cross section
+    m_get_muonxs_cmd = std::make_unique<G4UIcmdWithoutParameter>(
+        "/GRAPPA/physicsList/getMuonPairCrossSectionFactor", this);
+    m_get_muonxs_cmd->SetGuidance(
+        "Check the cross section factor to the muon pair production.");
+    m_get_muonxs_cmd->AvailableForStates(G4State_PreInit, G4State_Init, G4State_Idle, G4State_GeomClosed);
 
     // Command to list the current physics list status
     m_list_physics_cmd = std::make_unique<G4UIcmdWithoutParameter>(
-        "/GRAPPA/physics_list/list", this
+        "/GRAPPA/physicsList/list", this
     );
     m_list_physics_cmd->SetGuidance("List the current status of the custom physics list");
     m_list_physics_cmd->SetToBeBroadcasted(false);
@@ -60,7 +67,7 @@ void GRPPhysicsListMessenger::SetNewValue(
         m_physics_list->SetAddBiasing(ifaddbiasing);
     }
 
-    if (command == m_muonxs_cmd.get())
+    if (command == m_set_muonxs_cmd.get())
     {
         if (!m_em_physics)
         {
@@ -72,8 +79,23 @@ void GRPPhysicsListMessenger::SetNewValue(
                 FatalException,
                 msg);
         }
-        const G4double newxs = m_muonxs_cmd->GetNewDoubleValue(newValue);
+        const G4double newxs = m_set_muonxs_cmd->GetNewDoubleValue(newValue);
         m_em_physics->SetMuPairCrossSection(newxs);
+    }
+    if (command == m_get_muonxs_cmd.get())
+    {
+        if (!m_em_physics)
+        {
+            G4ExceptionDescription msg;
+            msg << "No electromagnetic physics is defined!";
+            G4Exception(
+                "GRPPhysicsListMessenger::SetNewValue()",
+                "GRAPPA::PHYSICS_LIST_UNDEFINED",
+                FatalException,
+                msg);
+        }
+        const G4double muonxs = m_em_physics->GetMuPairCrossSection();
+        G4cout << "Muon production is increased artificially by a factor " << muonxs << G4endl;
     }
     if (command == m_list_physics_cmd.get())
     {
