@@ -10,7 +10,6 @@
 // License: BSD-3-Clause
 
 #include <G4DecayPhysics.hh>
-#include <G4GenericBiasingPhysics.hh>
 #include <G4HadronElasticPhysicsHP.hh>
 #include <G4HadronicParameters.hh>
 #include <G4IonPhysics.hh>
@@ -25,7 +24,7 @@
 #include <GRPEmExtraPhysics.hpp>
 #include <GRPPhysicsList.hpp>
 
-GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList()
+GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList(), m_biasing(true)
 {
 
     G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(
@@ -69,18 +68,18 @@ GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList()
     RegisterPhysics(new G4StepLimiterPhysics());
 
     // Introduce biasing
-    G4GenericBiasingPhysics *biasingPhysics = new G4GenericBiasingPhysics();
+    m_biasingPhysics = new G4GenericBiasingPhysics();
     // We need to bias GammaGeneralProc because it's the only process
     // explicitly
     // declared. Selection is then performed in the biasing operation.
     std::vector<G4String> processToBias{"GammaToMuPair"};
-    biasingPhysics->PhysicsBias("gamma", processToBias);
+    m_biasingPhysics->PhysicsBias("gamma", processToBias);
     // Bias pion decay
     processToBias = {"Decay"};
-    biasingPhysics->PhysicsBias("pi+", processToBias);
-    biasingPhysics->PhysicsBias("pi-", processToBias);
+    m_biasingPhysics->PhysicsBias("pi+", processToBias);
+    m_biasingPhysics->PhysicsBias("pi-", processToBias);
 
-    RegisterPhysics(biasingPhysics);
+    RegisterPhysics(m_biasingPhysics);
 
     // Add the physics list messenger to have UI commands
     m_pl_messenger =
@@ -88,3 +87,32 @@ GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList()
 }
 
 GRPPhysicsList::~GRPPhysicsList() = default;
+
+void GRPPhysicsList::AddBiasing()
+{
+    if (m_biasingPhysics)
+    {
+        ReplacePhysics(m_biasingPhysics);
+        m_biasing = true;
+    }
+}
+
+void GRPPhysicsList::RemoveBiasing()
+{
+    if (m_biasingPhysics)
+    {
+        RemovePhysics(m_biasingPhysics);
+        m_biasing = false;
+    }
+}
+
+void GRPPhysicsList::SetAddBiasing(G4bool ifaddbiasing){
+    if (ifaddbiasing)
+    {
+        AddBiasing();
+    }
+    else
+    {
+        RemoveBiasing();
+    }
+}

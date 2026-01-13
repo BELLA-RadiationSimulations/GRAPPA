@@ -13,6 +13,7 @@
 
 #include <memory>
 
+#include <G4GenericBiasingPhysics.hh>
 #include <G4VModularPhysicsList.hh>
 
 #include <GRPPhysicsListMessenger.hpp>
@@ -23,11 +24,15 @@ class GRPPhysicsList : public G4VModularPhysicsList
 public:
     explicit GRPPhysicsList();
     ~GRPPhysicsList();
-    void SetAddBiasing(G4bool ifaddbiasing) { m_biasing = ifaddbiasing; }
+    // Public interface to add and remove biasing
+    void SetAddBiasing(G4bool ifaddbiasing);
     G4bool GetAddBiasing() const { return m_biasing; }
 
 private:
+    void AddBiasing();
+    void RemoveBiasing();
     std::unique_ptr<GRPPhysicsListMessenger> m_pl_messenger;
     GRPEmPhysics *m_em_physics;
     G4bool m_biasing;
+    G4GenericBiasingPhysics *m_biasingPhysics;
 };
