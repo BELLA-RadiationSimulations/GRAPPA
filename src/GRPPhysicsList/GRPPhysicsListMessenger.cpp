@@ -26,8 +26,8 @@ GRPPhysicsListMessenger::GRPPhysicsListMessenger(
 
     // Command to add the biasing physics
     m_add_biasing_cmd = std::make_unique<G4UIcmdWithABool>(
-        "/GRAPPA/physicsList/addBiasing", this);
-    m_add_biasing_cmd->SetGuidance("Add biasing to the physics list.");
+        "/GRAPPA/physicsList/setBiasing", this);
+    m_add_biasing_cmd->SetGuidance("Add or remove biasing to the physics list.");
     m_add_biasing_cmd->SetParameterName("ifbiasing", false);
     m_add_biasing_cmd->AvailableForStates(G4State_PreInit);
 
