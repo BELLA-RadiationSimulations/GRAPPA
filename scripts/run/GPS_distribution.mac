@@ -1,4 +1,4 @@
-# Copyright 2021-2025
+# Copyright 2021-2026
 #
 # Authors:
 # Stanimir Kisyov, Sarah Schröder, Davide Terzani
@@ -61,7 +61,7 @@
 /gps/pos/sigma_r 10 um
 
 # Angular distribution of the beam
-/gps/ang/type beam1d  
+/gps/ang/type beam1d
 /gps/ang/sigma_r 0.002 rad
 
 # Energy distribution of the beam
@@ -78,7 +78,7 @@
 # /analysis/plot/setStyle ROOT_default
 
 # If setActivationToAll is false, all the ntuples will not be written
-# (faster simulations, but only histograms at the end). Default is false 
+# (faster simulations, but only histograms at the end). Default is false
 /analysis/h1/setActivationToAll false
 /analysis/h1/setPlottingToAll false
 /analysis/h2/setActivationToAll false

@@ -48,7 +48,7 @@ CMakeSettings.json
 
 # Ipython notebooks
 .ipynb_checkpoints
- 
+
 # Other strange files
 .DS_Store
 

@@ -47,7 +47,7 @@ jobs:
           path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
           # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
           key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
-          
+
       - name: Download and Install Geant4 Binaries
         if: steps.geant4-cache.outputs.cache-hit != 'true'
         run: |
@@ -60,7 +60,7 @@ jobs:
           mv Geant4-* geant4-install
           rm geant4-binaries.tar.gz
           echo "Geant4 binaries installed successfully"
-              
+
   build-and-test:
     needs: dependency-install
     runs-on: macos-latest

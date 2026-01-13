@@ -81,7 +81,7 @@ Macro files in GRAPPA act as input files, providing commands to initialize
 simulations, change parameters, set up the in-situ data analysis, change the physics, _etc..._
 
 GRAPPA accepts all the basic Geant4 commands and introduces some specific ones.
-In this guide we only discuss some simple use cases, for a more complete manual please refer to the 
+In this guide we only discuss some simple use cases, for a more complete manual please refer to the
 [G4 application developers guide](https://geant4-userdoc.web.cern.ch/UsersGuides/ForApplicationDeveloper/html/index.html).
 
 In a typical macro file, one wants to address some aspects of the simulation:
@@ -125,7 +125,7 @@ An example of GPS settings is
 /gps/pos/sigma_r 10 um
 
 # Angular distribution of the beam
-/gps/ang/type beam1d  
+/gps/ang/type beam1d
 /gps/ang/sigma_r 0.002 rad # Beam divergence
 
 # Energy distribution of the beam
@@ -312,7 +312,7 @@ that sets the activation status of the `ntupleID` ntuple.
 
 GRAPPA defaults to the use of the `QGSP_BIC` physics reference.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
-An example of modification to the physics package is the activation (or deactivation) of new processes 
+An example of modification to the physics package is the activation (or deactivation) of new processes
 
 ```commandline
 /physics_lists/em/GammaToMuons true
@@ -388,7 +388,7 @@ The image is updated after every run.
 
 **Notes**
 - Advanced histogram plotting is available with the `Freetype` library: G4 must be built with `-DGEANT4_USE_FREETYPE:BOOL=ON`.
-- For the analysis of the `ROOT` (default) output file, [ROOT](https://root.cern) or the python package [uproot](https://pypi.org/project/uproot/) must be installed. 
+- For the analysis of the `ROOT` (default) output file, [ROOT](https://root.cern) or the python package [uproot](https://pypi.org/project/uproot/) must be installed.
 
 ### Running the simulation
 

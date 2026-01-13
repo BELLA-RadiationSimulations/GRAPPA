@@ -1,0 +1,20 @@
+repos:
+  # Standard formatting checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: mixed-line-ending
+        args: ['--fix=lf']
+
+  # Copyright notice check and update
+  - repo: local
+    hooks:
+      - id: update-copyright
+        name: Update copyright headers
+        entry: python .update_copyright.py
+        language: system
+        pass_filenames: false
