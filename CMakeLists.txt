@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 project(
     GRAPPA
-    VERSION 0.4.0
+    VERSION 0.5.0
     DESCRIPTION "Geant4 RApid Pair Production Application"
     HOMEPAGE_URL "https://github.com/BELLA-RadiationSimulations/GRAPPA"
     LANGUAGES CXX
@@ -22,11 +22,6 @@ project(
 
 # Defining the target
 add_executable(GRAPPA)
-target_compile_definitions(GRAPPA PRIVATE GRAPPA_VERSION=${PROJECT_VERSION})
-target_compile_definitions(
-    GRAPPA PRIVATE GRAPPA_DESCRIPTION=${PROJECT_DESCRIPTION}
-)
-target_compile_definitions(GRAPPA PRIVATE GRAPPA_URL="${PROJECT_HOMEPAGE_URL}")
 
 # ~~~
 # Instructions needed to link with Geant 4 if not installed in a standard
@@ -117,7 +112,6 @@ if(NOT ${Geant4_FOUND})
 endif()
 
 message(STATUS "Geant4 was found with version ${Geant4_VERSION}")
-target_compile_definitions(GRAPPA PRIVATE Geant4_VERSION=${Geant4_VERSION})
 
 # Check if Geant4 is found with static or shared version
 
