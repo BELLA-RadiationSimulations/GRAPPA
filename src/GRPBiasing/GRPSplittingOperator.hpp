@@ -13,11 +13,11 @@
 
 #include <memory>
 
-#include <G4GenericMessenger.hh>
 #include <G4VBiasingOperator.hh>
 
 #include <GRPMuonPairSplittingOperation.hpp>
 #include <GRPPionDecaySplittingOperation.hpp>
+#include <GRPSplittingOperatorMessenger.hpp>
 
 class GRPSplittingOperator : public G4VBiasingOperator
 {
@@ -34,21 +34,43 @@ public:
     // over tracking, e.g. the number of times the process was applied
     virtual void StartTracking(const G4Track *) {};
 
-    void PrintMuonSplittingFactor()
+    void SetMuonSplittingFactor(G4int muon_splitting_factor)
     {
-        G4cout << "The splitting factor for muon pair production is "
-               << m_muonSplittingFactor << G4endl;
+        m_muonSplittingFactor = muon_splitting_factor;
     }
-    void PrintPionSplittingFactor()
+    void SetPionSplittingFactor(G4int pion_splitting_factor)
     {
-        G4cout << "The splitting factor for pion decay is "
-               << m_pionSplittingFactor << G4endl;
+        m_pionSplittingFactor = pion_splitting_factor;
     }
-    void PrintScaleWeightByCrossSection()
+    void SetScaleMuonWeightByCrossSection(G4bool muon_scale_by_xs)
     {
-        G4cout << "Scale weight with artificial cross section: "
-               << (m_scaleMuonWeightByCrossSection ? "true" : "false")
-               << G4endl;
+        m_scaleMuonWeightByCrossSection = muon_scale_by_xs;
+    }
+
+    void PrintMuonSplittingFactor(G4bool enableprint)
+    {
+        if (enableprint)
+        {
+            G4cout << "The splitting factor for muon pair production is "
+                   << m_muonSplittingFactor << G4endl;
+        }
+    }
+    void PrintPionSplittingFactor(G4bool enableprint)
+    {
+        if (enableprint)
+        {
+            G4cout << "The splitting factor for pion decay is "
+                   << m_pionSplittingFactor << G4endl;
+        }
+    }
+    void PrintScaleWeightByCrossSection(G4bool enableprint)
+    {
+        if (enableprint)
+        {
+            G4cout << "Scale weight with artificial cross section: "
+                   << (m_scaleMuonWeightByCrossSection ? "true" : "false")
+                   << G4endl;
+        }
     }
 
 private:
@@ -78,7 +100,5 @@ private:
     G4int m_muonSplittingFactor;
     G4int m_pionSplittingFactor;
     G4bool m_scaleMuonWeightByCrossSection = true;
-    // Messengers to change the commands
-    std::unique_ptr<G4GenericMessenger> m_pionDecayFactorMessenger;
-    std::unique_ptr<G4GenericMessenger> m_muonPairFactorMessenger;
+    std::unique_ptr<GRPSplittingOperatorMessenger> m_splitting_messenger;
 };
