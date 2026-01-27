@@ -15,7 +15,7 @@
 
 GRPPhysicsListMessenger::GRPPhysicsListMessenger(
     GRPPhysicsList *physics_list, GRPEmPhysics *em_physics)
-    : G4UImessenger(), m_physics_list(physics_list), m_em_physics(em_physics)
+    : m_physics_list(physics_list), m_em_physics(em_physics)
 {
 
     m_physics_directory =

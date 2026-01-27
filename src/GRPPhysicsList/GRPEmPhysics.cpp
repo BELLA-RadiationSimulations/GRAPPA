@@ -86,7 +86,7 @@ void GRPEmPhysics::ConstructProcess()
     G4hMultipleScattering *hmsc = new G4hMultipleScattering("ionmsc");
 
     // nuclear stopping is enabled if th eenergy limit above zero
-    G4double nielEnergyLimit = param->MaxNIELEnergy();
+    const G4double nielEnergyLimit = param->MaxNIELEnergy();
     G4NuclearStopping *pnuc = nullptr;
     if (nielEnergyLimit > 0.0)
     {
@@ -95,11 +95,11 @@ void GRPEmPhysics::ConstructProcess()
     }
 
     // high energy limit for e+- scattering models and bremsstrahlung
-    G4double highEnergyLimit = param->MscEnergyLimit();
+    const G4double highEnergyLimit = param->MscEnergyLimit();
 
     // Add gamma EM Processes
     G4ParticleDefinition *particle = G4Gamma::Gamma();
-    G4bool polar = param->EnablePolarisation();
+    const G4bool polar = param->EnablePolarisation();
 
     // Photoelectric
     G4PhotoElectricEffect *pe = new G4PhotoElectricEffect();
@@ -217,7 +217,7 @@ void GRPEmPhysics::ConstructProcess()
     G4EmBuilder::ConstructCharged(hmsc, pnuc);
 
     // extra configuration
-    G4EmModelActivator mact(GetPhysicsName());
+    const G4EmModelActivator mact(GetPhysicsName());
 }
 
 void GRPEmPhysics::SetMuPairCrossSection(G4double newcrosssection)

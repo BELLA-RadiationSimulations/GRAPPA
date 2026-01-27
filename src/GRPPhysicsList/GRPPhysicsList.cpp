@@ -24,7 +24,7 @@
 #include <GRPEmExtraPhysics.hpp>
 #include <GRPPhysicsList.hpp>
 
-GRPPhysicsList::GRPPhysicsList() : G4VModularPhysicsList(), m_biasing(true)
+GRPPhysicsList::GRPPhysicsList() : m_biasing(true)
 {
 
     G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(
