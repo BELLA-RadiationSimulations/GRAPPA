@@ -25,6 +25,7 @@
 #include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
+#include <GRPHistandNTupleManager.hpp>
 #include <GRPSDAbsorber.hpp>
 #include <GRPSplittingOperator.hpp>
 

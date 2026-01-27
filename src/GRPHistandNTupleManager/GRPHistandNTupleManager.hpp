@@ -19,8 +19,6 @@ using G4AnalysisManager = G4GenericAnalysisManager;
 #endif
 #include <G4SystemOfUnits.hh>
 
-#include <GRPParticlePDGID.hpp>
-
 class HistoManager
 {
 public:

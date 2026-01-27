@@ -9,4 +9,6 @@
 #
 # License: BSD-3-Clause
 
-target_include_directories(GRAPPA PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(GRPUtils INTERFACE)
+
+target_include_directories(GRPUtils INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
