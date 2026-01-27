@@ -11,10 +11,8 @@
 
 add_library(GRPAbsorber STATIC)
 target_sources(
-    GRPAbsorber
-    PRIVATE # cmake-format: sortable
-            GRPAbsorberHit.cpp
-            GRPSDAbsorber.cpp
+    GRPAbsorber PRIVATE # cmake-format: sortable
+                        GRPAbsorberHit.cpp GRPSDAbsorber.cpp
 )
 
 target_include_directories(GRPAbsorber PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

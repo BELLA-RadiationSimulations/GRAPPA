@@ -10,9 +10,8 @@
 # License: BSD-3-Clause
 
 target_sources(
-    GRAPPA
-    PRIVATE # cmake-format: sortable
-            grappa.cpp
+    GRAPPA PRIVATE # cmake-format: sortable
+                   grappa.cpp
 )
 
 target_include_directories(GRAPPA PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
