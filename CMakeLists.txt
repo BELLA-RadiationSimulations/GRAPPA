@@ -20,6 +20,10 @@ project(
     LANGUAGES CXX
 )
 
+# This standard is required for compatibility with GEANT4
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Defining the target
 add_executable(GRAPPA)
 
@@ -43,9 +47,6 @@ if(APPLE)
 endif(APPLE)
 
 # =============#
-
-# This standard is required for compatibility with GEANT4
-set_property(TARGET GRAPPA PROPERTY CXX_STANDARD_REQUIRED 17)
 
 # CMAKE_INSTALL_PREFIX is set here
 set(CMAKE_INSTALL_PREFIX
