@@ -91,11 +91,22 @@ GRPPhysicsList::~GRPPhysicsList() = default;
 
 void GRPPhysicsList::AddBiasing()
 {
-    if (m_biasingPhysics)
+    if (!m_biasingPhysics)
     {
-        ReplacePhysics(m_biasingPhysics);
-        m_biasing = true;
+        // Introduce biasing
+        m_biasingPhysics = new G4GenericBiasingPhysics();
+        // We need to bias GammaGeneralProc because it's the only process
+        // explicitly
+        // declared. Selection is then performed in the biasing operation.
+        std::vector<G4String> processToBias{"GammaToMuPair"};
+        m_biasingPhysics->PhysicsBias("gamma", processToBias);
+        // Bias pion decay
+        processToBias = {"Decay"};
+        m_biasingPhysics->PhysicsBias("pi+", processToBias);
+        m_biasingPhysics->PhysicsBias("pi-", processToBias);
+        RegisterPhysics(m_biasingPhysics);
     }
+    m_biasing = true;
 }
 
 void GRPPhysicsList::RemoveBiasing()
@@ -103,8 +114,10 @@ void GRPPhysicsList::RemoveBiasing()
     if (m_biasingPhysics)
     {
         RemovePhysics(m_biasingPhysics);
-        m_biasing = false;
+        delete m_biasingPhysics;
+        m_biasingPhysics = nullptr;
     }
+    m_biasing = false;
 }
 
 void GRPPhysicsList::SetAddBiasing(G4bool ifaddbiasing)
