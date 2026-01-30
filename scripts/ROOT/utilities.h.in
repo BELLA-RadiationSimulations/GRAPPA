@@ -22,6 +22,8 @@
 #include <TMath.h>
 #include <TNtuple.h>
 
+// WARNING: This script is deprecated and not maintained anymore.
+
 namespace PhysicalConstants
 {
     constexpr double c_m_s = 299792458.;

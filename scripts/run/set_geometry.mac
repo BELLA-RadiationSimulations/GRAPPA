@@ -1,0 +1,20 @@
+# Copyright 2021-2026
+#
+# Authors:
+# Stanimir Kisyov, Sarah Schröder, Davide Terzani
+#
+# Creator: Davide Terzani
+#
+# This file is part of GRAPPA.
+#
+# License: BSD-3-Clause
+
+# Modify the target and world geometry
+# /geometry/world/material G4_AIR
+# /geometry/world/radius 20 cm
+# /geometry/absorber/thickness 0.2 mm
+# /geometry/foil/size 10 mm
+# /geometry/foil/center 0 0 0 mm
+/geometry/foil/thickness 3 mm
+# /geometry/foil/rotation 45 deg
+# /geometry/foil/material G4_W

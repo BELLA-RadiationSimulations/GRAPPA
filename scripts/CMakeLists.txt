@@ -19,6 +19,7 @@ set(ROOT_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ROOT)
 list(
     APPEND
     ROOT_SCRIPTS_BUILD
+    # cmake-format: sortable
     ${ROOT_SCRIPTS_DIR}/DumpPhaseSpace.C.in
     ${ROOT_SCRIPTS_DIR}/MuonAnalysis.C.in
     ${ROOT_SCRIPTS_DIR}/PlotParticles.C.in
@@ -35,19 +36,29 @@ foreach(filename ${ROOT_SCRIPTS_BUILD})
     list(APPEND ROOT_SCRIPTS ${CMAKE_BINARY_DIR}/${filename_we})
 endforeach()
 
-list(APPEND ROOT_SCRIPTS ${ROOT_SCRIPTS_DIR}/spectrum.py)
+list(
+    APPEND
+    ROOT_SCRIPTS
+    # cmake-format: sortable
+    ${ROOT_SCRIPTS_DIR}/spectrum.py
+    ${ROOT_SCRIPTS_DIR}/mu_pair_decay_mpi.py
+)
 # Save run script for installation in bin folder
 set(RUN_SCRIPTS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/run)
 list(
     APPEND
     RUN_SCRIPTS
+    # cmake-format: sortable
+    ${RUN_SCRIPTS_DIR}/control_biasing.mac
     ${RUN_SCRIPTS_DIR}/custom_distribution.mac
     ${RUN_SCRIPTS_DIR}/distribution_from_file.mac
+    ${RUN_SCRIPTS_DIR}/draw_trajectories.mac
+    ${RUN_SCRIPTS_DIR}/example_novis.mac
     ${RUN_SCRIPTS_DIR}/example_vis.mac
-    ${RUN_SCRIPTS_DIR}/GPS_distribution.mac
-    ${RUN_SCRIPTS_DIR}/initialize_vis.mac
+    ${RUN_SCRIPTS_DIR}/gaussian_10gev.mac
     ${RUN_SCRIPTS_DIR}/InitialPhaseSpace.dat
     ${RUN_SCRIPTS_DIR}/photon_energy.dat
+    ${RUN_SCRIPTS_DIR}/set_geometry.mac
 )
 
 # Install run scripts
