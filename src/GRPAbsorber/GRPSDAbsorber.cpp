@@ -11,6 +11,8 @@
 
 #include <GRPSDAbsorber.hpp>
 
+#include <GRPParticlePDGID.hpp>
+
 //
 //  Here we use the Particle Data Group (PDG) convention
 //  for particle numbering. Each particle has a unique integer ID.

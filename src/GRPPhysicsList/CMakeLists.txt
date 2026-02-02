@@ -26,6 +26,7 @@ target_sources(
 option(GRAPPA_ROLLBACK_BERT
        "Roll back Bertini cascade model to previous version." ON
 )
+mark_as_advanced(GRAPPA_ROLLBACK_BERT)
 if(Geant4_VERSION VERSION_GREATER_EQUAL 11.3.2 AND GRAPPA_ROLLBACK_BERT)
     message(
         STATUS

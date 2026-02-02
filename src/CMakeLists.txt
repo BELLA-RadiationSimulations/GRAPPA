@@ -10,22 +10,26 @@
 # License: BSD-3-Clause
 
 target_sources(
-    GRAPPA
-    PRIVATE # cmake-format: sortable
-            grappa.cpp
-            GRPAbsorberHit.cpp
-            GRPActionInitialization.cpp
-            GRPDetectorConstruction.cpp
-            GRPHistandNTupleManager.cpp
-            GRPPrimaryGeneratorAction.cpp
-            GRPRun.cpp
-            GRPRunAction.cpp
-            GRPSDAbsorber.cpp
-            GRPTrackingAction.cpp
+    GRAPPA PRIVATE # cmake-format: sortable
+                   grappa.cpp
 )
+
+target_include_directories(GRAPPA PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
+
+add_subdirectory(GRPAbsorber)
+target_link_libraries(GRAPPA PRIVATE GRPAbsorber)
+
+add_subdirectory(GRPActions)
+target_link_libraries(GRAPPA PRIVATE GRPActions)
 
 add_subdirectory(GRPBiasing)
 target_link_libraries(GRAPPA PRIVATE GRPBiasing)
+
+add_subdirectory(GRPDetectorConstruction)
+target_link_libraries(GRAPPA PRIVATE GRPDetectorConstruction)
+
+add_subdirectory(GRPHistandNTupleManager)
+target_link_libraries(GRAPPA PRIVATE GRPHistandNTupleManager)
 
 add_subdirectory(GRPMessages)
 target_link_libraries(GRAPPA PRIVATE GRPMessages)
@@ -38,3 +42,6 @@ target_link_libraries(GRAPPA PRIVATE GRPPhysicsList)
 
 add_subdirectory(GRPSignalHandler)
 target_link_libraries(GRAPPA PRIVATE GRPSignalHandler)
+
+add_subdirectory(GRPUtils)
+target_link_libraries(GRAPPA PRIVATE GRPUtils)

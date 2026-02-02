@@ -21,7 +21,6 @@
 
 #include <GRPAbsorberHit.hpp>
 #include <GRPHistandNTupleManager.hpp>
-#include <GRPParticlePDGID.hpp>
 
 //
 //  Here we use the Particle Data Group (PDG) convention

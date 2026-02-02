@@ -1,0 +1,16 @@
+# Copyright 2021-2026
+#
+# Authors:
+# Stanimir Kisyov, Sarah Schröder, Davide Terzani
+#
+# Creator: Davide Terzani
+#
+# This file is part of GRAPPA.
+#
+# License: BSD-3-Clause
+
+/GRAPPA/biasing/muonPair/setSplittingFactor 1000
+# This command defines if the particle weight has to account a cross section increase (to be used if /physics_lists/em/GammaToMuonsFactor > 1)
+/GRAPPA/biasing/muonPair/setScaleMuonWeigthWithCrossSection true
+# This command defines the splitting factor for pion decay
+/GRAPPA/biasing/pionDecay/setSplittingFactor 1000

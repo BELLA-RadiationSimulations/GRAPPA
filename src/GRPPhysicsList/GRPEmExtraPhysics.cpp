@@ -76,7 +76,7 @@ void GRPEmExtraPhysics::ConstructProcess()
     ph->RegisterProcess(muNucProcess, muonminus);
 
     // We leave this as a template to be reactivated if needed
-    if constexpr (false)
+    if (m_activate_muon_to_muon_pair)
     {
         auto proc = new G4MuonToMuonPairProduction();
         ph->RegisterProcess(proc, muonplus);

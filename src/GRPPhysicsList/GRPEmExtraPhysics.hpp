@@ -32,4 +32,5 @@ private:
     void ConstructGammaElectroNuclear();
     G4double m_GNLowEnergyLimit;
     G4int m_verbose;
+    const G4bool m_activate_muon_to_muon_pair = false;
 };

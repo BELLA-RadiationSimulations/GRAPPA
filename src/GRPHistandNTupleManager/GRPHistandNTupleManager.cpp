@@ -11,6 +11,8 @@
 
 #include <GRPHistandNTupleManager.hpp>
 
+#include <GRPParticlePDGID.hpp>
+
 HistandNTupleManager::HistandNTupleManager() : fFileName("Data_output")
 {
     m_HistoManager = new HistoManager();

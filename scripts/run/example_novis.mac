@@ -10,29 +10,22 @@
 # License: BSD-3-Clause
 
 # Set run verbosity
-/run/verbose 1
+/run/verbose 0
 /control/verbose 0
 /control/saveHistory
 /run/printProgress 10000
 # /run/numberOfThreads 4
 
 # Modify geometry (custom functions)
-# /geometry/world/material G4_AIR
-# /geometry/world/radius 20 cm
-# /geometry/absorber/thickness 0.2 mm
-# /geometry/foil/size 10 mm
-# /geometry/foil/center 0 0 0 mm
-/geometry/foil/thickness 3 mm
-# /geometry/foil/rotation 45 deg
-# /geometry/foil/material G4_W
+/control/execute set_geometry.mac
 
 # Fix random seed to have repeatable runs
 # /random/setSeeds 1 2 3
 
 # Introduce the muon pair production from photons and increase artificially its probability
-/physics_lists/em/GammaToMuons true
-/physics_lists/em/PositronToMuons false
-/physics_lists/em/GammaToMuonsFactor 200
+/GRAPPA/physicsList/setMuonPairCrossSectionFactor 200
+/GRAPPA/physicsList/setBiasing true
+/GRAPPA/physicsList/list
 
 # Initialize run
 /run/initialize
@@ -47,27 +40,10 @@
 
 # =/=/=/=/= Particle source section =/=/=/=/=
 
-# Set the particle source: must be done after run initialization.
-# Particle source must be chosen between e- and gamma (for our use)
-/gps/verbose 0
-/gps/particle e-
-
-# Particle source spatial information
-/gps/pos/type Beam
-/gps/pos/centre 0 0 5 mm
-/gps/pos/shape Circle
-# The radius parameter defines a central flat plateau
-/gps/pos/radius 0 mm
-/gps/pos/sigma_r 10 um
-
-# Angular distribution of the beam
-/gps/ang/type beam1d
-/gps/ang/sigma_r 0.002 rad
-
-# Energy distribution of the beam
-/gps/ene/mono 10 GeV
-/gps/ene/type Gauss
-/gps/ene/sigma 0 MeV
+# Choose the particle source
+/control/execute gaussian_10gev.mac
+# /control/execute distribution_from_file.mac
+# /control/execute custom_distribution.mac
 
 # =/=/=/=/= End particle source section =/=/=/=/=
 
@@ -185,9 +161,8 @@
 
 # =/=/=/=/= Biasing section =/=/=/=/=
 
-/GRAPPA/biasing/muonPair/setSplittingFactor 500
-/GRAPPA/biasing/muonPair/setScaleMuonWeigthWithCrossSection true
-/GRAPPA/biasing/pionDecay/setSplittingFactor 50
+# This script controls the biasing parameters (only if active)
+/control/execute control_biasing.mac
 
 # =/=/=/=/= End biasing section =/=/=/=/=
 

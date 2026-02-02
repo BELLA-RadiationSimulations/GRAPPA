@@ -1,0 +1,36 @@
+# Copyright 2021-2026
+#
+# Authors:
+# Stanimir Kisyov, Sarah Schröder, Davide Terzani
+#
+# Creator: Davide Terzani
+#
+# This file is part of GRAPPA.
+#
+# License: BSD-3-Clause
+
+# =/=/=/=/= Particle source section =/=/=/=/=
+
+# Set the particle source: must be done after run initialization.
+# Particle source must be chosen between e- and gamma (for our use)
+/gps/verbose 0
+/gps/particle e-
+
+# Particle source spatial information
+/gps/pos/type Beam
+/gps/pos/centre 0 0 5 mm
+/gps/pos/shape Circle
+# The radius parameter defines a central flat plateau
+/gps/pos/radius 0 mm
+/gps/pos/sigma_r 10 um
+
+# Angular distribution of the beam
+/gps/ang/type beam1d
+/gps/ang/sigma_r 0.00001 rad
+
+# Energy distribution of the beam
+/gps/ene/mono 10 GeV
+/gps/ene/type Gauss
+/gps/ene/sigma 10 MeV
+
+# =/=/=/=/= End particle source section =/=/=/=/=

@@ -26,7 +26,7 @@ check_clang_format_version() {
 
 check_clang_format_version
 
-find src/ include/ scripts/ \
+find src/ scripts/ \
     -type f -name "*.hpp" -o \
     -type f -name "*.cpp" -o \
     -type f -name "*.C.in" -o \

@@ -20,6 +20,10 @@ project(
     LANGUAGES CXX
 )
 
+# This standard is required for compatibility with GEANT4
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # Defining the target
 add_executable(GRAPPA)
 
@@ -43,9 +47,6 @@ if(APPLE)
 endif(APPLE)
 
 # =============#
-
-# This standard is required for compatibility with GEANT4
-set_property(TARGET GRAPPA PROPERTY CXX_STANDARD_REQUIRED 17)
 
 # CMAKE_INSTALL_PREFIX is set here
 set(CMAKE_INSTALL_PREFIX
@@ -141,16 +142,6 @@ if(GRAPPA_FOUND_SHARED_GEANT4 AND GRAPPA_FOUND_STATIC_GEANT4)
     endif()
 endif()
 
-# Checking if the Geant4 version is less than 11 to enable backward
-# compatibility with the analysis manager of version 10
-if(Geant4_VERSION VERSION_LESS 11)
-    message(
-        STATUS
-            "The major version of Geant 4 is less than 11. Backward compatibility with the analysis manager is enabled."
-    )
-    target_compile_definitions(GRAPPA PRIVATE GRAPPA_USE_BACKWARDS_ANALYSIS)
-endif()
-
 # Setting compiler options
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     if(CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -171,7 +162,6 @@ endif()
 
 # Add GRAPPA source files to target
 add_subdirectory(src)
-add_subdirectory(include)
 
 # Add Geant4 to target
 include(${Geant4_USE_FILE})

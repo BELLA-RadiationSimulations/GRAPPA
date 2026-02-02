@@ -17,7 +17,7 @@
 
 GRPSplittingOperatorMessenger::GRPSplittingOperatorMessenger(
     GRPSplittingOperator *splitting_operator)
-    : G4UImessenger(), m_splitting_operator(splitting_operator)
+    : m_splitting_operator(splitting_operator)
 {
     m_splitting_directory = std::make_unique<G4UIdirectory>("/GRAPPA/biasing/");
     m_splitting_directory->SetGuidance("Personalize GRAPPA biasing operation");
