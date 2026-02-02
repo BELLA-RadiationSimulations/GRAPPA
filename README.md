@@ -32,7 +32,7 @@ GRAPPA requires:
 
 Additional features:
 - Mutithreading support: if G4 is built with `-DGEANT4_BUILD_MULTITHREADED:BOOL=ON`, GRAPPA will automatically execute using multiple threads, unless specified differently in the simulation parameters (e.g., in the macro file).
-- Visualization support: In order to produce visual outputs, G4 provided visualization drivers must be installed (_e.g._ OpenGL, RayTracer, QT5, etc...).
+- Visualization support: In order to produce visual outputs, G4 provided visualization drivers must be installed (_e.g._ OpenGL, RayTracer, QT6, etc...).
 
 ## Build instructions
 
@@ -73,7 +73,7 @@ In order to execute a macro, you should provide it when running the program as
 ```commandline
 ./GRAPPA /path/to/macro
 ```
-Examples of macros can be found in the `script/run` folder.
+Examples of macros can be found in the `script/run` folder and they will be installed in the `bin/run` folder.
 
 ## Structure of macro files
 
@@ -310,16 +310,31 @@ that sets the activation status of the `ntupleID` ntuple.
 
 ### Modification to the Physics Package
 
-GRAPPA defaults to the use of the `QGSP_BIC` physics reference.
+From version `v0.5.0`, GRAPPA uses a custom physics list based on a combinaiton of default lists with the "basic" electromagnetic option (option 0).
+In addition to the default options, the custom physics list replaces the `G4StoppingPhysics` approach to muon stopping with the dedicated `G4MuonicAtomDecayPhysics`.
+The latter includes a special description of muonic atoms and of the `mu-` capturing process.
+Moreover, the code already includes muon production via Bethe-Heitler.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
-An example of modification to the physics package is the activation (or deactivation) of new processes
+
+:warning: In previous versions of GRAPPA, the `G4EmExtraPhysics` list could be controlled by commands such as
 
 ```commandline
 /physics_lists/em/GammaToMuons true
 /physics_lists/em/PositronToMuons true
 ```
 
-In this case the production of muons from photon-pair decay and from positron annihilation is activated. The modification of the physics_list **must** be performed before the run initialization.
+This is not the case anymore and these commands won't work as the `G4EmExtraPhysics` list was removed.
+Of this list, we kept only the muon production via pair decay.
+
+Now, all the commands have been replaced by custom ones:
+
+```commandline
+/GRAPPA/physicsList/list
+/GRAPPA/physicsList/setMuonPairCrossSectionFactor
+/GRAPPA/physicsList/getMuonPairCrossSectionFactor
+```
+
+In future releases, we may consider a more detailed approach to enable fine-grained control on other physics list components.
 
 ## Biasing
 
@@ -341,6 +356,9 @@ We introduced a few new commands:
 
 `/GRAPPA/biasing/muonPair/getScaleMuonWeigthWithCrossSection` Returns if the muon weights are scaled with the artificial cross section
 
+Biasing is enabled by default, but it can be disabled (and/or enabled again) using
+
+`/GRAPPA/physicsList/setBiasing true|false`, which is only accepted in the pre-initialization phase.
 
 ### Visualization
 
