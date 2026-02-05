@@ -212,7 +212,7 @@ void GRPEmPhysics::ConstructProcess()
         ph->RegisterProcess(pnuc, particle);
     }
 
-    // This function construct the basic processes (ionization, scattering,
+    // This function construct the basic processes (ionization, multiple scattering,
     // bremsstrahlung) for muons, hadrons and ions
     G4EmBuilder::ConstructCharged(hmsc, pnuc);
 
