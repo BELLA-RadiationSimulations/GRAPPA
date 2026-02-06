@@ -26,7 +26,8 @@ public:
     virtual ~GRPGeometryBuilder() = default;
     virtual G4VPhysicalVolume *ConstructWorldandTarget() = 0;
     virtual void ConstructSDandField() {};
-    virtual const SDMapping & ReturnSensitiveDetectors() const {
+    virtual const SDMapping &ReturnSensitiveDetectors() const
+    {
         G4ExceptionDescription msg;
 
         msg << "Trying to return a sensitive detector of a GDML geometry ";
@@ -37,7 +38,11 @@ public:
             G4ExceptionSeverity::FatalException,
             msg);
     };
-    virtual void SetHistandNtupleManager(HistandNTupleManager * histandntuplemanager) { m_HistoandNtupleManager = histandntuplemanager; }
+    virtual void
+    SetHistandNtupleManager(HistandNTupleManager *histandntuplemanager)
+    {
+        m_HistoandNtupleManager = histandntuplemanager;
+    }
 
 protected:
     // Pointer to the customized analysis manager

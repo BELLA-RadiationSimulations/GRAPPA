@@ -41,7 +41,8 @@ G4VPhysicalVolume *GRPDetectorConstruction::Construct()
 #else
         G4ExceptionDescription msg;
 
-        msg << "WARNING: GDML requested but not available in this build. " << G4endl;
+        msg << "WARNING: GDML requested but not available in this build. "
+            << G4endl;
         G4Exception(
             "GRPDetectorConstruction::Construct",
             "GRAPPA::GDML_UNSUPPORTED",
@@ -101,12 +102,12 @@ void GRPDetectorConstruction::ConstructStandardSDandField()
         SDMpointer->FindSensitiveDetector("FinalAbsorber");
     if (!previousdetector)
     {
-        AbsorberSD *standardAbsorber = new AbsorberSD(
-            "FinalAbsorber", m_HistoandNtupleManager);
+        AbsorberSD *standardAbsorber =
+            new AbsorberSD("FinalAbsorber", m_HistoandNtupleManager);
 
         SDMpointer->AddNewDetector(standardAbsorber);
-            G4LogicalVolume *logicalWorld =
-        G4LogicalVolumeStore::GetInstance()->GetVolume("AbsorberLogical");
+        G4LogicalVolume *logicalWorld =
+            G4LogicalVolumeStore::GetInstance()->GetVolume("AbsorberLogical");
         logicalWorld->SetSensitiveDetector(standardAbsorber);
     }
     // ===================================================
@@ -131,24 +132,33 @@ void GRPDetectorConstruction::ConstructStandardSDandField()
 
 void GRPDetectorConstruction::ConstructGDMLSDandField()
 {
-G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
+    G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
     // This contains a map of which volume has which sensitive detector.
     // The map is a pair (G4LogicalVolume *, G4String)
-  SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
-  for (SDMapping::const_iterator SDitem = SDmap.begin(); SDitem != SDmap.end(); SDitem++)
-  {
-    G4VSensitiveDetector* mydet = SDMpointer->FindSensitiveDetector(SDitem->second);
-    G4LogicalVolume* myvol = SDitem->first;
-if (mydet) {
-          myvol->SetSensitiveDetector(mydet);
+    SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
+    for (SDMapping::const_iterator SDitem = SDmap.begin();
+         SDitem != SDmap.end();
+         SDitem++)
+    {
+        G4VSensitiveDetector *mydet =
+            SDMpointer->FindSensitiveDetector(SDitem->second);
+        G4LogicalVolume *myvol = SDitem->first;
+        if (mydet)
+        {
+            myvol->SetSensitiveDetector(mydet);
         }
-        else {
-          G4ExceptionDescription msg;
-          msg << "Sensitive detector " << mydet << "not found" << G4endl;
-          msg << "Skipping addition to volume" << myvol->GetName() << G4endl;
-          G4Exception("GRPDetectorConstruction::ConstructGDMLSDandField", "GRAPPA:SD_NOT_FOUND", G4ExceptionSeverity::JustWarning, msg);
+        else
+        {
+            G4ExceptionDescription msg;
+            msg << "Sensitive detector " << mydet << "not found" << G4endl;
+            msg << "Skipping addition to volume" << myvol->GetName() << G4endl;
+            G4Exception(
+                "GRPDetectorConstruction::ConstructGDMLSDandField",
+                "GRAPPA:SD_NOT_FOUND",
+                G4ExceptionSeverity::JustWarning,
+                msg);
         }
-  }
+    }
 }
 
 void GRPDetectorConstruction::PrintDetector() const
@@ -187,33 +197,33 @@ void GRPDetectorConstruction::SetUseGDML(G4bool useGDML)
 #if defined(GRAPPA_USE_GDML)
     m_UseGDML = useGDML;
 #else
-            G4ExceptionDescription msg;
+    G4ExceptionDescription msg;
 
-        msg << "WARNING: GDML requested but not available in this build. ";
-        msg << "Falling back to standard geometry." << G4endl;
-        G4Exception(
-            "GRPDetectorConstruction::SetUseGDML",
-            "GRAPPA::GDML_UNSUPPORTED",
-            G4ExceptionSeverity::JustWarning,
-            msg);
-        m_UseGDML = false;
+    msg << "WARNING: GDML requested but not available in this build. ";
+    msg << "Falling back to standard geometry." << G4endl;
+    G4Exception(
+        "GRPDetectorConstruction::SetUseGDML",
+        "GRAPPA::GDML_UNSUPPORTED",
+        G4ExceptionSeverity::JustWarning,
+        msg);
+    m_UseGDML = false;
 #endif
 }
 
 void GRPDetectorConstruction::SetGDMLFilename(const G4String &filename)
 {
-    #if defined(GRAPPA_USE_GDML)
+#if defined(GRAPPA_USE_GDML)
     m_GDMLFilename = filename;
 #else
-            G4ExceptionDescription msg;
+    G4ExceptionDescription msg;
 
-        msg << "WARNING: GDML requested but not available in this build. ";
-        msg << "Falling back to standard geometry." << G4endl;
-        G4Exception(
-            "GRPDetectorConstruction::SetUseGDML",
-            "GRAPPA::GDML_UNSUPPORTED",
-            G4ExceptionSeverity::JustWarning,
-            msg);
-        m_UseGDML = false;
+    msg << "WARNING: GDML requested but not available in this build. ";
+    msg << "Falling back to standard geometry." << G4endl;
+    G4Exception(
+        "GRPDetectorConstruction::SetUseGDML",
+        "GRAPPA::GDML_UNSUPPORTED",
+        G4ExceptionSeverity::JustWarning,
+        msg);
+    m_UseGDML = false;
 #endif
 }

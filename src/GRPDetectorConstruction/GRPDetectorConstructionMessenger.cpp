@@ -167,10 +167,13 @@ void GRPDetectorConstructionMessenger::SetNewValue(
             m_absorber_thickness->GetNewDoubleValue(newValue);
         m_detectorconstruction->SetAbsorberThickness(thickness);
     }
-    if (command == m_use_gdml_cmd.get()) {
-        m_detectorconstruction->SetUseGDML(m_use_gdml_cmd->GetNewBoolValue(newValue));
+    if (command == m_use_gdml_cmd.get())
+    {
+        m_detectorconstruction->SetUseGDML(
+            m_use_gdml_cmd->GetNewBoolValue(newValue));
     }
-    else if (command == m_gdml_file_cmd.get()) {
+    else if (command == m_gdml_file_cmd.get())
+    {
         m_detectorconstruction->SetGDMLFilename(newValue);
     }
 }

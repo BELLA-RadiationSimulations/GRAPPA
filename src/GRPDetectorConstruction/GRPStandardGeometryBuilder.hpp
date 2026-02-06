@@ -23,10 +23,16 @@ public:
     void SetFoilThickness(G4double thickness) { m_foil_z = thickness; }
     void SetFoilSize(G4double size) { m_foil_x = m_foil_y = size; }
     void SetFoilCenter(G4ThreeVector center) { m_foil_center = center; }
-    void SetFoilMaterial(const G4String &material) { m_f_material_name = material; }
+    void SetFoilMaterial(const G4String &material)
+    {
+        m_f_material_name = material;
+    }
     void SetFoilRotation(G4double angle) { m_foil_angle_y = angle; }
     void SetWorldRadius(G4double radius) { m_w_radius = radius; }
-    void SetWorldMaterial(const G4String &material) { m_w_material_name = material; }
+    void SetWorldMaterial(const G4String &material)
+    {
+        m_w_material_name = material;
+    }
     void SetAbsorberThickness(G4double thickness)
     {
         m_absorber_thickness = thickness;

@@ -16,14 +16,13 @@
 #if defined(GRAPPA_USE_GDML)
 #include <G4GDMLParser.hh>
 
-
 class GRPGDMLGeometryBuilder : public GRPGeometryBuilder
 {
 public:
-    explicit GRPGDMLGeometryBuilder(const G4String& filename);
+    explicit GRPGDMLGeometryBuilder(const G4String &filename);
 
     G4VPhysicalVolume *ConstructWorldandTarget() override;
-    virtual const SDMapping & ReturnSensitiveDetectors() const override;
+    virtual const SDMapping &ReturnSensitiveDetectors() const override;
 
 private:
     G4String m_filename;

@@ -14,10 +14,9 @@ add_library(GRPDetectorConstruction STATIC)
 target_sources(
     GRPDetectorConstruction
     PRIVATE # cmake-format: sortable
-    GRPDetectorConstruction.cpp GRPDetectorConstructionMessenger.cpp
-    GRPStandardGeometryBuilder.cpp
-    )
-
+            GRPDetectorConstruction.cpp GRPDetectorConstructionMessenger.cpp
+            GRPStandardGeometryBuilder.cpp
+)
 
 # Check if GDML support was found
 set(GRAPPA_SUPPORT_GDML_GEOMETRY OFF)
@@ -26,9 +25,11 @@ if(${Geant4_gdml_FOUND})
     message(STATUS "Found support for GDML")
 endif()
 
-if (GRAPPA_SUPPORT_GDML_GEOMETRY)
-    target_sources(GRPDetectorConstruction PRIVATE # cmake-format: sortable
-    GRPGDMLGeometryBuilder.cpp)
+if(GRAPPA_SUPPORT_GDML_GEOMETRY)
+    target_sources(
+        GRPDetectorConstruction PRIVATE # cmake-format: sortable
+                                        GRPGDMLGeometryBuilder.cpp
+    )
     target_compile_definitions(GRPDetectorConstruction PUBLIC GRAPPA_USE_GDML)
 endif()
 
