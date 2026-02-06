@@ -56,7 +56,7 @@ GRPPhysicsList::GRPPhysicsList() : m_biasing(true)
     // We set it to false because it otherwise shadows the more detailed muonic
     // atom decay physics
     G4StoppingPhysics *stoppingphysics = new G4StoppingPhysics();
-    stoppingphysics->SetMuonMinusCapture(false);
+    stoppingphysics->SetMuonMinusCapture(true);
     RegisterPhysics(stoppingphysics);
 
     // Ion Physics

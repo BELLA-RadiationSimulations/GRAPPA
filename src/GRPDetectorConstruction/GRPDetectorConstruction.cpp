@@ -41,14 +41,12 @@ G4VPhysicalVolume *GRPDetectorConstruction::Construct()
 #else
         G4ExceptionDescription msg;
 
-        msg << "WARNING: GDML requested but not available in this build. ";
-        msg << "Falling back to standard geometry." << G4endl;
+        msg << "WARNING: GDML requested but not available in this build. " << G4endl;
         G4Exception(
             "GRPDetectorConstruction::Construct",
             "GRAPPA::GDML_UNSUPPORTED",
-            G4ExceptionSeverity::JustWarning,
+            G4ExceptionSeverity::FatalException,
             msg);
-        m_UseGDML = false;
 #endif
     }
 
@@ -72,20 +70,44 @@ G4VPhysicalVolume *GRPDetectorConstruction::Construct()
 
 void GRPDetectorConstruction::ConstructSDandField()
 {
+    if (m_UseGDML)
+    {
+#if defined(GRAPPA_USE_GDML)
+        ConstructGDMLSDandField();
+#else
+        G4ExceptionDescription msg;
+
+        msg << "WARNING: GDML requested but not available in this build. ";
+        G4Exception(
+            "GRPDetectorConstruction::ConstructSDandField",
+            "GRAPPA::GDML_UNSUPPORTED",
+            G4ExceptionSeverity::FatalException,
+            msg);
+#endif
+    }
+    else
+    {
+        ConstructStandardSDandField();
+    }
+}
+void GRPDetectorConstruction::ConstructStandardSDandField()
+{
     // ================================================ //
     // Link and activate sensitive detectors
 
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
     G4VSensitiveDetector *previousdetector =
-        SDMpointer->FindSensitiveDetector("/FinalAbsorber/StandardAbsorber");
+        SDMpointer->FindSensitiveDetector("FinalAbsorber");
     if (!previousdetector)
     {
         AbsorberSD *standardAbsorber = new AbsorberSD(
-            "/FinalAbsorber/StandardAbsorber", m_HistoandNtupleManager);
+            "FinalAbsorber", m_HistoandNtupleManager);
 
         SDMpointer->AddNewDetector(standardAbsorber);
-        SetSensitiveDetector("AbsorberLogical", standardAbsorber);
+            G4LogicalVolume *logicalWorld =
+        G4LogicalVolumeStore::GetInstance()->GetVolume("AbsorberLogical");
+        logicalWorld->SetSensitiveDetector(standardAbsorber);
     }
     // ===================================================
     // Attach biasing operator to the target and the world.
@@ -105,6 +127,28 @@ void GRPDetectorConstruction::ConstructSDandField()
 
     splittingOperator->AttachTo(logicalWorld);
     splittingOperator->AttachTo(logicalFoil);
+}
+
+void GRPDetectorConstruction::ConstructGDMLSDandField()
+{
+G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
+    // This contains a map of which volume has which sensitive detector.
+    // The map is a pair (G4LogicalVolume *, G4String)
+  SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
+  for (SDMapping::const_iterator SDitem = SDmap.begin(); SDitem != SDmap.end(); SDitem++)
+  {
+    G4VSensitiveDetector* mydet = SDMpointer->FindSensitiveDetector(SDitem->second);
+    G4LogicalVolume* myvol = SDitem->first;
+if (mydet) {
+          myvol->SetSensitiveDetector(mydet);
+        }
+        else {
+          G4ExceptionDescription msg;
+          msg << "Sensitive detector " << mydet << "not found" << G4endl;
+          msg << "Skipping addition to volume" << myvol->GetName() << G4endl;
+          G4Exception("GRPDetectorConstruction::ConstructGDMLSDandField", "GRAPPA:SD_NOT_FOUND", G4ExceptionSeverity::JustWarning, msg);
+        }
+  }
 }
 
 void GRPDetectorConstruction::PrintDetector() const

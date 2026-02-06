@@ -62,6 +62,9 @@ public:
     G4double GetAbsorberThickness() const { return m_absorber_thickness; }
 
 private:
+
+    void ConstructStandardSDandField();
+    void ConstructGDMLSDandField();
     // GDML configuration
     G4bool m_UseGDML = false;
     G4String m_GDMLFilename;

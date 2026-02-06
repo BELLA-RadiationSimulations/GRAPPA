@@ -143,13 +143,6 @@ if(GRAPPA_FOUND_SHARED_GEANT4 AND GRAPPA_FOUND_STATIC_GEANT4)
     endif()
 endif()
 
-# Check if GDML support was found
-set(GRAPPA_SUPPORT_GDML_GEOMETRY OFF)
-if(${Geant4_gdml_FOUND})
-    set(GRAPPA_SUPPORT_GDML_GEOMETRY ON)
-    message(STATUS "Found support for GDML.")
-endif()
-
 # Setting compiler options
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
     if(CMAKE_BUILD_TYPE MATCHES "Debug")

@@ -87,7 +87,7 @@ void GRPEmExtraPhysics::ConstructProcess()
 
     G4ProcessManager *pmanager = muonminus->GetProcessManager();
 
-    pmanager->AddRestProcess(new G4MuonMinusAtomicCapture());
+    // pmanager->AddRestProcess(new G4MuonMinusAtomicCapture());
 }
 
 void GRPEmExtraPhysics::ConstructGammaElectroNuclear()
