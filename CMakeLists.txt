@@ -103,6 +103,7 @@ if(GRAPPA_PREFER_STATIC_GEANT4)
     list(APPEND G4_OPTIONAL_COMPONENTS static)
 endif()
 
+list(APPEND G4_OPTIONAL_COMPONENTS gdml)
 find_package(
     Geant4 REQUIRED ${G4_REQUIRED_COMPONENTS}
     OPTIONAL_COMPONENTS ${G4_OPTIONAL_COMPONENTS}
@@ -140,6 +141,13 @@ if(GRAPPA_FOUND_SHARED_GEANT4 AND GRAPPA_FOUND_STATIC_GEANT4)
         )
         set(GRAPPA_USE_STATIC_GEANT4 FALSE)
     endif()
+endif()
+
+# Check if GDML support was found
+set(GRAPPA_SUPPORT_GDML_GEOMETRY OFF)
+if(${Geant4_gdml_FOUND})
+    set(GRAPPA_SUPPORT_GDML_GEOMETRY ON)
+    message(STATUS "Found support for GDML.")
 endif()
 
 # Setting compiler options

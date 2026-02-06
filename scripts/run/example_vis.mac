@@ -44,7 +44,7 @@
 /vis/scene/add/axes -10 0 0 2 cm
 # To get nice view
 # Make the "World" box invisible
-/vis/geometry/set/visibility World 0 false
+/vis/geometry/set/visibility WorldLogical 0 false
 
 # Remove hidden edges
 /vis/viewer/set/hiddenEdge 1

@@ -13,21 +13,12 @@
 
 #include <memory>
 #include <G4SystemOfUnits.hh>
-#include <G4Box.hh>
-#include <G4GenericMessenger.hh>
-#include <G4LogicalVolume.hh>
-#include <G4Material.hh>
-#include <G4NistManager.hh>
-#include <G4PVPlacement.hh>
-#include <G4RotationMatrix.hh>
-#include <G4RunManager.hh>
-#include <G4Sphere.hh>
-#include <G4VisAttributes.hh>
 #include <G4VUserDetectorConstruction.hh>
 
-#include <GRPHistandNTupleManager.hpp>
-#include <GRPSDAbsorber.hpp>
-#include <GRPSplittingOperator.hpp>
+#include <GRPDetectorConstructionMessenger.hpp>
+#include <GRPGeometryBuilder.hpp>
+
+class HistandNTupleManager;
 
 class GRPDetectorConstruction : public G4VUserDetectorConstruction
 {
@@ -43,40 +34,59 @@ public:
     // Sensitive Detector Construction
     void ConstructSDandField() override;
 
+    void SetFoilThickness(G4double thickness) { m_foil_z = thickness; }
+    void SetFoilSize(G4double size) { m_foil_x = m_foil_y = size; }
+    void SetFoilCenter(G4ThreeVector center) { m_foil_center = center; }
+    void SetFoilMaterial(const G4String &material) { m_f_material_name = material; }
+    void SetFoilRotation(G4double angle) { m_foil_angle_y = angle; }
+    void SetWorldRadius(G4double radius) { m_w_radius = radius; }
+    void SetWorldMaterial(const G4String &material) { m_w_material_name = material; }
+    void SetAbsorberThickness(G4double thickness)
+    {
+        m_absorber_thickness = thickness;
+    }
+
+    void SetUseGDML(G4bool useGDML);
+    void SetGDMLFilename(const G4String &filename);
+
+    void PrintDetector() const;
+
+    G4double GetFoilThickness() const { return m_foil_z; }
+    G4double GetFoilSizeX() const { return m_foil_x; }
+    G4double GetFoilSizeY() const { return m_foil_y; }
+    G4ThreeVector GetFoilCenter() const { return m_foil_center; }
+    G4String GetFoilMaterial() const { return m_f_material_name; }
+    G4double GetFoilRotation() const { return m_foil_angle_y; }
+    G4double GetWorldRadius() const { return m_w_radius; }
+    G4String GetWorldMaterial() const { return m_w_material_name; }
+    G4double GetAbsorberThickness() const { return m_absorber_thickness; }
+
 private:
-    // Function to define the custom commands for the UI
-    void DefineCommands();
-    void PrintDetector();
-    G4VPhysicalVolume *ConstructWorldandTarget();
-    void ReinitializeGeometry();
+    // GDML configuration
+    G4bool m_UseGDML = false;
+    G4String m_GDMLFilename;
 
     // Some useful parameters to construct the world and the detectors
-    G4double w_radius = 100 * cm;
-    G4double foil_x = 5 * cm;
-    G4double foil_y = 5 * cm;
-    G4double foil_z = 1 * cm;
-    G4ThreeVector foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
-    G4double foil_angle_y = 0 * rad;
-    G4double absorber_thickness = 1 * mm;
-    G4String w_name = "World", f_name = "Foil", std_a_name = "Absorber";
-    G4String w_material_name = "G4_Galactic", f_material_name = "G4_W",
-             a_material_name = "G4_Galactic";
+    G4double m_w_radius = 100 * cm;
+    G4double m_foil_x = 5 * cm;
+    G4double m_foil_y = 5 * cm;
+    G4double m_foil_z = 1 * cm;
+    G4ThreeVector m_foil_center = G4ThreeVector(0 * mm, 0 * mm, 0 * mm);
+    G4double m_foil_angle_y = 0 * rad;
+    G4double m_absorber_thickness = 1 * mm;
+    G4String m_w_material_name = "G4_Galactic", m_f_material_name = "G4_W",
+             m_a_material_name = "G4_Galactic";
+
+    // Pointer to the geometry builder
+    std::unique_ptr<GRPGeometryBuilder> m_builder;
 
     // Pointer to the physical world
-    G4VPhysicalVolume *physWorld;
+    G4VPhysicalVolume *m_physWorld = nullptr;
 
     // Pointer to the customized analysis manager
     HistandNTupleManager *m_HistoandNtupleManager;
 
-    // Sensitive detectors
-    // Pointer to the logical absorber for sensitive detectors
-    G4LogicalVolume *m_LogicalAbsorber;
-    // Pointer to the standard sensitive detector
-    AbsorberSD *m_StandardAbsorber;
-
-    // Pointer to the generic messengers
-    std::shared_ptr<G4GenericMessenger> m_WMessenger;
-    std::shared_ptr<G4GenericMessenger> m_FMessenger;
-    std::shared_ptr<G4GenericMessenger> m_AMessenger;
-    std::shared_ptr<G4GenericMessenger> m_GenericMessenger;
+    // Pointer to the messenger
+    std::unique_ptr<GRPDetectorConstructionMessenger>
+        m_detector_construction_messenger;
 };

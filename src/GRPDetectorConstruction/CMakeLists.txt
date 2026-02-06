@@ -11,8 +11,10 @@
 
 add_library(GRPDetectorConstruction STATIC)
 target_sources(
-    GRPDetectorConstruction PRIVATE # cmake-format: sortable
-                                    GRPDetectorConstruction.cpp
+    GRPDetectorConstruction
+    PRIVATE # cmake-format: sortable
+            GRPDetectorConstruction.cpp GRPDetectorConstructionMessenger.cpp
+            GRPStandardGeometryBuilder.cpp
 )
 
 target_include_directories(

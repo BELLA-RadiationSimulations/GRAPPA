@@ -68,7 +68,7 @@ void GRPPhysicsListMessenger::SetNewValue(
             G4ExceptionDescription msg;
             msg << "No physics list is defined!";
             G4Exception(
-                "GRPPhysicsListMessenger::SetNewValue()",
+                "GRPPhysicsListMessenger::SetNewValue",
                 "GRAPPA::PHYSICS_LIST_UNDEFINED",
                 FatalException,
                 msg);
