@@ -84,8 +84,9 @@ void GRPEmExtraPhysics::ConstructProcess()
     }
 
     // Add muon capturing in atom
+    // Warning: maybe broken process, need to investigate
 
-    G4ProcessManager *pmanager = muonminus->GetProcessManager();
+    // G4ProcessManager *pmanager = muonminus->GetProcessManager();
 
     // pmanager->AddRestProcess(new G4MuonMinusAtomicCapture());
 }

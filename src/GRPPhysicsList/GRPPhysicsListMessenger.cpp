@@ -147,15 +147,14 @@ void GRPPhysicsListMessenger::SetNewValue(
                 << "\t(Muon production is increased artificially by a factor "
                 << muonxs << ")" << G4endl;
         }
-        G4cout << "- G4MuonicAtomDecayPhysics for decay of muonic atoms"
-               << G4endl;
+        // We keep this commented for now, need to investigate if list is broken
+        // G4cout << "- G4MuonicAtomDecayPhysics for decay of muonic atoms"
+        //        << G4endl;
         G4cout << "- G4DecayPhysics for decay of general ions" << G4endl;
         G4cout << "- G4HadronElasticPhysicsHP high precision elastic "
                   "scattering model"
                << G4endl;
-        G4cout << "- G4StoppingPhysics without muon capture (this would shadow "
-                  "the G4MuonicAtomDecayPhysics model)"
-               << G4endl;
+        G4cout << "- G4StoppingPhysics to model particle stopping, including muon capture"<< G4endl;
         G4cout << "- G4IonPhysics to model generic ions" << G4endl;
         G4cout << "- G4NeutronTrackingCut to enable tracking cuts on neutrons"
                << G4endl;

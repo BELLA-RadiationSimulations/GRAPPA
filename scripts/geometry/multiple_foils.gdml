@@ -6,7 +6,7 @@
     <!-- ============================================== -->
     <define>
         <!-- World parameters -->
-        <constant name="w_radius" value="200"/>
+        <constant name="w_radius" value="2000"/>
         <!-- mm -->
 
         <!-- Foil parameters -->
@@ -31,17 +31,50 @@
 
         <!-- Center position (used for absorber) -->
         <position name="center" x="0" y="0" z="0" unit="mm"/>
+
+        <variable name="i" value="0" />
+        <variable name="nfoils" value="4" />
+        <variable name="deltafoil" value="15"/>
     </define>
 
     <!-- ============================================== -->
     <!-- MATERIALS: Reference NIST materials           -->
     <!-- ============================================== -->
-
-    <!-- Or you can just reference NIST materials directly in the structure -->
-    <!-- by using the NIST name string if your Geant4 is configured for it -->
     <materials>
+        <!-- These reference NIST materials by name -->
+        <element Z="8" formula="O" name="Oxygen">
+            <atom value="16" />
+        </element>
+        <element Z="1" formula="H" name="Hydrogen">
+            <atom value="1" />
+        </element>
+        <element Z="14" formula="Si" name="Silicon">
+            <atom value="28.09" />
+        </element>
+        <element Z="6" formula="C" name="Carbon">
+            <atom value="12" />
+        </element>
+        <material name="SiliconDioxide" formula="SiO2">
+            <D value="2.65" unit="g/cm3" />
+            <composite n="2" ref="Oxygen" />
+            <composite n="1" ref="Silicon" />
+        </material>
+        <material name="Water" formula="H2O">
+            <D value="1.0" />
+            <composite n="2" ref="Hydrogen" />
+            <composite n="1" ref="Oxygen" />
+        </material>
+        <material name="Aerogel" formula="aerogel">
+            <D value="0.2" unit="g/cm3" />
+            <fraction n="0.625" ref="SiliconDioxide" />
+            <fraction n="0.374" ref="Water" />
+            <fraction n="0.001" ref="Carbon" />
+        </material>
 
+        <!-- Or you can just reference NIST materials directly in the structure -->
+        <!-- by using the NIST name string if your Geant4 is configured for it -->
     </materials>
+
     <!-- ============================================== -->
     <!-- SOLIDS: Geometry shapes                       -->
     <!-- ============================================== -->
@@ -50,7 +83,9 @@
         <sphere name="WorldSphere" rmin="0" rmax="w_radius" startphi="0" deltaphi="360" starttheta="0" deltatheta="180" aunit="deg" lunit="mm"/>
 
         <!-- Foil: box (note: GDML uses half-lengths) -->
-        <box name="FoilBox" x="foil_x" y="foil_y" z="foil_z" lunit="mm"/>
+        <loop for="i" from="1" to="nfoils" step="1">
+            <box name="FoilBox[i]" x="foil_x" y="foil_y" z="foil_z" lunit="mm"/>
+        </loop>
 
         <!-- Absorber: spherical shell at edge of world -->
         <sphere name="AbsorberSphere" rmin="w_radius - absorber_thickness" rmax="w_radius" startphi="0" deltaphi="360" starttheta="0" deltatheta="180" aunit="deg" lunit="mm"/>
@@ -61,11 +96,13 @@
     <!-- ============================================== -->
     <structure>
         <!-- Foil logical volume -->
-        <volume name="FoilLogical">
-            <materialref ref="G4_W"/>
-            <!-- Replace with your material_name -->
-            <solidref ref="FoilBox"/>
-        </volume>
+        <loop for="i" from="1" to="nfoils" step="1">
+            <volume name="FoilLogical[i]">
+                <materialref ref="Aerogel"/>
+                <!-- Replace with your material_name -->
+                <solidref ref="FoilBox[i]"/>
+            </volume>
+        </loop>
 
         <!-- Absorber logical volume -->
         <volume name="AbsorberLogical">
@@ -82,11 +119,13 @@
             <solidref ref="WorldSphere"/>
 
             <!-- Place the foil with rotation -->
-            <physvol name="Foil">
-                <volumeref ref="FoilLogical"/>
-                <positionref ref="foil_pos"/>
-                <rotationref ref="foil_rot"/>
-            </physvol>
+            <loop for="i" from="1" to="nfoils" step="1">
+                <physvol name="Foil[i]">
+                    <volumeref ref="FoilLogical[i]"/>
+                    <position name="foil_pos_[i]" x="0" y="0" z="deltafoil*i" unit="mm"/>
+                    <rotationref ref="foil_rot"/>
+                </physvol>
+            </loop>
 
             <!-- Place the absorber at center (no rotation) -->
             <physvol name="Absorber">
