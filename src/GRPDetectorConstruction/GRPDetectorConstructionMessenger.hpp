@@ -48,4 +48,6 @@ private:
 
     std::unique_ptr<G4UIcmdWithABool> m_use_gdml_cmd;
     std::unique_ptr<G4UIcmdWithAString> m_gdml_file_cmd;
+    std::unique_ptr<G4UIcmdWithABool> m_dump_obj;
+    std::unique_ptr<G4UIcmdWithAString> m_dump_directory;
 };

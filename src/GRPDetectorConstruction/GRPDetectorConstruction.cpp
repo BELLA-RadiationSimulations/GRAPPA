@@ -37,7 +37,12 @@ G4VPhysicalVolume *GRPDetectorConstruction::Construct()
     if (m_UseGDML)
     {
 #if defined(GRAPPA_USE_GDML)
-        m_builder = std::make_unique<GRPGDMLGeometryBuilder>(m_GDMLFilename);
+        auto gdmlbuilder =
+            std::make_unique<GRPGDMLGeometryBuilder>(m_GDMLFilename);
+        gdmlbuilder->SetDumpObjFiles(m_dumpObjFile);
+        gdmlbuilder->SetDumpObjDirectory(m_dumpObjDirectory);
+        m_builder = std::move(gdmlbuilder);
+
 #else
         G4ExceptionDescription msg;
 
@@ -132,7 +137,17 @@ void GRPDetectorConstruction::ConstructStandardSDandField()
 
 void GRPDetectorConstruction::ConstructGDMLSDandField()
 {
+    // First, set up the sensitive detectors
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
+    G4VSensitiveDetector *previousdetector =
+        SDMpointer->FindSensitiveDetector("FinalAbsorber");
+    if (!previousdetector)
+    {
+        AbsorberSD *standardAbsorber =
+            new AbsorberSD("FinalAbsorber", m_HistoandNtupleManager);
+
+        SDMpointer->AddNewDetector(standardAbsorber);
+    }
     // This contains a map of which volume has which sensitive detector.
     // The map is a pair (G4LogicalVolume *, G4String)
     SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
@@ -150,8 +165,9 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
         else
         {
             G4ExceptionDescription msg;
-            msg << "Sensitive detector " << mydet << "not found" << G4endl;
-            msg << "Skipping addition to volume" << myvol->GetName() << G4endl;
+            msg << "Sensitive detector " << SDitem->second << "not found"
+                << G4endl;
+            msg << "Skipping addition to volume " << myvol->GetName() << G4endl;
             G4Exception(
                 "GRPDetectorConstruction::ConstructGDMLSDandField",
                 "GRAPPA:SD_NOT_FOUND",
@@ -167,6 +183,12 @@ void GRPDetectorConstruction::PrintDetector() const
     {
         G4cout << "Geometry loaded from GDML file: " << m_GDMLFilename
                << G4endl;
+        if (m_dumpObjFile)
+        {
+            G4cout << "Upon construction, geometry .obj files will be dumped "
+                      "in the directory "
+                   << m_dumpObjDirectory << G4endl;
+        }
     }
     else
     {

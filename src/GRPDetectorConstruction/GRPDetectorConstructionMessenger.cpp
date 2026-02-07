@@ -103,6 +103,22 @@ GRPDetectorConstructionMessenger::GRPDetectorConstructionMessenger(
     m_gdml_file_cmd->SetGuidance("Path to GDML geometry file");
     m_gdml_file_cmd->SetParameterName("filename", false);
     m_gdml_file_cmd->AvailableForStates(G4State_PreInit);
+
+    m_dump_obj =
+        std::make_unique<G4UIcmdWithABool>("/geometry/dumpObjGeometry", this);
+    m_dump_obj->SetGuidance(
+        "Specify if the code needs to save a set of .obj files with the "
+        "geometry on construction. The directory where files are saved is "
+        "specified by geometry/objDumpDirectory");
+    m_dump_obj->SetParameterName("ifDump", false);
+    m_dump_obj->AvailableForStates(G4State_PreInit);
+
+    m_dump_directory = std::make_unique<G4UIcmdWithAString>(
+        "/geometry/objDumpDirectory", this);
+    m_dump_directory->SetGuidance(
+        "Path to directory where obj files with geometry are saved");
+    m_dump_directory->SetParameterName("directory", false);
+    m_dump_directory->AvailableForStates(G4State_PreInit);
 }
 
 GRPDetectorConstructionMessenger::~GRPDetectorConstructionMessenger() = default;
@@ -175,5 +191,14 @@ void GRPDetectorConstructionMessenger::SetNewValue(
     else if (command == m_gdml_file_cmd.get())
     {
         m_detectorconstruction->SetGDMLFilename(newValue);
+    }
+    else if (command == m_dump_obj.get())
+    {
+        const G4bool ifDump = m_dump_obj->GetNewBoolValue(newValue);
+        m_detectorconstruction->SetDumpObjFiles(ifDump);
+    }
+    else if (command == m_dump_directory.get())
+    {
+        m_detectorconstruction->SetDumpObjDirectory(newValue);
     }
 }

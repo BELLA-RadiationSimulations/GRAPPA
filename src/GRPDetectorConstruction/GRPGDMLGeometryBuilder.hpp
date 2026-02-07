@@ -22,10 +22,18 @@ public:
     explicit GRPGDMLGeometryBuilder(const G4String &filename);
 
     G4VPhysicalVolume *ConstructWorldandTarget() override;
-    virtual const SDMapping &ReturnSensitiveDetectors() const override;
+    virtual const SDMapping ReturnSensitiveDetectors() const override;
+
+    void SetDumpObjFiles(G4bool dumpobjfile) { m_dumpObjFiles = dumpobjfile; }
+    void SetDumpObjDirectory(G4String directory)
+    {
+        m_dumpObjDirectory = directory;
+    }
 
 private:
     G4String m_filename;
     std::unique_ptr<G4GDMLParser> m_parser;
+    G4bool m_dumpObjFiles = false;
+    G4String m_dumpObjDirectory;
 };
 #endif

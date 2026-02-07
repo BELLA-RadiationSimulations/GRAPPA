@@ -26,7 +26,7 @@ public:
     virtual ~GRPGeometryBuilder() = default;
     virtual G4VPhysicalVolume *ConstructWorldandTarget() = 0;
     virtual void ConstructSDandField() {};
-    virtual const SDMapping &ReturnSensitiveDetectors() const
+    virtual const SDMapping ReturnSensitiveDetectors() const
     {
         G4ExceptionDescription msg;
 
@@ -37,6 +37,7 @@ public:
             "GRAPPA::GDML_UNSUPPORTED",
             G4ExceptionSeverity::FatalException,
             msg);
+        return {};
     };
     virtual void
     SetHistandNtupleManager(HistandNTupleManager *histandntuplemanager)

@@ -54,6 +54,11 @@ public:
 
     void SetUseGDML(G4bool useGDML);
     void SetGDMLFilename(const G4String &filename);
+    void SetDumpObjFiles(G4bool dumpobjfile) { m_dumpObjFile = dumpobjfile; }
+    void SetDumpObjDirectory(G4String directory)
+    {
+        m_dumpObjDirectory = directory;
+    }
 
     void PrintDetector() const;
 
@@ -73,6 +78,8 @@ private:
     // GDML configuration
     G4bool m_UseGDML = false;
     G4String m_GDMLFilename;
+    G4bool m_dumpObjFile = false;
+    G4String m_dumpObjDirectory = "geometry";
 
     // Some useful parameters to construct the world and the detectors
     G4double m_w_radius = 100 * cm;
