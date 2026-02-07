@@ -154,7 +154,9 @@ void GRPPhysicsListMessenger::SetNewValue(
         G4cout << "- G4HadronElasticPhysicsHP high precision elastic "
                   "scattering model"
                << G4endl;
-        G4cout << "- G4StoppingPhysics to model particle stopping, including muon capture"<< G4endl;
+        G4cout << "- G4StoppingPhysics to model particle stopping, including "
+                  "muon capture"
+               << G4endl;
         G4cout << "- G4IonPhysics to model generic ions" << G4endl;
         G4cout << "- G4NeutronTrackingCut to enable tracking cuts on neutrons"
                << G4endl;

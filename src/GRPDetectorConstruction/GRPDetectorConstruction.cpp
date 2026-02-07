@@ -214,7 +214,7 @@ void GRPDetectorConstruction::PrintDetector() const
     }
 }
 
-void GRPDetectorConstruction::SetUseGDML(G4bool useGDML)
+void GRPDetectorConstruction::SetUseGDML([[maybe_unused]] G4bool useGDML)
 {
 #if defined(GRAPPA_USE_GDML)
     m_UseGDML = useGDML;
@@ -232,7 +232,8 @@ void GRPDetectorConstruction::SetUseGDML(G4bool useGDML)
 #endif
 }
 
-void GRPDetectorConstruction::SetGDMLFilename(const G4String &filename)
+void GRPDetectorConstruction::SetGDMLFilename(
+    [[maybe_unused]] const G4String &filename)
 {
 #if defined(GRAPPA_USE_GDML)
     m_GDMLFilename = filename;
