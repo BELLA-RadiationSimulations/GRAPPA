@@ -186,8 +186,15 @@ const BiasedMapping GRPGDMLGeometryBuilder::ReturnBiasedVolumes() const
                 if (vit->value != "true" && vit->value != "false")
                 {
                     G4ExceptionDescription msg;
-                    msg << "The auxiliary value passed to volume " << volume->GetName() << " for Biasing cannot be parsed as 'true' or 'false'" << G4endl;
-                    G4Exception("GRPGDMLGeometryBuilder::ReturnBiasedVolumes", "GRAPPA::INCORRECT_BOOLEAN", G4ExceptionSeverity::FatalException, msg);
+                    msg << "The auxiliary value passed to volume "
+                        << volume->GetName()
+                        << " for Biasing cannot be parsed as 'true' or 'false'"
+                        << G4endl;
+                    G4Exception(
+                        "GRPGDMLGeometryBuilder::ReturnBiasedVolumes",
+                        "GRAPPA::INCORRECT_BOOLEAN",
+                        G4ExceptionSeverity::FatalException,
+                        msg);
                 }
                 if (vit->value == "true")
                 {

@@ -11,8 +11,6 @@
 
 #pragma once
 
-#include <G4GenericBiasingPhysics.hh>
-#include <G4PhysListFactory.hh>
 #include <G4RunManagerFactory.hh>
 #include <G4Timer.hh>
 #include <G4UIExecutive.hh>

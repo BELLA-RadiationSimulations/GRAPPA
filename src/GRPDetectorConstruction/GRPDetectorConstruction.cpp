@@ -192,7 +192,7 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
     // The map is a pair (G4LogicalVolume *, G4bool)
     BiasedMapping biasMap = m_builder->ReturnBiasedVolumes();
     G4int biasedVolumeCounter = 0;
-    G4LogicalVolume * lastVolume = nullptr;
+    G4LogicalVolume *lastVolume = nullptr;
     for (BiasedMapping::const_iterator biasItem = biasMap.begin();
          biasItem != biasMap.end();
          biasItem++)
@@ -206,9 +206,9 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
     }
     // If no volume has biasing attached then we trigger a bug:
     // The biasing operator was defined and registered in the physics list and
-    // so it's going to be called for construction. This is true regardless if the
-    // biasing is deactivated via command line later. So, we just attach a biasing operator to
-    // one of the volumes to avoid bad references.
+    // so it's going to be called for construction. This is true regardless if
+    // the biasing is deactivated via command line later. So, we just attach a
+    // biasing operator to one of the volumes to avoid bad references.
     if (biasedVolumeCounter == 0)
     {
         splittingOperator->AttachTo(lastVolume);
