@@ -9,6 +9,8 @@
 //
 // License: BSD-3-Clause
 
+#include <filesystem>
+
 #include <G4Material.hh>
 #include <G4VisAttributes.hh>
 
@@ -161,4 +163,39 @@ const SDMapping GRPGDMLGeometryBuilder::ReturnSensitiveDetectors() const
     }
 
     return SDmap;
+}
+
+const BiasedMapping GRPGDMLGeometryBuilder::ReturnBiasedVolumes() const
+{
+    BiasedMapping BiasMap;
+    const G4GDMLAuxMapType *auxmap = m_parser->GetAuxMap();
+    // Volume iterator
+    for (G4GDMLAuxMapType::const_iterator iter = auxmap->begin();
+         iter != auxmap->end();
+         iter++)
+    {
+        // Auxiliary information iterator (could be multiple per volume)
+        G4LogicalVolume *volume = iter->first;
+        for (G4GDMLAuxListType::const_iterator vit = (*iter).second.begin();
+             vit != (*iter).second.end();
+             vit++)
+        {
+            const G4String auxtype = vit->type;
+            if (auxtype == "Biasing")
+            {
+                if (vit->value != "true" && vit->value != "false")
+                {
+                    G4ExceptionDescription msg;
+                    msg << "The auxiliary value passed to volume " << volume->GetName() << " for Biasing cannot be parsed as 'true' or 'false'" << G4endl;
+                    G4Exception("GRPGDMLGeometryBuilder::ReturnBiasedVolumes", "GRAPPA::INCORRECT_BOOLEAN", G4ExceptionSeverity::FatalException, msg);
+                }
+                if (vit->value == "true")
+                {
+                    BiasMap.insert({volume, true});
+                }
+            }
+        }
+    }
+
+    return BiasMap;
 }

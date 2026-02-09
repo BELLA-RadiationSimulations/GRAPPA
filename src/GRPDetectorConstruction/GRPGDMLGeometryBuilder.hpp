@@ -23,6 +23,7 @@ public:
 
     G4VPhysicalVolume *ConstructWorldandTarget() override;
     virtual const SDMapping ReturnSensitiveDetectors() const override;
+    virtual const BiasedMapping ReturnBiasedVolumes() const override;
 
     void SetDumpObjFiles(G4bool dumpobjfile) { m_dumpObjFiles = dumpobjfile; }
     void SetDumpObjDirectory(G4String directory)

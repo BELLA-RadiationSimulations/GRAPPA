@@ -175,6 +175,37 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
                 msg);
         }
     }
+
+    // ===================================================
+    // Now, set up biasing
+
+    // Attach biasing operator to the volumes.
+    // WARNING: with the current implementation of biasing, the new weight
+    // of the particle also takes into account the artificial cross section
+    // of the muon pair production. This means that we have to be careful
+    // to include all the regions where a significant number of muon pairs
+    // is generated, otherwise in some regions the number of muon generated,
+    // artificially increased, is not appropriately compensated by their weight
+    GRPSplittingOperator *splittingOperator = new GRPSplittingOperator();
+
+    // This contains a map of which volume is biased.
+    // The map is a pair (G4LogicalVolume *, G4bool)
+    BiasedMapping biasMap = m_builder->ReturnBiasedVolumes();
+    G4int biasedVolumeCounter = 0;
+    for (BiasedMapping::const_iterator biasItem = biasMap.begin();
+         biasItem != biasMap.end();
+         biasItem++)
+    {
+        if (biasItem->second)
+        {
+            splittingOperator->AttachTo(biasItem->first);
+            biasedVolumeCounter++;
+        }
+    }
+    if (biasedVolumeCounter == 0)
+    {
+        delete splittingOperator;
+    }
 }
 
 void GRPDetectorConstruction::PrintDetector() const

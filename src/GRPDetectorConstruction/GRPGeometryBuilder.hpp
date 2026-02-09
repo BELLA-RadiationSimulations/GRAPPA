@@ -19,6 +19,7 @@
 class HistandNTupleManager;
 
 typedef std::map<G4LogicalVolume *, G4String> SDMapping;
+typedef std::map<G4LogicalVolume *, G4bool> BiasedMapping;
 
 class GRPGeometryBuilder
 {
@@ -34,6 +35,19 @@ public:
         msg << "but GDML is not supported in this build." << G4endl;
         G4Exception(
             "GRPGeometryBuilder::ReturnSensitiveDetectors",
+            "GRAPPA::GDML_UNSUPPORTED",
+            G4ExceptionSeverity::FatalException,
+            msg);
+        return {};
+    };
+    virtual const BiasedMapping ReturnBiasedVolumes() const
+    {
+        G4ExceptionDescription msg;
+
+        msg << "Trying to return a biased mapping of a GDML geometry ";
+        msg << "but GDML is not supported in this build." << G4endl;
+        G4Exception(
+            "GRPGeometryBuilder::ReturnBiasedVolumes",
             "GRAPPA::GDML_UNSUPPORTED",
             G4ExceptionSeverity::FatalException,
             msg);
