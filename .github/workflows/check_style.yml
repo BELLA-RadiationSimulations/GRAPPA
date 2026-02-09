@@ -1,6 +1,13 @@
 name: Check code style
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - dev
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches:
+      - dev
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -10,7 +17,6 @@ jobs:
   check-style:
     name: Check code style with clang-format
     runs-on: ubuntu-latest
-    if: github.event.pull_request.draft == false
     steps:
       - uses: actions/checkout@v3
       - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
