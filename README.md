@@ -344,7 +344,10 @@ that sets the activation status of the `ntupleID` ntuple.
 ### Modification to the Physics Package
 
 From version `v0.5.0`, GRAPPA uses a custom physics list based on a combinaiton of default lists with the "basic" electromagnetic option (option 0).
-In addition to the default options, the custom physics list replaces the `G4StoppingPhysics` approach to muon stopping with the dedicated `G4MuonicAtomDecayPhysics`.
+In addition to the default options, the custom physics list replaces the `G4StoppingPhysics` approach to muon stopping with the dedicated `G4MuonMinusAtomicCapture`.
+
+:warning: At the moment, `G4MuonMinusAtomicCapture` is deactivated in GRAPPA in favor of the default `G4MuonMinusCapture` as in the last few runs we experienced some code crashes related to muonic atoms definitions.
+
 The latter includes a special description of muonic atoms and of the `mu-` capturing process.
 Moreover, the code already includes muon production via Bethe-Heitler.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
