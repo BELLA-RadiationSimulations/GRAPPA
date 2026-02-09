@@ -237,6 +237,9 @@ In addition to this, the user can choose to have GRAPPA generate an `.obj` file 
 ```
 where `directory` indicates the name of the directory where to store the list of files. This is a useful choice in case the user wants to visualize the object using external softwares (such as Paraview) or simply to load them into the Geant4 internal visualization system.
 
+> [!IMPORTANT]
+> The GDML geometry is only enabled if supported by the Geant4 installation. Make sure to compile Geant4 with `-DGEANT4_USE_GDML=ON`. If the GDML support is not available in Geant4, GRAPPA will default on the standard geometry definition that was used in the past.
+
 ### Analysis
 
 Analysis commands allow to personalize both the _in-situ_ histograms that GRAPPA generates at the end of the simulation and the output files for the raw data.
