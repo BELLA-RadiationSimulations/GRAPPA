@@ -65,6 +65,7 @@
             <materialref ref="G4_W"/>
             <!-- Replace with your material_name -->
             <solidref ref="FoilBox"/>
+            <auxiliary auxtype="Biasing" auxvalue="true"/>
         </volume>
 
         <!-- Absorber logical volume -->
@@ -80,6 +81,7 @@
             <materialref ref="G4_Galactic"/>
             <!-- Replace with your w_material_name -->
             <solidref ref="WorldSphere"/>
+            <auxiliary auxtype="Biasing" auxvalue="true"/>
 
             <!-- Place the foil with rotation -->
             <physvol name="Foil">

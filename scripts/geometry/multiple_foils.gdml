@@ -101,6 +101,7 @@
                 <materialref ref="Aerogel"/>
                 <!-- Replace with your material_name -->
                 <solidref ref="FoilBox[i]"/>
+                <auxiliary auxtype="Biasing" auxvalue="true"/>
             </volume>
         </loop>
 
@@ -117,12 +118,13 @@
             <materialref ref="G4_Galactic"/>
             <!-- Replace with your w_material_name -->
             <solidref ref="WorldSphere"/>
+            <auxiliary auxtype="Biasing" auxvalue="true"/>
 
             <!-- Place the foil with rotation -->
             <loop for="i" from="1" to="nfoils" step="1">
                 <physvol name="Foil[i]">
                     <volumeref ref="FoilLogical[i]"/>
-                    <position name="foil_pos_[i]" x="0" y="0" z="deltafoil*i" unit="mm"/>
+                    <position name="foil_pos_[i]" x="0" y="0" z="-deltafoil*(i-1)" unit="mm"/>
                     <rotationref ref="foil_rot"/>
                 </physvol>
             </loop>
