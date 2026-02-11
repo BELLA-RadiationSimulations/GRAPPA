@@ -23,6 +23,8 @@
 class GRPPhysicsList;
 class GRPEmPhysics;
 
+// Messenger for the GRPPhysicsList class.
+// Via this messenger we can personalize options for the physics class
 class GRPPhysicsListMessenger : public G4UImessenger
 {
 public:

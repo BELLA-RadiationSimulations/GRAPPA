@@ -21,6 +21,9 @@ class HistandNTupleManager;
 typedef std::map<G4LogicalVolume *, G4String> SDMapping;
 typedef std::map<G4LogicalVolume *, G4bool> BiasedMapping;
 
+// Base class that handles the two possible geometry builders.
+// This is an abstract class.
+// Possible derived classes are the Standard builder and the GDML builder
 class GRPGeometryBuilder
 {
 public:

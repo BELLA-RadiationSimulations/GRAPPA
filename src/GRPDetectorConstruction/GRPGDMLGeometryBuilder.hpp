@@ -16,6 +16,12 @@
 #if defined(GRAPPA_USE_GDML)
 #include <G4GDMLParser.hh>
 
+// GDML geometry builder.
+// This class implement a GDML-based parser to define a
+// geometry via input file. At the moment it supports specifying volume
+// biasing and sensitive detectors.
+// This class is only available when the Geant4 installation supports GDML
+// files.
 class GRPGDMLGeometryBuilder : public GRPGeometryBuilder
 {
 public:

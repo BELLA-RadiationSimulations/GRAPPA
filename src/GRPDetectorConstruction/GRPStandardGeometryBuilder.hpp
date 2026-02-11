@@ -15,6 +15,13 @@
 
 #include <GRPGeometryBuilder.hpp>
 
+// Standard geometry builder.
+// This class implement the geometry as it has been done since
+// GRAPPA's creation. It is hardcoded C++ volumes, with the possibility
+// of changing the elements properties.
+// This class is not deprecated, but it won't be updated with newer geometries
+// in the future and it will not include new detectors. All the new effort will
+// go into supporting the more general approach based on GDML input files
 class GRPStandardGeometryBuilder : public GRPGeometryBuilder
 {
 

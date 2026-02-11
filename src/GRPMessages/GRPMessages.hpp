@@ -15,13 +15,15 @@
 #define MAKE_STR(x) _MAKE_STR(x)
 #define _MAKE_STR(x) #x
 
-// Geant4
-#include <G4ios.hh>
-#include <G4SystemOfUnits.hh>
 #include <G4Timer.hh>
 
+// Prints the header message with the application name,
+// version, Geant4 linked version, etc...
 void PrintWelcomeMessage();
 
+// Prints the initial timer message
 void PrintStartMessage(const G4Timer &timer);
 
+// Prints the closing message for the application,
+// which includes the execution time.
 void PrintFinalMessage(const G4Timer &timer);

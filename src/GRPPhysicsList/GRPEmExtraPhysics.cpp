@@ -85,6 +85,7 @@ void GRPEmExtraPhysics::ConstructProcess()
 
     // Add muon capturing in atom
     // Warning: maybe broken process, need to investigate
+    // Sometimes it returns errors like a muonic particle being defined twice.
 
     // G4ProcessManager *pmanager = muonminus->GetProcessManager();
 
