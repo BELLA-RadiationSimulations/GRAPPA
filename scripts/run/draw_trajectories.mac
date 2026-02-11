@@ -32,4 +32,5 @@
 /vis/filtering/trajectories/particleFilter-0/add gamma
 
 # To superimpose all of the events from a given run:
+/vis/multithreading/actionOnEventQueueFull discard
 /vis/scene/endOfEventAction accumulate
