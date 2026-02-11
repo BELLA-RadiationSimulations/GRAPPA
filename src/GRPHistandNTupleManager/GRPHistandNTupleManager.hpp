@@ -212,7 +212,9 @@ private:
 // doesn't add anything that can't be handled by the relative classes.
 // In particular, Ntuple creation and handling should be directly tasked
 // to the Sensitive Detectors
-class [[deprecated("This class is redundant and prone to errors. Will be deprecated soon.")]] HistandNTupleManager
+class [[deprecated(
+    "This class is redundant and prone to errors. Will be deprecated "
+    "soon.")]] HistandNTupleManager
 {
 public:
     HistandNTupleManager();
