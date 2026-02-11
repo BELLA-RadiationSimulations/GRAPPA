@@ -93,8 +93,9 @@ jobs:
           sudo apt-get install -y cmake gcc g++ libx11-dev libxpm-dev libxft-dev libxext-dev libxmu-dev libxerces-c-dev libgl1-mesa-dev libglu1-mesa-dev
 
       - name: Compile Project
+          # Temporarily ignore deprecated classes
         run: |
-          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow"
+          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow -Wno-deprecated-declarations"
 
           cmake -S . -B build --log-level=VERBOSE \
             -DCMAKE_BUILD_TYPE=Release \

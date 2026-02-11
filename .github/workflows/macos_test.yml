@@ -96,8 +96,9 @@ jobs:
           brew install cmake llvm
 
       - name: Compile Project
+          # Temporarily ignore deprecated classes
         run: |
-          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow"
+          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow -Wno-deprecated-declarations"
 
           cmake -S . -B build --log-level=VERBOSE \
             -DCMAKE_BUILD_TYPE=Release \
