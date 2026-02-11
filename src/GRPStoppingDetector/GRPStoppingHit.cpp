@@ -21,13 +21,15 @@ GRPStoppingHit::GRPStoppingHit(
     G4float weight,
     G4int partID,
     G4float time,
-    G4int trackID)
+    G4int trackID,
+    const G4String &stoppingProcess)
     : m_Ekin(Ekin)
     , m_Position(std::move(position))
     , m_weight(weight)
     , m_PartID(partID)
     , m_Time(time)
     , m_TrackID(trackID)
+    , m_stoppingProcess(stoppingProcess)
 {}
 
 void GRPStoppingHit::Draw()

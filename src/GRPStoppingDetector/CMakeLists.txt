@@ -12,7 +12,7 @@
 add_library(GRPStoppingDetector STATIC)
 target_sources(
     GRPStoppingDetector PRIVATE # cmake-format: sortable
-                                GRPStoppingDetector.cpp GRPStoppingHit.cpp
+                                GRPStoppingDetector.cpp GRPStoppingDetectorMessenger.cpp GRPStoppingHit.cpp
 )
 
 target_include_directories(

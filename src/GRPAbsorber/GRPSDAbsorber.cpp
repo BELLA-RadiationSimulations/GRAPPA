@@ -51,11 +51,15 @@ void AbsorberSD::Initialize(G4HCofThisEvent *HCE)
 
     // Create hit collection
     m_HitCollection =
-        new GRPAbsorberHitCollection(this->GetName(), collectionName[0]);
+        new GRPAbsorberHitCollection(GetName(), collectionName[0]);
 
     // Add this collection in hce
 
-    m_hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+    if (m_hcID < 0)
+    {
+        m_hcID = G4SDManager::GetSDMpointer()->GetCollectionID(
+            GetName() + "/" + collectionName[0]);
+    }
     HCE->AddHitsCollection(m_hcID, m_HitCollection);
 }
 

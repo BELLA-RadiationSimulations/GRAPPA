@@ -34,7 +34,8 @@ public:
         G4float weigth,
         G4int partID,
         G4float time,
-        G4int trackID);
+        G4int trackID,
+        const G4String &stoppingProcess);
     ~GRPStoppingHit() override;
 
     GRPStoppingHit &operator=(const GRPStoppingHit &right) = default;
@@ -54,6 +55,7 @@ public:
     G4float GetX() const { return m_Position.x(); }
     G4float GetY() const { return m_Position.y(); }
     G4float GetZ() const { return m_Position.z(); }
+    G4String GetStoppingProcess() const { return m_stoppingProcess; }
 
     void SetEkin(G4float de) { m_Ekin = de; }
     void SetPartID(G4int partID) { m_PartID = partID; }
@@ -61,6 +63,10 @@ public:
     void SetPosition(G4ThreeVector position) { m_Position = position; }
     void SetTrackID(G4int trackID) { m_TrackID = trackID; }
     void SetWeight(G4float weigth) { m_weight = weigth; }
+    void SetStoppingProcess(const G4String &process)
+    {
+        m_stoppingProcess = process;
+    }
 
 private:
     G4float m_Ekin = 0.;
@@ -69,6 +75,7 @@ private:
     G4int m_PartID;
     G4float m_Time;
     G4int m_TrackID = -1;
+    G4String m_stoppingProcess;
 };
 
 using GRPStoppingHitCollection = G4THitsCollection<GRPStoppingHit>;

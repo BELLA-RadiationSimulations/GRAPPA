@@ -10,12 +10,13 @@
 // License: BSD-3-Clause
 
 #include <G4AnalysisManager.hh>
+#include <G4ParticleTable.hh>
 #include <G4Run.hh>
 #include <G4RunManager.hh>
+#include <G4VProcess.hh>
 
 #include <GRPStoppingDetector.hpp>
 
-// Primaries, electrons, positrons and photons absorbing layer
 GRPStoppingDetector::GRPStoppingDetector(const G4String &name)
     : G4VSensitiveDetector(name)
 {
@@ -46,8 +47,12 @@ GRPStoppingDetector::GRPStoppingDetector(const G4String &name)
     analysisManager->CreateNtupleFColumn("z");
     analysisManager->CreateNtupleFColumn("time");
     analysisManager->CreateNtupleFColumn("weight");
+    analysisManager->CreateNtupleSColumn("StoppingProcess");
     analysisManager->FinishNtuple(m_stoppedPositionNtupleNumber);
     analysisManager->SetNtupleActivation(m_stoppedPositionNtupleNumber, true);
+
+    m_stoppingDetectorMessenger =
+        std::make_unique<GRPStoppingDetectorMessenger>(this);
 }
 
 GRPStoppingDetector::~GRPStoppingDetector() = default;
@@ -57,11 +62,15 @@ void GRPStoppingDetector::Initialize(G4HCofThisEvent *HCE)
 
     // Create hit collection
     m_HitCollection =
-        new GRPStoppingHitCollection(this->GetName(), collectionName[0]);
+        new GRPStoppingHitCollection(GetName(), collectionName[0]);
 
     // Add this collection in hce
 
-    m_hcID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+    if (m_hcID < 0)
+    {
+        m_hcID = G4SDManager::GetSDMpointer()->GetCollectionID(
+            GetName() + "/" + collectionName[0]);
+    }
     HCE->AddHitsCollection(m_hcID, m_HitCollection);
 }
 
@@ -82,7 +91,28 @@ G4bool GRPStoppingDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *)
     // Want to know the kinetic energy before the particle stops
     const G4float ekin = static_cast<G4float>(preStepPoint->GetKineticEnergy());
     const G4ThreeVector position = postStepPoint->GetPosition();
+    const G4VProcess *stoppingProcess = postStepPoint->GetProcessDefinedStep();
+    G4String stoppingProcessName = "";
+    if (stoppingProcess)
+    {
+        stoppingProcessName = stoppingProcess->GetProcessName();
+    }
 
+    // First, check if particle and processes are within the accepted list
+    const G4bool particleInList = std::find(
+                                      m_sensitiveParticles.begin(),
+                                      m_sensitiveParticles.end(),
+                                      particle) != m_sensitiveParticles.end();
+    const G4bool processInList =
+        std::find(
+            m_sensitiveProcesses.begin(),
+            m_sensitiveProcesses.end(),
+            stoppingProcessName) != m_sensitiveProcesses.end();
+
+    if (!(particleInList && processInList))
+    {
+        return false;
+    }
     if (trackStatus == G4TrackStatus::fStopAndKill)
     {
         // Do not save the same hit twice, so check the trackID
@@ -101,7 +131,13 @@ G4bool GRPStoppingDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *)
         }
 
         GRPStoppingHit *aNewHit = new GRPStoppingHit(
-            ekin, position, weight, particleID, stoptime, trackID);
+            ekin,
+            position,
+            weight,
+            particleID,
+            stoptime,
+            trackID,
+            stoppingProcessName);
         m_HitCollection->insert(aNewHit);
         return true;
     }
@@ -136,6 +172,7 @@ void GRPStoppingDetector::EndOfEvent(G4HCofThisEvent *HCE)
                 const G4float x = thisHit->GetPosition().x();
                 const G4float y = thisHit->GetPosition().y();
                 const G4float z = thisHit->GetPosition().z();
+                const G4String stoppingProcess = thisHit->GetStoppingProcess();
 
                 analysisManager->FillNtupleIColumn(
                     m_stoppedPositionNtupleNumber, 0, particleID);
@@ -150,9 +187,34 @@ void GRPStoppingDetector::EndOfEvent(G4HCofThisEvent *HCE)
                 analysisManager->FillNtupleFColumn(
                     m_stoppedPositionNtupleNumber, 5, time);
                 analysisManager->FillNtupleFColumn(
-                    m_stoppedPositionNtupleNumber, 5, weight);
+                    m_stoppedPositionNtupleNumber, 6, weight);
+                analysisManager->FillNtupleSColumn(
+                    m_stoppedPositionNtupleNumber, 7, stoppingProcess);
                 analysisManager->AddNtupleRow(m_stoppedPositionNtupleNumber);
             }
         }
     }
+}
+
+void GRPStoppingDetector::SetSensitiveParticles(
+    std::vector<G4String> sensitiveParticles)
+{
+    G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
+
+    m_sensitiveParticles.clear();
+    for (const G4String &particleName : sensitiveParticles)
+    {
+        G4ParticleDefinition *aParticle =
+            particleTable->FindParticle(particleName);
+        if (aParticle)
+        {
+            m_sensitiveParticles.push_back(aParticle);
+        }
+    }
+}
+
+void GRPStoppingDetector::SetSensitiveProcesses(
+    std::vector<G4String> sensitiveProcesses)
+{
+    m_sensitiveProcesses = sensitiveProcesses;
 }

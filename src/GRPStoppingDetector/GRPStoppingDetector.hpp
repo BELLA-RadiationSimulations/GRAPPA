@@ -11,9 +11,13 @@
 
 #pragma once
 
-#include <G4VSensitiveDetector.hh>
-#include <G4SDManager.hh>
+#include <memory>
 
+#include <G4ParticleDefinition.hh>
+#include <G4SDManager.hh>
+#include <G4VSensitiveDetector.hh>
+
+#include <GRPStoppingDetectorMessenger.hpp>
 #include <GRPStoppingHit.hpp>
 
 class GRPStoppingDetector : public G4VSensitiveDetector
@@ -26,8 +30,22 @@ public:
     G4bool ProcessHits(G4Step *aStep, G4TouchableHistory *ROhist) override;
     void EndOfEvent(G4HCofThisEvent *HCE) override final;
 
+    std::vector<G4ParticleDefinition *> GetSensitiveParticles() const
+    {
+        return m_sensitiveParticles;
+    }
+    std::vector<G4String> GetSensitiveProcesses() const
+    {
+        return m_sensitiveProcesses;
+    }
+    void SetSensitiveParticles(std::vector<G4String> sensitiveParticles);
+    void SetSensitiveProcesses(std::vector<G4String> sensitiveProcesses);
+
 private:
-    G4int m_hcID = 0;
+    G4int m_hcID = -1;
     G4int m_stoppedPositionNtupleNumber = 0;
     GRPStoppingHitCollection *m_HitCollection = nullptr;
+    std::vector<G4ParticleDefinition *> m_sensitiveParticles;
+    std::vector<G4String> m_sensitiveProcesses;
+    std::unique_ptr<GRPStoppingDetectorMessenger> m_stoppingDetectorMessenger;
 };

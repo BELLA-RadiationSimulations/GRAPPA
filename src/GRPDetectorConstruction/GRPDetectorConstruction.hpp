@@ -68,12 +68,6 @@ private:
     // Pointer to the customized analysis manager
     HistandNTupleManager *m_HistoandNtupleManager;
 
-    // Sensitive detectors
-    // Pointer to the logical absorber for sensitive detectors
-    G4LogicalVolume *m_LogicalAbsorber;
-    // Pointer to the standard sensitive detector
-    AbsorberSD *m_StandardAbsorber;
-
     // Pointer to the generic messengers
     std::shared_ptr<G4GenericMessenger> m_WMessenger;
     std::shared_ptr<G4GenericMessenger> m_FMessenger;
