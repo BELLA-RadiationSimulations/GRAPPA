@@ -19,20 +19,22 @@ GRPStoppingDetectorMessenger::GRPStoppingDetectorMessenger(
     : m_stoppingDetector(stoppingDetector)
 {
 
+    const G4String detName = m_stoppingDetector->GetName();
+    const G4String basePath = "/GRAPPA/stoppingDetector/" + detName + "/";
     m_stoppingDetectorDirectory =
-        std::make_unique<G4UIdirectory>("/GRAPPA/stoppingDetector/");
+        std::make_unique<G4UIdirectory>(basePath.c_str());
     m_stoppingDetectorDirectory->SetGuidance(
         "Personalize the GRAPPA stopping detector");
 
     m_stoppingDetectorParticleList = std::make_unique<G4UIcmdWithAString>(
-        "/GRAPPA/stoppingDetector/setParticleList", this);
+        (basePath + "setParticleList").c_str(), this);
     m_stoppingDetectorParticleList->SetGuidance(
         "Set the list of particles to which the detector is sensitive");
     m_stoppingDetectorParticleList->AvailableForStates(
         G4State_Init, G4State_Idle, G4State_GeomClosed);
 
     m_stoppingDetectorProcessList = std::make_unique<G4UIcmdWithAString>(
-        "/GRAPPA/stoppingDetector/setProcessList", this);
+        (basePath + "setProcessList").c_str(), this);
     m_stoppingDetectorProcessList->SetGuidance(
         "Set the list of processes recorded by the detector");
     m_stoppingDetectorProcessList->AvailableForStates(
@@ -40,7 +42,7 @@ GRPStoppingDetectorMessenger::GRPStoppingDetectorMessenger(
 
     m_stoppingDetectorListSensitiveParticles =
         std::make_unique<G4UIcmdWithoutParameter>(
-            "/GRAPPA/stoppingDetector/getParticleList", this);
+            (basePath + "getParticleList").c_str(), this);
     m_stoppingDetectorListSensitiveParticles->SetGuidance(
         "List of particles to which the detector is sensitive");
     m_stoppingDetectorListSensitiveParticles->AvailableForStates(
@@ -49,7 +51,7 @@ GRPStoppingDetectorMessenger::GRPStoppingDetectorMessenger(
 
     m_stoppingDetectorListSensitiveProcesses =
         std::make_unique<G4UIcmdWithoutParameter>(
-            "/GRAPPA/stoppingDetector/getProcessList", this);
+            (basePath + "getProcessList").c_str(), this);
     m_stoppingDetectorListSensitiveProcesses->SetGuidance(
         "List of processes recorded by the detector");
     m_stoppingDetectorListSensitiveProcesses->AvailableForStates(
