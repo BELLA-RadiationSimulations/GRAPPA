@@ -139,41 +139,31 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
 {
     // First, set up the sensitive detectors
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
-    G4VSensitiveDetector *previousdetector =
-        SDMpointer->FindSensitiveDetector("FinalAbsorber");
-    if (!previousdetector)
-    {
-        AbsorberSD *standardAbsorber =
-            new AbsorberSD("FinalAbsorber", m_HistoandNtupleManager);
 
-        SDMpointer->AddNewDetector(standardAbsorber);
-    }
     // This contains a map of which volume has which sensitive detector.
-    // The map is a pair (G4LogicalVolume *, G4String)
+    // The map is a pair (G4LogicalVolume *, std::pair<G4String, G4String>)
     SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
-    for (SDMapping::const_iterator SDitem = SDmap.begin();
-         SDitem != SDmap.end();
-         SDitem++)
+
+    for (auto const &[logVol, sdConfig] : SDmap)
     {
-        G4VSensitiveDetector *mydet =
-            SDMpointer->FindSensitiveDetector(SDitem->second);
-        G4LogicalVolume *myvol = SDitem->first;
-        if (mydet)
+        // sdConfig.first = SD type (e.g., "FinalAbsorber")
+        // sdConfig.second = instance name (e.g., "MyDetector_1")
+
+        const G4String sdName = sdConfig.second;
+        G4VSensitiveDetector *existing =
+            SDMpointer->FindSensitiveDetector(sdName, false);
+
+        if (!existing)
         {
-            myvol->SetSensitiveDetector(mydet);
+            if (sdConfig.first == "FinalAbsorber")
+            {
+                auto *sd = new AbsorberSD(sdName, m_HistoandNtupleManager);
+                SDMpointer->AddNewDetector(sd);
+                existing = sd;
+            }
         }
-        else
-        {
-            G4ExceptionDescription msg;
-            msg << "Sensitive detector " << SDitem->second << "not found"
-                << G4endl;
-            msg << "Skipping addition to volume " << myvol->GetName() << G4endl;
-            G4Exception(
-                "GRPDetectorConstruction::ConstructGDMLSDandField",
-                "GRAPPA:SD_NOT_FOUND",
-                G4ExceptionSeverity::JustWarning,
-                msg);
-        }
+
+        logVol->SetSensitiveDetector(existing);
     }
 
     // ===================================================

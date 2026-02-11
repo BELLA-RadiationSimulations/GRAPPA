@@ -11,6 +11,8 @@
 
 #pragma once
 
+#include <set>
+
 #include <GRPGeometryBuilder.hpp>
 
 #if defined(GRAPPA_USE_GDML)
@@ -42,5 +44,6 @@ private:
     std::unique_ptr<G4GDMLParser> m_parser;
     G4bool m_dumpObjFiles = false;
     G4String m_dumpObjDirectory;
+    std::set<G4String> m_supportedSensitiveDetectors;
 };
 #endif

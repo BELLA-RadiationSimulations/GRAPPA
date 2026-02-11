@@ -123,6 +123,8 @@ GRPGDMLGeometryBuilder::GRPGDMLGeometryBuilder(const G4String &filename)
 {
     m_parser = std::make_unique<G4GDMLParser>();
     m_parser->Read(m_filename);
+
+    m_supportedSensitiveDetectors.insert("FinalAbsorber");
 }
 
 G4VPhysicalVolume *GRPGDMLGeometryBuilder::ConstructWorldandTarget()
@@ -143,21 +145,30 @@ const SDMapping GRPGDMLGeometryBuilder::ReturnSensitiveDetectors() const
 {
     SDMapping SDmap;
     const G4GDMLAuxMapType *auxmap = m_parser->GetAuxMap();
-    // Volume iterator
+
+    // With this loop we check the auxiliary map of the GDML file
     for (G4GDMLAuxMapType::const_iterator iter = auxmap->begin();
          iter != auxmap->end();
          iter++)
     {
-        // Auxiliary information iterator (could be multiple per volume)
+        // For a given logical volume we check the auxiliary variables
+        // We assume it's the definition of a sensitive detector if
+        // the "type" is one of the types supported as a sensitive detector.
+        // The second variable is then the detector name
         G4LogicalVolume *volume = iter->first;
-        for (G4GDMLAuxListType::const_iterator vit = (*iter).second.begin();
-             vit != (*iter).second.end();
+        for (G4GDMLAuxListType::const_iterator vit = iter->second.begin();
+             vit != iter->second.end();
              vit++)
         {
             const G4String auxtype = vit->type;
-            if (auxtype == "SensitiveDetector")
+            const G4String auxvalue = vit->value;
+
+            //
+            if (m_supportedSensitiveDetectors.count(auxtype))
             {
-                SDmap.insert({volume, vit->value});
+                SDmap.insert({
+                    volume, {auxtype, auxvalue}
+                });
             }
         }
     }

@@ -18,8 +18,8 @@
 
 class HistandNTupleManager;
 
-typedef std::map<G4LogicalVolume *, G4String> SDMapping;
-typedef std::map<G4LogicalVolume *, G4bool> BiasedMapping;
+using SDMapping = std::map<G4LogicalVolume *, std::pair<G4String, G4String>>;
+using BiasedMapping = std::map<G4LogicalVolume *, G4bool>;
 
 // Base class that handles the two possible geometry builders.
 // This is an abstract class.
