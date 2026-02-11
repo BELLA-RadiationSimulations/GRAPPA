@@ -45,6 +45,7 @@ GRPStoppingDetectorMessenger::GRPStoppingDetectorMessenger(
         "List of particles to which the detector is sensitive");
     m_stoppingDetectorListSensitiveParticles->AvailableForStates(
         G4State_Init, G4State_Idle, G4State_GeomClosed);
+    m_stoppingDetectorListSensitiveParticles->SetToBeBroadcasted(false);
 
     m_stoppingDetectorListSensitiveProcesses =
         std::make_unique<G4UIcmdWithoutParameter>(
@@ -53,6 +54,7 @@ GRPStoppingDetectorMessenger::GRPStoppingDetectorMessenger(
         "List of processes recorded by the detector");
     m_stoppingDetectorListSensitiveProcesses->AvailableForStates(
         G4State_Init, G4State_Idle, G4State_GeomClosed);
+    m_stoppingDetectorListSensitiveProcesses->SetToBeBroadcasted(false);
 }
 
 GRPStoppingDetectorMessenger::~GRPStoppingDetectorMessenger() = default;
