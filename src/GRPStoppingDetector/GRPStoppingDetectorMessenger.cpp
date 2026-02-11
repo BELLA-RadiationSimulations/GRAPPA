@@ -98,19 +98,26 @@ void GRPStoppingDetectorMessenger::SetNewValue(
     }
     if (command == m_stoppingDetectorListSensitiveParticles.get())
     {
-        std::vector<G4ParticleDefinition *> particleVector =
-            m_stoppingDetector->GetSensitiveParticles();
         G4cout << "List of particles for detector "
                << m_stoppingDetector->GetName() << ": ";
-        for (G4ParticleDefinition *aParticle : particleVector)
+        if (m_stoppingDetector->IsSensitiveToAllParticles())
         {
-            G4cout << aParticle->GetParticleName() << " ";
+            G4cout << "all" << " ";
+        }
+        else
+        {
+            const std::vector<G4ParticleDefinition *> particleVector =
+                m_stoppingDetector->GetSensitiveParticles();
+            for (G4ParticleDefinition *aParticle : particleVector)
+            {
+                G4cout << aParticle->GetParticleName() << " ";
+            }
         }
         G4cout << G4endl;
     }
     if (command == m_stoppingDetectorListSensitiveProcesses.get())
     {
-        std::vector<G4String> processVector =
+        const std::vector<G4String> processVector =
             m_stoppingDetector->GetSensitiveProcesses();
         G4cout << "List of processes for detector "
                << m_stoppingDetector->GetName() << ": ";

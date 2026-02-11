@@ -11,8 +11,6 @@
 
 #include <G4AnalysisManager.hh>
 #include <G4ParticleTable.hh>
-#include <G4Run.hh>
-#include <G4RunManager.hh>
 #include <G4VProcess.hh>
 
 #include <GRPStoppingDetector.hpp>
@@ -23,7 +21,7 @@ GRPStoppingDetector::GRPStoppingDetector(const G4String &name)
     //=============================================
     // This script extracts the name of the detector
     // just in case it is defined as a "path"
-    size_t pos = name.find_last_of("/");
+    const size_t pos = name.find_last_of("/");
     G4String finalname;
     if (pos != G4String::npos)
     {
@@ -84,7 +82,7 @@ G4bool GRPStoppingDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *)
     const G4int particleID = particle->GetPDGEncoding();
     const G4float weight = static_cast<G4float>(aTrack->GetWeight());
     const G4float stoptime = static_cast<G4float>(aTrack->GetGlobalTime());
-    G4TrackStatus trackStatus = aTrack->GetTrackStatus();
+    const G4TrackStatus trackStatus = aTrack->GetTrackStatus();
 
     const G4StepPoint *preStepPoint = aStep->GetPreStepPoint();
     const G4StepPoint *postStepPoint = aStep->GetPostStepPoint();
@@ -99,15 +97,20 @@ G4bool GRPStoppingDetector::ProcessHits(G4Step *aStep, G4TouchableHistory *)
     }
 
     // First, check if particle and processes are within the accepted list
-    const G4bool particleInList = std::find(
-                                      m_sensitiveParticles.begin(),
-                                      m_sensitiveParticles.end(),
-                                      particle) != m_sensitiveParticles.end();
-    const G4bool processInList =
+    G4bool particleInList = std::find(
+                                m_sensitiveParticles.begin(),
+                                m_sensitiveParticles.end(),
+                                particle) != m_sensitiveParticles.end();
+    G4bool processInList =
         std::find(
             m_sensitiveProcesses.begin(),
             m_sensitiveProcesses.end(),
             stoppingProcessName) != m_sensitiveProcesses.end();
+
+    // If the detector is set to be sensitive to all processes or particles,
+    // then process anyway
+    particleInList = particleInList || m_sensitiveAllParticles;
+    processInList = processInList || m_sensitiveAllProcesses;
 
     if (!(particleInList && processInList))
     {
@@ -152,9 +155,6 @@ void GRPStoppingDetector::EndOfEvent(G4HCofThisEvent *HCE)
 
     GRPStoppingHitCollection *aHC =
         static_cast<GRPStoppingHitCollection *>(HCE->GetHC(m_hcID));
-
-    const G4int runID =
-        G4RunManager::GetRunManager()->GetCurrentRun()->GetRunID();
 
     // Second round: accumulate results
     // And write on the time-Energy ntuple
@@ -202,14 +202,23 @@ void GRPStoppingDetector::SetSensitiveParticles(
     G4ParticleTable *particleTable = G4ParticleTable::GetParticleTable();
 
     m_sensitiveParticles.clear();
-    for (const G4String &particleName : sensitiveParticles)
+
+    if (sensitiveParticles.size() == 1 && sensitiveParticles[0] == "all")
     {
-        G4ParticleDefinition *aParticle =
-            particleTable->FindParticle(particleName);
-        if (aParticle)
+        m_sensitiveAllParticles = true;
+    }
+    else
+    {
+        for (const G4String &particleName : sensitiveParticles)
         {
-            m_sensitiveParticles.push_back(aParticle);
+            G4ParticleDefinition *aParticle =
+                particleTable->FindParticle(particleName);
+            if (aParticle)
+            {
+                m_sensitiveParticles.push_back(aParticle);
+            }
         }
+        m_sensitiveAllParticles = false;
     }
 }
 
@@ -217,4 +226,6 @@ void GRPStoppingDetector::SetSensitiveProcesses(
     std::vector<G4String> sensitiveProcesses)
 {
     m_sensitiveProcesses = sensitiveProcesses;
+    m_sensitiveAllProcesses =
+        (m_sensitiveProcesses.size() == 1 && m_sensitiveProcesses[0] == "all");
 }
