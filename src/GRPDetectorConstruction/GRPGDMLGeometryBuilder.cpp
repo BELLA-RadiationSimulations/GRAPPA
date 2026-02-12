@@ -30,10 +30,10 @@ void CollectVolumes(
     std::vector<VolumeInfo> &volumes,
     bool skipWorld = true)
 {
-    G4RotationMatrix rot = pv->GetObjectRotationValue();
-    G4ThreeVector trans = pv->GetTranslation();
-    G4AffineTransform local(rot, trans);
-    G4AffineTransform global = parentTransform * local;
+    const G4RotationMatrix rot = pv->GetObjectRotationValue();
+    const G4ThreeVector trans = pv->GetTranslation();
+    const G4AffineTransform local(rot, trans);
+    const G4AffineTransform global = parentTransform * local;
 
     G4LogicalVolume *lv = pv->GetLogicalVolume();
 
@@ -59,23 +59,23 @@ void WriteOBJ(const VolumeInfo &vol, const std::string &directory)
     if (!polyhedron)
         return;
 
-    std::string filename = directory + "/" + vol.name + ".obj";
+    const std::string filename = directory + "/" + vol.name + ".obj";
     std::ofstream out(filename);
     out << "# Volume: " << vol.name << "\n";
     out << "# Material: " << vol.materialName << "\n";
     out << "o " << vol.name << "\n";
 
-    int nVerts = polyhedron->GetNoVertices();
-    for (int i = 1; i <= nVerts; ++i)
+    const G4int nVerts = polyhedron->GetNoVertices();
+    for (size_t i = 1; i <= nVerts; ++i)
     {
-        G4Point3D v = polyhedron->GetVertex(i);
+        const G4Point3D v = polyhedron->GetVertex(i);
         G4ThreeVector vt(v.x(), v.y(), v.z());
         vt = vol.transform.NetRotation() * vt + vol.transform.NetTranslation();
         out << "v " << vt.x() << " " << vt.y() << " " << vt.z() << "\n";
     }
 
-    int nFacets = polyhedron->GetNoFacets();
-    for (int f = 1; f <= nFacets; ++f)
+    const G4int nFacets = polyhedron->GetNoFacets();
+    for (size_t f = 1; f <= nFacets; ++f)
     {
         G4int n;
         G4int nodes[4];
@@ -83,7 +83,7 @@ void WriteOBJ(const VolumeInfo &vol, const std::string &directory)
         polyhedron->GetFacet(f, n, nodes, edgeFlags);
 
         out << "f";
-        for (int j = 0; j < n; ++j)
+        for (size_t j = 0; j < n; ++j)
         {
             out << " " << std::abs(nodes[j]);
         }
@@ -98,7 +98,7 @@ void ExportAllVolumes(G4VPhysicalVolume *world, const std::string &directory)
     std::filesystem::create_directories(directory);
 
     std::vector<VolumeInfo> volumes;
-    G4AffineTransform identity;
+    const G4AffineTransform identity;
     CollectVolumes(world, identity, volumes, true);
 
     // Write individual files
@@ -148,24 +148,20 @@ const SDMapping GRPGDMLGeometryBuilder::ReturnSensitiveDetectors() const
     const G4GDMLAuxMapType *auxmap = m_parser->GetAuxMap();
 
     // With this loop we check the auxiliary map of the GDML file
-    for (G4GDMLAuxMapType::const_iterator iter = auxmap->begin();
-         iter != auxmap->end();
-         iter++)
+    for (const std::pair<G4LogicalVolume *const, G4GDMLAuxListType> &iter: *auxmap)
     {
         // For a given logical volume we check the auxiliary variables
         // We assume it's the definition of a sensitive detector if
         // the "type" is one of the types supported as a sensitive detector.
         // The second variable is then the detector name
-        G4LogicalVolume *volume = iter->first;
-        for (G4GDMLAuxListType::const_iterator vit = iter->second.begin();
-             vit != iter->second.end();
-             vit++)
+        G4LogicalVolume *volume = iter.first;
+        for (const G4GDMLAuxStructType &vit: iter.second)
         {
-            const G4String auxtype = vit->type;
-            const G4String auxvalue = vit->value;
+            const G4String auxtype = vit.type;
+            const G4String auxvalue = vit.value;
 
             //
-            if (m_supportedSensitiveDetectors.count(auxtype))
+            if (m_supportedSensitiveDetectors.contains(auxtype))
             {
                 SDmap.insert({
                     volume, {auxtype, auxvalue}
@@ -182,20 +178,16 @@ const BiasedMapping GRPGDMLGeometryBuilder::ReturnBiasedVolumes() const
     BiasedMapping BiasMap;
     const G4GDMLAuxMapType *auxmap = m_parser->GetAuxMap();
     // Volume iterator
-    for (G4GDMLAuxMapType::const_iterator iter = auxmap->begin();
-         iter != auxmap->end();
-         iter++)
+    for (const std::pair<G4LogicalVolume *const, G4GDMLAuxListType> &iter: *auxmap)
     {
         // Auxiliary information iterator (could be multiple per volume)
-        G4LogicalVolume *volume = iter->first;
-        for (G4GDMLAuxListType::const_iterator vit = (*iter).second.begin();
-             vit != (*iter).second.end();
-             vit++)
+        G4LogicalVolume *volume = iter.first;
+        for (const G4GDMLAuxStructType &vit: iter.second)
         {
-            const G4String auxtype = vit->type;
+            const G4String auxtype = vit.type;
             if (auxtype == "Biasing")
             {
-                if (vit->value != "true" && vit->value != "false")
+                if (vit.value != "true" && vit.value != "false")
                 {
                     G4ExceptionDescription msg;
                     msg << "The auxiliary value passed to volume "
@@ -208,7 +200,7 @@ const BiasedMapping GRPGDMLGeometryBuilder::ReturnBiasedVolumes() const
                         G4ExceptionSeverity::FatalException,
                         msg);
                 }
-                if (vit->value == "true")
+                if (vit.value == "true")
                 {
                     BiasMap.insert({volume, true});
                 }

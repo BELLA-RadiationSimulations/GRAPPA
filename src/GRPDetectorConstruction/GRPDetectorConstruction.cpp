@@ -145,7 +145,7 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
 
     // This contains a map of which volume has which sensitive detector.
     // The map is a pair (G4LogicalVolume *, std::pair<G4String, G4String>)
-    SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
+    const SDMapping SDmap = m_builder->ReturnSensitiveDetectors();
 
     for (auto const &[logVol, sdConfig] : SDmap)
     {
