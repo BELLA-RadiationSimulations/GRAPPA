@@ -17,6 +17,7 @@
 #include <GRPSDAbsorber.hpp>
 #include <GRPSplittingOperator.hpp>
 #include <GRPStandardGeometryBuilder.hpp>
+#include <GRPStoppingDetector.hpp>
 
 #if defined(GRAPPA_USE_GDML)
 #include <GRPGDMLGeometryBuilder.hpp>
@@ -160,6 +161,12 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
             if (sdConfig.first == "FinalAbsorber")
             {
                 auto *sd = new AbsorberSD(sdName, m_HistoandNtupleManager);
+                SDMpointer->AddNewDetector(sd);
+                existing = sd;
+            }
+            if (sdConfig.first == "StoppingDetector")
+            {
+                auto *sd = new GRPStoppingDetector(sdName);
                 SDMpointer->AddNewDetector(sd);
                 existing = sd;
             }

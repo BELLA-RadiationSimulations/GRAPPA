@@ -125,6 +125,7 @@ GRPGDMLGeometryBuilder::GRPGDMLGeometryBuilder(const G4String &filename)
     m_parser->Read(m_filename);
 
     m_supportedSensitiveDetectors.insert("FinalAbsorber");
+    m_supportedSensitiveDetectors.insert("StoppingDetector");
 }
 
 G4VPhysicalVolume *GRPGDMLGeometryBuilder::ConstructWorldandTarget()
