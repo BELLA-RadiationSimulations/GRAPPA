@@ -43,5 +43,8 @@ target_link_libraries(GRAPPA PRIVATE GRPPhysicsList)
 add_subdirectory(GRPSignalHandler)
 target_link_libraries(GRAPPA PRIVATE GRPSignalHandler)
 
+add_subdirectory(GRPStoppingDetector)
+target_link_libraries(GRAPPA PRIVATE GRPStoppingDetector)
+
 add_subdirectory(GRPUtils)
 target_link_libraries(GRAPPA PRIVATE GRPUtils)

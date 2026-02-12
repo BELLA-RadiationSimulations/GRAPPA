@@ -13,6 +13,8 @@
 
 #include <GRPDetectorConstruction.hpp>
 
+#include <GRPStoppingDetector.hpp>
+
 GRPDetectorConstruction::GRPDetectorConstruction(
     HistandNTupleManager *myanalysismanager)
 {
@@ -135,7 +137,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
         180 * deg); // its theta initial and final angles
 
     // Creating sensitive detector logical volume (with the shape of a sphere)
-    m_LogicalAbsorber = new G4LogicalVolume(
+    G4LogicalVolume *logicalAbsorber = new G4LogicalVolume(
         StdsolidAbsorber, // its solid
         a_material, // its material
         std_a_name); // its name
@@ -145,7 +147,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
     new G4PVPlacement(
         nullptr, // no rotation
         G4ThreeVector(), // at (0,0,0)
-        m_LogicalAbsorber, // its logical volume
+        logicalAbsorber, // its logical volume
         std_a_name, // its name
         logicWorld, // its mother  volume
         false, // no boolean operation
@@ -169,7 +171,7 @@ G4VPhysicalVolume *GRPDetectorConstruction::ConstructWorldandTarget()
 
     logicWorld->SetVisAttributes(worldVisAtt);
     logicfoil->SetVisAttributes(targetVisAtt);
-    m_LogicalAbsorber->SetVisAttributes(absorberVisAtt);
+    logicalAbsorber->SetVisAttributes(absorberVisAtt);
 
     // Return root volume
     return physWorld;
@@ -182,11 +184,20 @@ void GRPDetectorConstruction::ConstructSDandField()
 
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
-    m_StandardAbsorber = new AbsorberSD(
+    AbsorberSD *standardAbsorber = new AbsorberSD(
         "/FinalAbsorber/StandardAbsorber", m_HistoandNtupleManager);
+    GRPStoppingDetector *stoppingDetector =
+        new GRPStoppingDetector("StoppingDetector");
 
-    SDMpointer->AddNewDetector(m_StandardAbsorber);
-    m_LogicalAbsorber->SetSensitiveDetector(m_StandardAbsorber);
+    G4LogicalVolume *logicalFoil =
+        G4LogicalVolumeStore::GetInstance()->GetVolume(f_name);
+    G4LogicalVolume *logicalAbsorber =
+        G4LogicalVolumeStore::GetInstance()->GetVolume(std_a_name);
+    SDMpointer->AddNewDetector(standardAbsorber);
+    SDMpointer->AddNewDetector(stoppingDetector);
+    logicalAbsorber->SetSensitiveDetector(standardAbsorber);
+
+    logicalFoil->SetSensitiveDetector(stoppingDetector);
 
     // ===================================================
     // Attach biasing operator to the beam dump, the world,
@@ -202,8 +213,6 @@ void GRPDetectorConstruction::ConstructSDandField()
     GRPSplittingOperator *splittingOperator = new GRPSplittingOperator();
     G4LogicalVolume *logicalWorld =
         G4LogicalVolumeStore::GetInstance()->GetVolume(w_name);
-    G4LogicalVolume *logicalFoil =
-        G4LogicalVolumeStore::GetInstance()->GetVolume(f_name);
 
     splittingOperator->AttachTo(logicalWorld);
     splittingOperator->AttachTo(logicalFoil);
