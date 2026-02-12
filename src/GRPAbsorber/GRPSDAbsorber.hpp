@@ -47,7 +47,7 @@ public:
     void EndOfEvent(G4HCofThisEvent *HCE) override final;
 
 private:
-    G4int m_hcID = 0;
+    G4int m_hcID = -1;
     HistandNTupleManager *m_HistoandNtupleManager;
     // Set containing the particles included in this absorber
     std::vector<G4int> m_ParticleList;

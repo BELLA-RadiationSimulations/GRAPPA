@@ -22,6 +22,8 @@
 #include <GRPGDMLGeometryBuilder.hpp>
 #endif
 
+#include <GRPStoppingDetector.hpp>
+
 GRPDetectorConstruction::GRPDetectorConstruction(
     HistandNTupleManager *myanalysismanager)
     : m_HistoandNtupleManager(myanalysismanager)
