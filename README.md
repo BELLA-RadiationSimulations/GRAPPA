@@ -336,6 +336,18 @@ Now, all the commands have been replaced by custom ones:
 
 In future releases, we may consider a more detailed approach to enable fine-grained control on other physics list components.
 
+## Sensitive Detectors
+
+GRAPPA implements two kinds of sensitive detectors.
+
+- `FinalAbsorber` records particles the first time they touch it. It records their position, momentum, energy, particleID, weight, interaction time, and creator process.
+In the current implementation, a few "major" particles are saved in dedicated NTuples, while the rest of the particles are saved in a separated one.
+
+- `StoppingDetector` records all the particles *stopping* inside it, where stopping is defined as particles that are killed (a particle that leaves the detector is never registered).
+The detector saves the stopping position, the particle energy when it was killed the particle ID and weight, the stopping time and the stopping process.
+
+`StoppingDetector` defines a dedicated messenger that is accessed via `/GRAPPA/stoppingDetector` after initialization.
+
 ## Biasing
 
 The code provides biasing capabilities for muon production. In particular, we bias the muon pair production and pion decay by splitting the created particles in certain volumes. The user can provide independent biasing factors for the two processes using dedicated macro commands. When a process is biased, the weight of the products is reduced by a factor `1/splittingFactor` to maintain a correct physical description *on average*.
