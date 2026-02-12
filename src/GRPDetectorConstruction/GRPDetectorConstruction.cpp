@@ -106,7 +106,7 @@ void GRPDetectorConstruction::ConstructStandardSDandField()
     G4SDManager *SDMpointer = G4SDManager::GetSDMpointer();
 
     G4VSensitiveDetector *previousdetector =
-        SDMpointer->FindSensitiveDetector("FinalAbsorber");
+        SDMpointer->FindSensitiveDetector("FinalAbsorber", false);
     if (!previousdetector)
     {
         AbsorberSD *standardAbsorber =
@@ -201,6 +201,7 @@ void GRPDetectorConstruction::ConstructGDMLSDandField()
     // so it's going to be called for construction. This is true regardless if
     // the biasing is deactivated via command line later. So, we just attach a
     // biasing operator to one of the volumes to avoid bad references.
+    // Due to this issue, biasing should be inactive by default
     if (biasedVolumeCounter == 0)
     {
         splittingOperator->AttachTo(lastVolume);
