@@ -218,12 +218,14 @@ such that when a particle reaches them, it is registered before being killed.
 GRAPPA also implements a more general system to handle the geometry based on [GDML files](https://gdml.web.cern.ch/doc/GDMLmanual.pdf).
 Using these files the user can change the geometry of the simulation entirely without needing to program C++ files and recompile the code from scratch.
 GRAPPA is sensitive to two particular auxiliary variables that can be specified within the geometry:
-- `SensitiveDetector` which carries the value of a specific sensitive detector that should be attached to that volume
+- `SensitiveDetectorType` which carries the value of a specific sensitive detector that should be attached to that volume.
+Refer to the section on [sensitive detectors](#sensitive-detectors) to check the supported types of detectors. The auxiliary value associated with the variable is the detector name.
+The detector name will generate ntuples with different names. Otherwise, one can associate multiple detectors of the same type with the same name, in which case all their ntuples will be merged in one.
+A single volume **cannot** have multiple sensitive detectors associated to it. This would require implementing a different detector class, not currently supported.
+
 - `Biasing` which specifies via `true` or `false` if the volume is biased according the the biasing operation explained [later](#biasing).
 
 An auxiliary line typically looks like: `<auxiliary auxtype="SensitiveDetector" auxvalue="FinalAbsorber"/>`.
-Currently, the list of available Sensitive Detectors is:
-- `FinalAbsorber`
 
 The geometry is fully specified in the `.gdml` file, that is passed via
 
