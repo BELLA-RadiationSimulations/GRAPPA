@@ -148,14 +148,15 @@ const SDMapping GRPGDMLGeometryBuilder::ReturnSensitiveDetectors() const
     const G4GDMLAuxMapType *auxmap = m_parser->GetAuxMap();
 
     // With this loop we check the auxiliary map of the GDML file
-    for (const std::pair<G4LogicalVolume *const, G4GDMLAuxListType> &iter: *auxmap)
+    for (const std::pair<G4LogicalVolume *const, G4GDMLAuxListType> &iter :
+         *auxmap)
     {
         // For a given logical volume we check the auxiliary variables
         // We assume it's the definition of a sensitive detector if
         // the "type" is one of the types supported as a sensitive detector.
         // The second variable is then the detector name
         G4LogicalVolume *volume = iter.first;
-        for (const G4GDMLAuxStructType &vit: iter.second)
+        for (const G4GDMLAuxStructType &vit : iter.second)
         {
             const G4String auxtype = vit.type;
             const G4String auxvalue = vit.value;
@@ -178,11 +179,12 @@ const BiasedMapping GRPGDMLGeometryBuilder::ReturnBiasedVolumes() const
     BiasedMapping BiasMap;
     const G4GDMLAuxMapType *auxmap = m_parser->GetAuxMap();
     // Volume iterator
-    for (const std::pair<G4LogicalVolume *const, G4GDMLAuxListType> &iter: *auxmap)
+    for (const std::pair<G4LogicalVolume *const, G4GDMLAuxListType> &iter :
+         *auxmap)
     {
         // Auxiliary information iterator (could be multiple per volume)
         G4LogicalVolume *volume = iter.first;
-        for (const G4GDMLAuxStructType &vit: iter.second)
+        for (const G4GDMLAuxStructType &vit : iter.second)
         {
             const G4String auxtype = vit.type;
             if (auxtype == "Biasing")
