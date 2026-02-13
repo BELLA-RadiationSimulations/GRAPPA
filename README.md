@@ -171,12 +171,19 @@ the initialization and even between runs
 If the file contains fewer particles than the ones requested for a run,
 GRAPPA will keep looping through the file relying on the fact that the random seed will be constantly updated.
 
-### Modify the target geometry
+## Geometry
 
-Commands to modify the geometry are introduced specifically for GRAPPA
+GRAPPA supports two ways of handling simulation geometry. Geometry can be specified either via command line or by passing a geometry description file ([GDML](https://gdml.web.cern.ch/doc/GDMLmanual.pdf)). The user chooses which geometry to use via macro commands
+
+```commandline
+/geometry/useGDML true|false
+```
+
+### Modify the target geometry via macro
+Hardcoded geometry was the default system adopted by the code since its creation. GRAPPA defines a spherical world and a simple target, plus an thin "absorber" layer that coincides with the world. These three elements can be modified using macro commands. Commands to modify the geometry are internally defined
 and, as such, you will not find them in the G4 official guide.
 
-They **must** be invoked before the run is initialized in order to avoid the loss of the geometry.
+They **must** be invoked before the run is initialized in order to avoid the loss of the geometry[^geometrynote].
 
 ```commandline
 # Modify geometry (custom functions)
@@ -203,6 +210,37 @@ The _world_ is a sphere that surrounds everything else,
 so please ensure that its radius is large enough.
 Sensitive detectors are positioned on the world boundary (_i.e._ they are spherical),
 such that when a particle reaches them, it is registered before being killed.
+
+[^geometrynote]: This is not a strict requirement, in principle, but it is the way geometry is currently implemented in GRAPPA.
+
+### Specifying a geometry using the GDML standard
+
+GRAPPA also implements a more general system to handle the geometry based on [GDML files](https://gdml.web.cern.ch/doc/GDMLmanual.pdf).
+Using these files the user can change the geometry of the simulation entirely without needing to program C++ files and recompile the code from scratch.
+GRAPPA is sensitive to two particular auxiliary variables that can be specified within the geometry:
+- `SensitiveDetectorType` which carries the value of a specific sensitive detector that should be attached to that volume.
+Refer to the section on [sensitive detectors](#sensitive-detectors) to check the supported types of detectors. The auxiliary value associated with the variable is the detector name.
+The detector name will generate ntuples with different names. Otherwise, one can associate multiple detectors of the same type with the same name, in which case all their ntuples will be merged in one.
+A single volume **cannot** have multiple sensitive detectors associated to it. This would require implementing a different detector class, not currently supported.
+
+- `Biasing` which specifies via `true` or `false` if the volume is biased according the the biasing operation explained [later](#biasing).
+
+An auxiliary line typically looks like: `<auxiliary auxtype="SensitiveDetector" auxvalue="FinalAbsorber"/>`.
+
+The geometry is fully specified in the `.gdml` file, that is passed via
+
+```commandline
+/geometry/gdmlFile filename.gdml
+```
+In addition to this, the user can choose to have GRAPPA generate an `.obj` file per volume defined in the GDML file via
+```commandline
+/geometry/dumpObjGeometry true|false
+/geometry/objDumpDirectory directory
+```
+where `directory` indicates the name of the directory where to store the list of files. This is a useful choice in case the user wants to visualize the object using external softwares (such as Paraview) or simply to load them into the Geant4 internal visualization system.
+
+> [!IMPORTANT]
+> The GDML geometry is only enabled if supported by the Geant4 installation. Make sure to compile Geant4 with `-DGEANT4_USE_GDML=ON`. If the GDML support is not available in Geant4, GRAPPA will default on the standard geometry definition that was used in the past.
 
 ### Analysis
 
@@ -311,7 +349,10 @@ that sets the activation status of the `ntupleID` ntuple.
 ### Modification to the Physics Package
 
 From version `v0.5.0`, GRAPPA uses a custom physics list based on a combinaiton of default lists with the "basic" electromagnetic option (option 0).
-In addition to the default options, the custom physics list replaces the `G4StoppingPhysics` approach to muon stopping with the dedicated `G4MuonicAtomDecayPhysics`.
+In addition to the default options, the custom physics list replaces the `G4StoppingPhysics` approach to muon stopping with the dedicated `G4MuonMinusAtomicCapture`.
+
+:warning: At the moment, `G4MuonMinusAtomicCapture` is deactivated in GRAPPA in favor of the default `G4MuonMinusCapture` as in the last few runs we experienced some code crashes related to muonic atoms definitions.
+
 The latter includes a special description of muonic atoms and of the `mu-` capturing process.
 Moreover, the code already includes muon production via Bethe-Heitler.
 For more information read the [Physics Reference Manual](https://geant4-userdoc.web.cern.ch/UsersGuides/PhysicsReferenceManual/html/index.html).
@@ -346,7 +387,7 @@ In the current implementation, a few "major" particles are saved in dedicated NT
 - `StoppingDetector` records all the particles *stopping* inside it, where stopping is defined as particles that are killed (a particle that leaves the detector is never registered).
 The detector saves the stopping position, the particle energy when it was killed the particle ID and weight, the stopping time and the stopping process.
 
-`StoppingDetector` defines a dedicated messenger that is accessed via `/GRAPPA/stoppingDetector` after initialization.
+`StoppingDetector` defines a dedicated messenger that is accessed via `/GRAPPA/stoppingDetector/detectorName` after initialization and that is used to define which particles and processes the detector us sensitive to. Use `all` to make the detector sensitive to all particles/processes.
 
 ## Biasing
 

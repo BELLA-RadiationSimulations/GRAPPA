@@ -17,7 +17,12 @@
 # /run/numberOfThreads 4
 
 # Modify geometry (custom functions)
-/control/execute set_geometry.mac
+/geometry/useGDML true
+/geometry/gdmlFile geometry/multiple_foils.gdml
+/geometry/dumpObjGeometry true
+/geometry/objDumpDirectory solids
+# The following sets the target when GDML is not used
+#/control/execute set_geometry.mac
 
 # Fix random seed to have repeatable runs
 # /random/setSeeds 1 2 3

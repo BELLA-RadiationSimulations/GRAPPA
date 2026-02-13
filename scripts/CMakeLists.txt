@@ -61,6 +61,11 @@ list(
     ${RUN_SCRIPTS_DIR}/set_geometry.mac
 )
 
+# Install GDML files if GDML is supported
+if(${Geant4_gdml_FOUND})
+    add_subdirectory(geometry)
+endif()
+
 # Install run scripts
 install(FILES ${RUN_SCRIPTS} DESTINATION bin)
 # Install ROOT scripts

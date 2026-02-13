@@ -18,7 +18,12 @@
 /GRAPPA/physicsList/list
 
 # Modify geometry (custom functions)
-/control/execute set_geometry.mac
+/geometry/useGDML true
+/geometry/gdmlFile geometry/multiple_foils.gdml
+/geometry/dumpObjGeometry true
+/geometry/objDumpDirectory solids
+# The following sets the target when GDML is not used
+#/control/execute set_geometry.mac
 
 # Initialize kernel
 /run/initialize
@@ -44,7 +49,8 @@
 /vis/scene/add/axes -10 0 0 2 cm
 # To get nice view
 # Make the "World" box invisible
-/vis/geometry/set/visibility World 0 false
+/vis/geometry/set/visibility WorldLogical 0 false
+/vis/geometry/set/visibility AbsorberLogical 0 false
 
 # Remove hidden edges
 /vis/viewer/set/hiddenEdge 1

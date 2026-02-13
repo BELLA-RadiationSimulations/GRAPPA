@@ -205,7 +205,16 @@ private:
     G4bool m_otherparticlesactive = true;
 };
 
-class HistandNTupleManager
+// This class should be deprecated soon
+// At the moment it serves as a container to store informations
+// related to the NTuples and histograms.
+// However, it raises the points of ownership throughout the code and
+// doesn't add anything that can't be handled by the relative classes.
+// In particular, Ntuple creation and handling should be directly tasked
+// to the Sensitive Detectors
+class [[deprecated(
+    "This class is redundant and prone to errors. Will be deprecated "
+    "soon.")]] HistandNTupleManager
 {
 public:
     HistandNTupleManager();

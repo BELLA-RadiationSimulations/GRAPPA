@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<gdml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://cern.ch/service-spi/app/releases/GDML/schema/gdml.xsd">
+
+    <!-- ============================================== -->
+    <!-- DEFINE: Constants, positions, rotations       -->
+    <!-- ============================================== -->
+    <define>
+        <!-- World parameters -->
+        <constant name="w_radius" value="200"/>
+        <!-- mm -->
+
+        <!-- Foil parameters -->
+        <constant name="foil_x" value="200"/>
+        <!-- mm -->
+        <constant name="foil_y" value="200"/>
+        <!-- mm (same as foil_x) -->
+        <constant name="foil_z" value="10"/>
+        <!-- mm -->
+        <constant name="foil_angle_y" value="0"/>
+        <!-- degrees -->
+
+        <!-- Absorber parameters -->
+        <constant name="absorber_thickness" value="0.1"/>
+        <!-- mm -->
+
+        <!-- Foil position -->
+        <position name="foil_pos" x="0" y="0" z="0" unit="mm"/>
+
+        <!-- Foil rotation (around Y axis) -->
+        <rotation name="foil_rot" x="0" y="foil_angle_y" z="0" unit="deg"/>
+
+        <!-- Center position (used for absorber) -->
+        <position name="center" x="0" y="0" z="0" unit="mm"/>
+    </define>
+
+    <!-- ============================================== -->
+    <!-- MATERIALS: Reference NIST materials           -->
+    <!-- ============================================== -->
+
+    <!-- Or you can just reference NIST materials directly in the structure -->
+    <!-- by using the NIST name string if your Geant4 is configured for it -->
+    <materials>
+
+    </materials>
+    <!-- ============================================== -->
+    <!-- SOLIDS: Geometry shapes                       -->
+    <!-- ============================================== -->
+    <solids>
+        <!-- World: full sphere -->
+        <sphere name="WorldSphere" rmin="0" rmax="w_radius" startphi="0" deltaphi="360" starttheta="0" deltatheta="180" aunit="deg" lunit="mm"/>
+
+        <!-- Foil: box (note: GDML uses half-lengths) -->
+        <box name="FoilBox" x="foil_x" y="foil_y" z="foil_z" lunit="mm"/>
+
+        <!-- Absorber: spherical shell at edge of world -->
+        <sphere name="AbsorberSphere" rmin="w_radius - absorber_thickness" rmax="w_radius" startphi="0" deltaphi="360" starttheta="0" deltatheta="180" aunit="deg" lunit="mm"/>
+    </solids>
+
+    <!-- ============================================== -->
+    <!-- STRUCTURE: Logical and physical volumes       -->
+    <!-- ============================================== -->
+    <structure>
+        <!-- Foil logical volume -->
+        <volume name="FoilLogical">
+            <materialref ref="G4_W"/>
+            <!-- Replace with your material_name -->
+            <solidref ref="FoilBox"/>
+            <auxiliary auxtype="Biasing" auxvalue="true"/>
+        </volume>
+
+        <!-- Absorber logical volume -->
+        <volume name="AbsorberLogical">
+            <materialref ref="G4_Galactic"/>
+            <!-- Same as world material -->
+            <solidref ref="AbsorberSphere"/>
+            <auxiliary auxtype="FinalAbsorber" auxvalue="FinalAbsorberName"/>
+        </volume>
+
+        <!-- World logical volume (contains foil and absorber) -->
+        <volume name="WorldLogical">
+            <materialref ref="G4_Galactic"/>
+            <!-- Replace with your w_material_name -->
+            <solidref ref="WorldSphere"/>
+            <auxiliary auxtype="Biasing" auxvalue="true"/>
+
+            <!-- Place the foil with rotation -->
+            <physvol name="Foil">
+                <volumeref ref="FoilLogical"/>
+                <positionref ref="foil_pos"/>
+                <rotationref ref="foil_rot"/>
+            </physvol>
+
+            <!-- Place the absorber at center (no rotation) -->
+            <physvol name="Absorber">
+                <volumeref ref="AbsorberLogical"/>
+                <positionref ref="center"/>
+            </physvol>
+        </volume>
+    </structure>
+
+    <!-- ============================================== -->
+    <!-- SETUP: Define the world volume                -->
+    <!-- ============================================== -->
+    <setup name="Default" version="1.0">
+        <world ref="WorldLogical"/>
+    </setup>
+
+</gdml>

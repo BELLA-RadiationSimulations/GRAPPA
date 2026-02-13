@@ -13,6 +13,12 @@
 
 #include <G4VPhysicsConstructor.hh>
 
+// This class implements all the basic
+// electromagnetic physics, roughly following what's done in QGSP_BIC.
+// This class defines a minimal set of electromagnetic particles
+// and their respective basic electromagnetic processes,
+// such as multiple scattering, ionization, pair production, photoelectric
+// effect, etc...
 class GRPEmPhysics : public G4VPhysicsConstructor
 {
 public:

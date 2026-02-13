@@ -9,6 +9,10 @@
 //
 // License: BSD-3-Clause
 
+// Geant4
+#include <G4ios.hh>
+#include <G4SystemOfUnits.hh>
+
 #include <GRPMessages.hpp>
 
 void PrintWelcomeMessage()
