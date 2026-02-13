@@ -387,7 +387,7 @@ In the current implementation, a few "major" particles are saved in dedicated NT
 - `StoppingDetector` records all the particles *stopping* inside it, where stopping is defined as particles that are killed (a particle that leaves the detector is never registered).
 The detector saves the stopping position, the particle energy when it was killed the particle ID and weight, the stopping time and the stopping process.
 
-`StoppingDetector` defines a dedicated messenger that is accessed via `/GRAPPA/stoppingDetector` after initialization.
+`StoppingDetector` defines a dedicated messenger that is accessed via `/GRAPPA/stoppingDetector/detectorName` after initialization.
 
 ## Biasing
 

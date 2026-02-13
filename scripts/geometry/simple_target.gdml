@@ -73,7 +73,7 @@
             <materialref ref="G4_Galactic"/>
             <!-- Same as world material -->
             <solidref ref="AbsorberSphere"/>
-            <auxiliary auxtype="SensitiveDetector" auxvalue="FinalAbsorber"/>
+            <auxiliary auxtype="FinalAbsorber" auxvalue="FinalAbsorberName"/>
         </volume>
 
         <!-- World logical volume (contains foil and absorber) -->
