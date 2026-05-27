@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 import argparse
 from datetime import date
@@ -55,7 +55,7 @@ def generate_copyright(language="cpp"):
     copy_str.append(cnospace + "\n")
     copy_str.append(c + "This file is part of GRAPPA." + "\n")
     copy_str.append(cnospace + "\n")
-    copy_str.append(c + "License: BSD-3-Clause" + "\n")
+    copy_str.append(c + "License: BSD-3-Clause-LBNL" + "\n")
 
     return copy_str
 

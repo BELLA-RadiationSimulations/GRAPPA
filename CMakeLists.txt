@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 # Setting CMAKE options
 cmake_minimum_required(VERSION 3.16 FATAL_ERROR)

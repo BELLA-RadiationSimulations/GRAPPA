@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 # Modify the target and world geometry
 # /geometry/world/material G4_AIR

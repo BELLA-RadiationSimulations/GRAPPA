@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 add_library(GRPParticleSource STATIC)
 target_sources(

@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 # Set the particle source: must be done after run initialization.
 # Particle source must be chosen between e- and gamma (for our use)
