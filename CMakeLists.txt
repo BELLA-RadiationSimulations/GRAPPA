@@ -14,7 +14,7 @@ cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
 project(
     GRAPPA
-    VERSION 0.5.1
+    VERSION 1.0.0
     DESCRIPTION "Geant4 RApid Pair Production Application"
     HOMEPAGE_URL "https://github.com/BELLA-RadiationSimulations/GRAPPA"
     LANGUAGES CXX
