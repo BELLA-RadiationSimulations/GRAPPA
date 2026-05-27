@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 set(ROOT_ANALYSIS_INSTALL_DIR bin/analysis)
 set(UTILITIES_PATH

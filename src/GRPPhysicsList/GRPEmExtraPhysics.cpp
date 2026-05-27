@@ -7,7 +7,7 @@
 //
 // This file is part of GRAPPA.
 //
-// License: BSD-3-Clause
+// License: BSD-3-Clause-LBNL
 
 #include <G4AnnihiToMuPair.hh>
 #include <G4BuilderType.hh>

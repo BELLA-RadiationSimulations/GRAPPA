@@ -7,7 +7,7 @@
 #
 # This file is part of GRAPPA.
 #
-# License: BSD-3-Clause
+# License: BSD-3-Clause-LBNL
 
 /GRAPPA/biasing/muonPair/setSplittingFactor 1000
 # This command defines if the particle weight has to account a cross section increase (to be used if /physics_lists/em/GammaToMuonsFactor > 1)

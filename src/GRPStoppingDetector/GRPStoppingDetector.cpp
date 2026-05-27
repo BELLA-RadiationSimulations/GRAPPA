@@ -7,7 +7,7 @@
 //
 // This file is part of GRAPPA.
 //
-// License: BSD-3-Clause
+// License: BSD-3-Clause-LBNL
 
 #include <G4AnalysisManager.hh>
 #include <G4ParticleTable.hh>
