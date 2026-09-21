@@ -107,14 +107,14 @@ G4VParticleChange *GRPPionDecaySplittingOperation::ApplyFinalStateBiasing(
     // muweight (= w/N), the neutrino sample would be under-weighted by a factor
     // of N and any neutrino-based tally would be biased.
     //
-    // Therefore: DO NOT call SetWeight(muweight) on the neutrino track. It keeps
-    // the weight propagated to it by the wrapped decay process, which is the
-    // primary weight w.
+    // Therefore: DO NOT call SetWeight(muweight) on the neutrino track. It
+    // keeps the weight propagated to it by the wrapped decay process, which is
+    // the primary weight w.
     //
     // Caveat: only this one neutrino is correlated with its partner muon
-    // (muon #1). Muons #2..N have no associated neutrino. This is acceptable for
-    // downstream muon tallies, but muon-neutrino correlation studies would be
-    // biased by this scheme.
+    // (muon #1). Muons #2..N have no associated neutrino. This is acceptable
+    // for downstream muon tallies, but muon-neutrino correlation studies would
+    // be biased by this scheme.
 
     m_ParticleChange.Initialize(*track);
     // Store final state:
@@ -144,7 +144,8 @@ G4VParticleChange *GRPPionDecaySplittingOperation::ApplyFinalStateBiasing(
     }
 
     m_ParticleChange.AddSecondary(firstsecondarytrack);
-    // Keep neutrino at PRIMARY weight w (do NOT set muweight) -- see note above.
+    // Keep neutrino at PRIMARY weight w (do NOT set muweight) -- see note
+    // above.
     m_ParticleChange.AddSecondary(secondsecondarytrack);
 
     processFinalState->Clear();
