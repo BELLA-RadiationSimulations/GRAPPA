@@ -1,107 +1,287 @@
-name: MacOs compilation
+name: macOS compilation
 
 on:
   pull_request:
     branches:
       - dev
     types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - src/**
-      - include/**
-      - CMakeLists.txt
-      - scripts/CMakeLists.txt
-      - .github/workflows/macos_test.yml
   push:
     branches:
       - dev
-    paths:
-      - src/**
-      - include/**
-      - CMakeLists.txt
-      - scripts/CMakeLists.txt
-      - .github/workflows/macos_test.yml
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
 
 env:
   DEPENDENCY_INSTALL: ${{ github.workspace }}/dependency_install
-  GEANT4_BINARY_URL: https://cern.ch/geant4-data/releases/lib4.11.3.p02/Darwin-clang17.0.0-Sequoia.tar.gz
+  CACHE_REVISION: "0"
 
 jobs:
-  dependency-install:
-    # Run on push OR on a non‑draft PR
-    if: ${{ github.event_name != 'pull_request' ||
-           (github.event_name == 'pull_request' && github.event.pull_request.draft == false) }}
-    runs-on: macos-latest
-    defaults:
-      run:
-        shell: bash -e {0}
-    steps:
-      - name: Cache Geant4 Install
-        id: geant4-cache
-        uses: actions/cache@v4
-        env:
-          # Increase this value to reset cache
-          CACHE_NUMBER: 0
-        with:
-          # The directory where Geant4 will be installed (in this example: geant4-install).
-          path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
-          # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
-          key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
+  changes:
+    name: Detect build-relevant changes
+    runs-on: ubuntu-latest
 
-      - name: Download and Install Geant4 Binaries
-        if: steps.geant4-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ${{ env.DEPENDENCY_INSTALL }}
-          cd ${{ env.DEPENDENCY_INSTALL }}
-          echo "Downloading Geant4 pre-compiled binaries..."
-          curl -L -o geant4-binaries.tar.gz ${{ env.GEANT4_BINARY_URL }}
-          echo "Extracting Geant4 binaries..."
-          tar -xzvf geant4-binaries.tar.gz
-          mv Geant4-* geant4-install
-          rm geant4-binaries.tar.gz
-          echo "Geant4 binaries installed successfully"
-
-  build-and-test:
-    needs: dependency-install
-    runs-on: macos-latest
-    defaults:
-      run:
-        shell: bash -e {0}
+    outputs:
+      build: ${{ steps.filter.outputs.build }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore Geant4 Install
-        uses: actions/cache/restore@v4
-        env:
-          # Increase this value to reset cache
-          CACHE_NUMBER: 0
+      - name: Detect changed files
+        id: filter
+        uses: dorny/paths-filter@v4
         with:
-          # The directory where Geant4 will be installed (in this example: geant4-install).
-          path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
-          # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
-          key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
+          filters: |
+            build:
+              - 'src/**'
+              - 'scripts/CMakeLists.txt'
+              - 'scripts/geometry/CMakeLists.txt'
+              - 'CMakeLists.txt'
+              - '**/CMakeLists.txt'
+              - '**/*.cmake'
+              - '.github/workflows/macos_test.yml'
 
-      - name: Install Build tools
+  build:
+    name: macOS / Geant4 ${{ matrix.geant4 }}
+    needs: changes
+
+    if: >-
+      needs.changes.outputs.build == 'true' &&
+      (
+        github.event_name != 'pull_request' ||
+        github.event.pull_request.draft == false
+      )
+
+    runs-on: macos-26
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - geant4: "11.4.0"
+            binary_url: >-
+              https://cern.ch/geant4-data/releases/lib4.11.4/Darwin-clang17.0.0-Tahoe.tar.gz
+            cache_id: "11.4.0-clang17-tahoe"
+
+          - geant4: "11.1.2"
+            binary_url: >-
+              https://cern.ch/geant4-data/releases/lib4.11.1.p02/Darwin-clang14.0.3-Ventura.tar.gz
+            cache_id: "11.1.2-clang14-ventura"
+
+    env:
+      GEANT4_INSTALL: >-
+        ${{ github.workspace }}/dependency_install/geant4-${{ matrix.geant4 }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore Geant4 installation
+        id: geant4-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.GEANT4_INSTALL }}
+          key: >-
+            geant4-${{ runner.os }}-${{ runner.arch }}-${{
+            matrix.cache_id }}-r${{ env.CACHE_REVISION }}
+
+      - name: Download and extract Geant4
+        if: steps.geant4-cache.outputs.cache-hit != 'true'
+        shell: bash
         run: |
-          set +e
-          echo "Updating packages"
-          brew update
-          brew upgrade || true
-          echo "Installing requisites"
-          brew install cmake llvm
+          set -euo pipefail
 
-      - name: Compile Project
-          # Temporarily ignore deprecated classes
+          archive="${RUNNER_TEMP}/geant4-${{ matrix.geant4 }}.tar.gz"
+          extract_dir="${RUNNER_TEMP}/geant4-extracted"
+
+          rm -rf \
+            "${GEANT4_INSTALL}" \
+            "${extract_dir}"
+
+          mkdir -p \
+            "${GEANT4_INSTALL}" \
+            "${extract_dir}"
+
+          curl \
+            --fail \
+            --location \
+            --retry 5 \
+            --retry-all-errors \
+            --output "${archive}" \
+            "${{ matrix.binary_url }}"
+
+          tar -xzf "${archive}" -C "${extract_dir}"
+          rm -f "${archive}"
+
+          # macOS archives normally contain one top-level Geant4 directory.
+          # Copy its contents into the stable cache location.
+          extracted_config="$(
+            find "${extract_dir}" \
+              -type f \
+              -name Geant4Config.cmake \
+              -print \
+              -quit
+          )"
+
+          if [[ -z "${extracted_config}" ]]; then
+            echo "::error::Geant4Config.cmake was not found after extraction."
+            exit 1
+          fi
+
+          extracted_prefix="$(
+            dirname "$(dirname "$(dirname "$(dirname "${extracted_config}")")")"
+          )"
+
+          cp -R "${extracted_prefix}/." "${GEANT4_INSTALL}/"
+
+      - name: Locate and verify Geant4
+        id: geant4
+        shell: bash
         run: |
-          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow -Wno-deprecated-declarations"
+          set -euo pipefail
 
-          cmake -S . -B build --log-level=VERBOSE \
+          config_file="$(
+            find "${GEANT4_INSTALL}" \
+              -type f \
+              -name Geant4Config.cmake \
+              -print \
+              -quit
+          )"
+
+          if [[ -z "${config_file}" ]]; then
+            echo "::error::Geant4Config.cmake was not found."
+            exit 1
+          fi
+
+          geant4_dir="$(dirname "${config_file}")"
+
+          echo "Runner architecture: $(uname -m)"
+          echo "Geant4 version: ${{ matrix.geant4 }}"
+          echo "Geant4_DIR: ${geant4_dir}"
+          echo "dir=${geant4_dir}" >> "${GITHUB_OUTPUT}"
+
+          geant4_library="$(
+            find "${GEANT4_INSTALL}" \
+              -type f \
+              -name 'libG4global*.dylib' \
+              -print \
+              -quit
+          )"
+
+          if [[ -z "${geant4_library}" ]]; then
+            echo "::error::libG4global was not found."
+            exit 1
+          fi
+
+          echo "Geant4 library: ${geant4_library}"
+          echo "Geant4 architecture: $(lipo -archs "${geant4_library}")"
+
+          if ! lipo -archs "${geant4_library}" |
+            grep -qw "$(uname -m)"; then
+            echo "::error::Geant4 does not support the runner architecture."
+            exit 1
+          fi
+
+          config_program="$(
+            find "${GEANT4_INSTALL}" \
+              -type f \
+              -name geant4-config \
+              -print \
+              -quit
+          )"
+
+          if [[ -n "${config_program}" ]]; then
+            chmod +x "${config_program}"
+            "${config_program}" --version
+            "${config_program}" --features
+          fi
+
+      - name: Display build-tool versions
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cmake --version
+          clang++ --version
+
+      - name: Configure GRAPPA
+        shell: bash
+        env:
+          CXXFLAGS: >-
+            -Wall
+            -Wextra
+            -Werror
+            -Wpedantic
+            -Wshadow
+            -Wno-deprecated-declarations
+        run: |
+          set -euo pipefail
+
+          cmake \
+            -S . \
+            -B build \
+            --log-level=VERBOSE \
             -DCMAKE_BUILD_TYPE=Release \
-            -DGeant4_DIR=${{ env.DEPENDENCY_INSTALL }}/geant4-install/lib/cmake/Geant4 \
+            -DGeant4_DIR="${{ steps.geant4.outputs.dir }}" \
             -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install"
-          cmake --build build --target install -j 2
+
+      - name: Build and install GRAPPA
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cmake --build build \
+            --target install \
+            --parallel 3
+
+  required-build:
+    name: Required macOS compilation
+    if: always()
+    needs:
+      - changes
+      - build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Evaluate compilation result
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          changes_result="${{ needs.changes.result }}"
+          build_required="${{ needs.changes.outputs.build }}"
+          build_result="${{ needs.build.result }}"
+
+          echo "Change detection result: ${changes_result}"
+          echo "Build required: ${build_required}"
+          echo "Matrix build result: ${build_result}"
+
+          if [[ "${changes_result}" != "success" ]]; then
+            echo "::error::Changed-file detection failed."
+            exit 1
+          fi
+
+          if [[ "${build_required}" != "true" ]]; then
+            echo "No build-relevant files changed."
+            echo "macOS compilation check passes without building."
+            exit 0
+          fi
+
+          if [[ "${{ github.event_name }}" == "pull_request" &&
+                "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "Draft pull request; compilation is intentionally skipped."
+            exit 0
+          fi
+
+          if [[ "${build_result}" != "success" ]]; then
+            echo "::error::One or more macOS build configurations failed."
+            exit 1
+          fi
+
+          echo "All macOS build configurations passed."
