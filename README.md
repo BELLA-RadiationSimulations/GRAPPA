@@ -26,7 +26,7 @@ GRAPPA is a Geant4 (G4) application. A comprehensive guide on how to install G4 
 ## Requirements
 
 GRAPPA requires:
-- `Geant4`
+- `Geant4 11.3 (or higher)`
 - `C++` compiler (standard required C++-17)
 - `cmake`
 
