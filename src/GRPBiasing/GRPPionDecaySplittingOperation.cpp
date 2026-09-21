@@ -93,9 +93,31 @@ G4VParticleChange *GRPPionDecaySplittingOperation::ApplyFinalStateBiasing(
     // the decay. To do so, we first copy the primary particle (pion)
     // into the new particle change and we mark its deletion, like the original
     // process. Then we need to copy the secondaries from the process.
+    // IMPORTANT: weighting rationale.
+    //
+    // We split only the muon: N muons are produced, each from an independent
+    // re-sampling of the pion decay, each carrying weight w/N (muweight). The
+    // expectation is preserved since N * (w/N) = w, where w is the primary
+    // (pion) weight.
+    //
+    // The neutrino, by contrast, is NOT split. We keep exactly ONE neutrino
+    // (from this first decay) and it must retain the PRIMARY weight w, not
+    // muweight. Reason: unbiased expectation for a neutrino tally is a single
+    // neutrino at weight w, and 1 * w = w. If this neutrino were instead given
+    // muweight (= w/N), the neutrino sample would be under-weighted by a factor
+    // of N and any neutrino-based tally would be biased.
+    //
+    // Therefore: DO NOT call SetWeight(muweight) on the neutrino track. It keeps
+    // the weight propagated to it by the wrapped decay process, which is the
+    // primary weight w.
+    //
+    // Caveat: only this one neutrino is correlated with its partner muon
+    // (muon #1). Muons #2..N have no associated neutrino. This is acceptable for
+    // downstream muon tallies, but muon-neutrino correlation studies would be
+    // biased by this scheme.
 
     m_ParticleChange.Initialize(*track);
-    // Store gamma final state:
+    // Store final state:
     m_ParticleChange.ProposeMomentumDirection(0., 0., 0.);
     m_ParticleChange.ProposeEnergy(0.);
     m_ParticleChange.ProposeTrackStatus(fStopAndKill);
@@ -122,6 +144,7 @@ G4VParticleChange *GRPPionDecaySplittingOperation::ApplyFinalStateBiasing(
     }
 
     m_ParticleChange.AddSecondary(firstsecondarytrack);
+    // Keep neutrino at PRIMARY weight w (do NOT set muweight) -- see note above.
     m_ParticleChange.AddSecondary(secondsecondarytrack);
 
     processFinalState->Clear();
