@@ -1,0 +1,149 @@
+name: clang-tidy and GDML checks
+
+on:
+  pull_request:
+    branches: [dev]
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  GEANT4_VERSION: "11.4.0"
+  GEANT4_INSTALL: ${{ github.workspace }}/dependency_install/geant4-11.4.0-gdml
+  CACHE_REVISION: "0"
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      analysis: ${{ steps.filter.outputs.analysis }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - id: filter
+        uses: dorny/paths-filter@v4
+        with:
+          filters: |
+            analysis:
+              - 'src/**'
+              - '**/CMakeLists.txt'
+              - '**/*.cmake'
+              - '.clang-tidy'
+              - '.github/workflows/full_analysis.yml'
+
+  analysis:
+    name: GDML and clang-tidy
+    needs: changes
+    if: >-
+      needs.changes.outputs.analysis == 'true' &&
+      (
+        github.event_name != 'pull_request' ||
+        github.event.pull_request.draft == false
+      )
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake ninja-build gcc g++ clang-tidy-18 \
+            libxerces-c-dev
+
+      - name: Restore Geant4
+        id: geant4-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.GEANT4_INSTALL }}
+          key: >-
+            geant4-${{ runner.os }}-${{ runner.arch }}-11.4.0-gdml-r${{
+            env.CACHE_REVISION }}
+
+      - name: Build Geant4 with GDML
+        if: steps.geant4-cache.outputs.cache-hit != 'true'
+        run: |
+          set -euo pipefail
+
+          source_dir="${RUNNER_TEMP}/geant4-source"
+          build_dir="${RUNNER_TEMP}/geant4-build"
+          archive="${RUNNER_TEMP}/geant4.tar.gz"
+
+          rm -rf "${source_dir}" "${build_dir}" "${GEANT4_INSTALL}"
+          mkdir -p "${source_dir}" "${GEANT4_INSTALL}"
+
+          curl --fail --location --retry 5 \
+            --output "${archive}" \
+            "https://gitlab.cern.ch/geant4/geant4/-/archive/v${GEANT4_VERSION}/geant4-v${GEANT4_VERSION}.tar.gz"
+
+          tar -xzf "${archive}" \
+            --strip-components=1 \
+            -C "${source_dir}"
+
+          cmake -S "${source_dir}" -B "${build_dir}" -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_INSTALL_PREFIX="${GEANT4_INSTALL}" \
+            -DCMAKE_INSTALL_LIBDIR=lib \
+            -DBUILD_SHARED_LIBS=ON \
+            -DBUILD_STATIC_LIBS=OFF \
+            -DGEANT4_BUILD_MULTITHREADED=ON \
+            -DGEANT4_USE_GDML=ON \
+            -DGEANT4_INSTALL_DATA=OFF \
+            -DGEANT4_USE_QT=OFF \
+            -DGEANT4_USE_OPENGL_X11=OFF
+
+          cmake --build "${build_dir}" --parallel 2
+          cmake --install "${build_dir}"
+
+      - name: Verify GDML
+        run: |
+          "${GEANT4_INSTALL}/bin/geant4-config" --features |
+            tee "${RUNNER_TEMP}/geant4-features.txt"
+
+          grep -q 'gdml\[yes\]' "${RUNNER_TEMP}/geant4-features.txt"
+
+      - name: Configure GRAPPA
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DGeant4_DIR="${GEANT4_INSTALL}/lib/cmake/Geant4" \
+            -DCMAKE_CXX_CLANG_TIDY="clang-tidy-18;--config-file=${GITHUB_WORKSPACE}/.clang-tidy;--warnings-as-errors=*"
+
+      - name: Build GRAPPA with clang-tidy
+        run: cmake --build build --parallel 2
+
+  required-analysis:
+    name: Required full analysis
+    if: always()
+    needs: [changes, analysis]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Evaluate result
+        run: |
+          if [[ "${{ needs.changes.result }}" != "success" ]]; then
+            exit 1
+          fi
+
+          if [[ "${{ needs.changes.outputs.analysis }}" != "true" ]]; then
+            echo "No analysis-relevant files changed."
+            exit 0
+          fi
+
+          if [[ "${{ github.event_name }}" == "pull_request" &&
+                "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "Draft pull request; analysis skipped."
+            exit 0
+          fi
+
+          [[ "${{ needs.analysis.result }}" == "success" ]]

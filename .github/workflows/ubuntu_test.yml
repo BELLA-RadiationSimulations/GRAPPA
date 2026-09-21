@@ -40,8 +40,6 @@ jobs:
           filters: |
             build:
               - 'src/**'
-              - 'scripts/CMakeLists.txt'
-              - 'scripts/geometry/CMakeLists.txt'
               - 'CMakeLists.txt'
               - '**/CMakeLists.txt'
               - '**/*.cmake'
