@@ -34,7 +34,7 @@ jobs:
         run: |
           python -m pip install -r requirements-style.txt
 
-          clang-format-18 --version
+          clang-format --version
           cmake-format --version
 
       - name: Check C/C++ formatting
