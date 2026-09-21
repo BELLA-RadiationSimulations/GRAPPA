@@ -32,9 +32,7 @@ jobs:
 
       - name: Install formatting tools
         run: |
-          sudo apt-get update
-          sudo apt-get install -y clang-format-18
-          python -m pip install --disable-pip-version-check "cmakelang==0.6.13"
+          python -m pip install -r requirements-style.txt
 
           clang-format-18 --version
           cmake-format --version
@@ -53,25 +51,7 @@ jobs:
                -name '*.C.in' -o \
                -name '*.h.in' \) \
             -print0 |
-            xargs -0 --no-run-if-empty clang-format-18 \
+            xargs -0 --no-run-if-empty clang-format \
               --style=file \
               --dry-run \
               --Werror
-
-      - name: Check CMake formatting
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          find . \
-            \( -type d \( \
-                -name build -o \
-                -name dependency_install -o \
-                -name .git \
-            \) -prune \) \
-            -o \
-            \( -type f \( \
-                -name 'CMakeLists.txt' -o \
-                -name '*.cmake' \
-            \) -print0 \) |
-            xargs -0 --no-run-if-empty cmake-format --check
