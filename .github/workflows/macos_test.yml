@@ -103,5 +103,5 @@ jobs:
           cmake -S . -B build --log-level=VERBOSE \
             -DCMAKE_BUILD_TYPE=Release \
             -DGeant4_DIR=${{ env.DEPENDENCY_INSTALL }}/geant4-install/lib/cmake/Geant4 \
-            -DCMAKE_INSTALL_PREFIX=.
+            -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install"
           cmake --build build --target install -j 2

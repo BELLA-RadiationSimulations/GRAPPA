@@ -13,31 +13,65 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   check-style:
-    name: Check code style with clang-format
-    runs-on: ubuntu-latest
+    name: Check code formatting
+    runs-on: ubuntu-24.04
+
     steps:
-      - uses: actions/checkout@v3
-      - run: echo "The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Install clang-format
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install formatting tools
         run: |
-          echo "Updating packages and getting the llvm repo"
-          wget https://apt.llvm.org/llvm.sh
           sudo apt-get update
-          chmod u+x llvm.sh
-          sudo ./llvm.sh 18 all
-          echo "The basic installed version of clang-format is $(clang-format --version)"
-          echo "The installed version of clang-format-18 is $(clang-format-18 --version)"
-          sudo update-alternatives --remove-all clang-format
-          sudo update-alternatives --install /usr/bin/clang-format clang-format /usr/bin/clang-format-18 18
-          echo "default clang-format has been updated to $(clang-format --version)"
-      - name: Run clang-format
+          sudo apt-get install -y clang-format-18
+          python -m pip install --disable-pip-version-check "cmakelang==0.6.13"
+
+          clang-format-18 --version
+          cmake-format --version
+
+      - name: Check C/C++ formatting
+        shell: bash
         run: |
-          find src/ include/ scripts/ \
-          -type f -name "*.hpp" -o \
-          -type f -name "*.cpp" -o \
-          -type f -name "*.C.in" -o \
-          -type f -name "*.h.in" | xargs clang-format --style=file --dry-run --Werror
+          set -euo pipefail
+
+          find src scripts -type f \
+            \( -name '*.h' -o \
+               -name '*.hpp' -o \
+               -name '*.c' -o \
+               -name '*.cc' -o \
+               -name '*.cpp' -o \
+               -name '*.C.in' -o \
+               -name '*.h.in' \) \
+            -print0 |
+            xargs -0 --no-run-if-empty clang-format-18 \
+              --style=file \
+              --dry-run \
+              --Werror
+
+      - name: Check CMake formatting
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          find . \
+            \( -type d \( \
+                -name build -o \
+                -name dependency_install -o \
+                -name .git \
+            \) -prune \) \
+            -o \
+            \( -type f \( \
+                -name 'CMakeLists.txt' -o \
+                -name '*.cmake' \
+            \) -print0 \) |
+            xargs -0 --no-run-if-empty cmake-format --check
