@@ -1,34 +1,39 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Function to check the clang-format version
-check_clang_format_version() {
-    local required_version=18
-    local version_output
-    local major_version
+set -euo pipefail
 
-    # Get the version output from clang-format
-    version_output=$(clang-format --version)
+required_version=18
 
-    # Extract the major version number
-    if [[ $version_output =~ ([0-9]+)\. ]]; then
-        major_version=${BASH_REMATCH[1]}
-    else
-        echo "Unable to determine clang-format version."
-        exit 1
-    fi
+if ! command -v clang-format >/dev/null 2>&1; then
+    echo "Error: clang-format was not found in PATH." >&2
+    exit 1
+fi
 
-    # Check if the major version is the required version
-    if [[ "$major_version" -ne "$required_version" ]]; then
-        echo "Error: clang-format version $required_version is required. Found version $major_version."
-        exit 1
-    fi
-}
+version_output="$(clang-format --version)"
 
-check_clang_format_version
+if [[ "${version_output}" =~ ([0-9]+)\. ]]; then
+    major_version="${BASH_REMATCH[1]}"
+else
+    echo "Error: unable to determine clang-format version from:" >&2
+    echo "  ${version_output}" >&2
+    exit 1
+fi
 
-find src/ scripts/ \
-    -type f -name "*.hpp" -o \
-    -type f -name "*.cpp" -o \
-    -type f -name "*.C.in" -o \
-    -type f -name "*.h.in" \
-    | xargs clang-format --style=file -i
+if [[ "${major_version}" -ne "${required_version}" ]]; then
+    echo "Error: clang-format ${required_version} is required; found ${major_version}." >&2
+    exit 1
+fi
+
+find src scripts -type f \
+    \( -name '*.h' -o \
+       -name '*.hpp' -o \
+       -name '*.c' -o \
+       -name '*.cc' -o \
+       -name '*.cpp' -o \
+       -name '*.C.in' -o \
+       -name '*.h.in' \) \
+    -print0 |
+    xargs -0 --no-run-if-empty \
+        clang-format \
+        --style=file \
+        -i

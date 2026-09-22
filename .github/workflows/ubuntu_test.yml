@@ -5,100 +5,271 @@ on:
     branches:
       - dev
     types: [opened, synchronize, reopened, ready_for_review]
-    paths:
-      - src/**
-      - include/**
-      - CMakeLists.txt
-      - scripts/CMakeLists.txt
-      - .github/workflows/ubuntu_test.yml
   push:
     branches:
       - dev
-    paths:
-      - src/**
-      - include/**
-      - CMakeLists.txt
-      - scripts/CMakeLists.txt
-      - .github/workflows/ubuntu_test.yml
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pull-requests: read
+
 env:
   DEPENDENCY_INSTALL: ${{ github.workspace }}/dependency_install
-  GEANT4_BINARY_URL: https://cern.ch/geant4-data/releases/lib4.11.3.p02/Linux-g++11.5.0-Alma9.tar.gz
+  CACHE_REVISION: "0"
 
 jobs:
-  dependency-install:
-    # Run on push OR on a non‑draft PR
-    if: ${{ github.event_name != 'pull_request' ||
-           (github.event_name == 'pull_request' && github.event.pull_request.draft == false) }}
+  changes:
+    name: Detect build-relevant changes
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -e {0}
-    steps:
-      - name: Cache Geant4 Install
-        id: geant4-cache
-        uses: actions/cache@v4
-        env:
-          # Increase this value to reset cache
-          CACHE_NUMBER: 0
-        with:
-          path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
-          key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
 
-      - name: Download and Install Geant4 Binaries
-        if: steps.geant4-cache.outputs.cache-hit != 'true'
-        run: |
-          mkdir -p ${{ env.DEPENDENCY_INSTALL }}
-          cd ${{ env.DEPENDENCY_INSTALL }}
-          echo "Downloading Geant4 pre-compiled binaries..."
-          curl -L -o geant4-binaries.tar.gz ${{ env.GEANT4_BINARY_URL }}
-          echo "Extracting Geant4 binaries..."
-          echo "Unix version of Geant4 is distributed without a parent folder, which we create."
-          mkdir -p geant4-install
-          tar -xzvf geant4-binaries.tar.gz -C geant4-install
-          rm geant4-binaries.tar.gz
-          echo "Geant4 binaries installed successfully"
-
-  build-and-test:
-    needs: dependency-install
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash -e {0}
+    outputs:
+      build: ${{ steps.filter.outputs.build }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Restore Geant4 Install
-        uses: actions/cache/restore@v4
-        env:
-          # Increase this value to reset cache
-          CACHE_NUMBER: 0
+      - name: Detect changed files
+        id: filter
+        uses: dorny/paths-filter@v4
         with:
-          # The directory where Geant4 will be installed (in this example: geant4-install).
-          path: ${{ env.DEPENDENCY_INSTALL }}/geant4-install
-          # Use a key that matches your Geant4 version, OS, and potentially other environment variables.
-          key: ${{ runner.os }}-geant4-v11.3.2-precompiled-${{ env.CACHE_NUMBER }}
+          filters: |
+            build:
+              - 'src/**'
+              - 'CMakeLists.txt'
+              - '**/CMakeLists.txt'
+              - '**/*.cmake'
+              - '.github/workflows/ubuntu_test.yml'
 
-      - name: Install Build tools
+  build:
+    name: Ubuntu / Geant4 ${{ matrix.geant4 }}
+    needs: changes
+
+    if: >-
+      needs.changes.outputs.build == 'true' &&
+      (
+        github.event_name != 'pull_request' ||
+        github.event.pull_request.draft == false
+      )
+
+    runs-on: ubuntu-24.04
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - geant4: "11.4.0"
+            binary_url: >-
+              https://cern.ch/geant4-data/releases/lib4.11.4/Linux-g++11.5.0-Alma9.tar.gz
+            cache_id: "11.4.0-gcc11-alma9"
+
+          - geant4: "11.2.2"
+            binary_url: >-
+              https://cern.ch/geant4-data/releases/lib4.11.2.p02/Linux-g++11.4.1-Alma9.tar.gz
+            cache_id: "11.2.2-gcc11-alma9"
+
+    env:
+      GEANT4_INSTALL: >-
+        ${{ github.workspace }}/dependency_install/geant4-${{ matrix.geant4 }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Restore Geant4 installation
+        id: geant4-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.GEANT4_INSTALL }}
+          key: >-
+            geant4-${{ runner.os }}-${{ runner.arch }}-${{
+            matrix.cache_id }}-r${{ env.CACHE_REVISION }}
+
+      - name: Download and extract Geant4
+        if: steps.geant4-cache.outputs.cache-hit != 'true'
+        shell: bash
         run: |
-          echo "Updating packages"
+          set -euo pipefail
+
+          archive="${RUNNER_TEMP}/geant4-${{ matrix.geant4 }}.tar.gz"
+
+          rm -rf "${GEANT4_INSTALL}"
+          mkdir -p "${GEANT4_INSTALL}"
+
+          curl \
+            --fail \
+            --location \
+            --retry 5 \
+            --retry-all-errors \
+            --output "${archive}" \
+            "${{ matrix.binary_url }}"
+
+          # The official Linux archives contain their installation files
+          # directly, without a common parent directory.
+          tar -xzf "${archive}" -C "${GEANT4_INSTALL}"
+          rm -f "${archive}"
+
+      - name: Install Geant4 runtime dependencies (mapping missing libexpat)
+        shell: bash
+        run: |
+          set -euo pipefail
+
           sudo apt-get update
-          echo "Installing requisites"
-          sudo apt-get install -y cmake gcc g++ libx11-dev libxpm-dev libxft-dev libxext-dev libxmu-dev libxerces-c-dev libgl1-mesa-dev libglu1-mesa-dev
+          sudo apt-get install -y libexpat1-dev
 
-      - name: Compile Project
-          # Temporarily ignore deprecated classes
+          expat_library="$(g++ -print-file-name=libexpat.so)"
+
+          if [[ ! -f "${expat_library}" ]]; then
+            echo "::error::Ubuntu's libexpat.so was not found."
+            exit 1
+          fi
+
+          sudo mkdir -p /usr/lib64
+          sudo ln -sf "${expat_library}" /usr/lib64/libexpat.so
+
+          ls -l /usr/lib64/libexpat.so
+
+
+      - name: Locate and verify Geant4
+        id: geant4
+        shell: bash
         run: |
-          export CXXFLAGS="-Wall -Wextra -Werror -Wpedantic -Wshadow -Wno-deprecated-declarations"
+          set -euo pipefail
 
-          cmake -S . -B build --log-level=VERBOSE \
+          config_file="$(
+            find "${GEANT4_INSTALL}" \
+              -type f \
+              -name Geant4Config.cmake \
+              -print \
+              -quit
+          )"
+
+          if [[ -z "${config_file}" ]]; then
+            echo "::error::Geant4Config.cmake was not found."
+            exit 1
+          fi
+
+          geant4_dir="$(dirname "${config_file}")"
+
+          echo "Geant4 version: ${{ matrix.geant4 }}"
+          echo "Geant4_DIR: ${geant4_dir}"
+          echo "dir=${geant4_dir}" >> "${GITHUB_OUTPUT}"
+
+          config_program="$(
+            find "${GEANT4_INSTALL}" \
+              -type f \
+              -name geant4-config \
+              -print \
+              -quit
+          )"
+
+          if [[ -n "${config_program}" ]]; then
+            chmod +x "${config_program}"
+            "${config_program}" --version
+            "${config_program}" --features
+          fi
+
+      - name: Install build tools
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          sudo apt-get update
+          sudo apt-get install -y \
+            cmake \
+            gcc \
+            g++ \
+            libx11-dev \
+            libxpm-dev \
+            libxft-dev \
+            libxext-dev \
+            libxmu-dev \
+            libxerces-c-dev \
+            libgl1-mesa-dev \
+            libglu1-mesa-dev
+
+          cmake --version
+          g++ --version
+
+      - name: Configure GRAPPA
+        shell: bash
+        env:
+          CXXFLAGS: >-
+            -Wall
+            -Wextra
+            -Werror
+            -Wpedantic
+            -Wshadow
+            -Wno-deprecated-declarations
+        run: |
+          set -euo pipefail
+
+          rm -rf build
+
+          cmake \
+            -S . \
+            -B build \
+            --log-level=VERBOSE \
+            -DWITH_GEANT4_UIVIS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
-            -DGeant4_DIR=${{ env.DEPENDENCY_INSTALL }}/geant4-install/lib64/cmake/Geant4 \
-            -DCMAKE_INSTALL_PREFIX=.
-          cmake --build build --target install -j 2
+            -DGeant4_DIR="${{ steps.geant4.outputs.dir }}" \
+            -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install"
+
+      - name: Build and install GRAPPA
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          cmake --build build \
+            --target install \
+            --parallel 2
+
+  required-build:
+    name: Required Ubuntu compilation
+    if: always()
+    needs:
+      - changes
+      - build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Evaluate compilation result
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          changes_result="${{ needs.changes.result }}"
+          build_required="${{ needs.changes.outputs.build }}"
+          build_result="${{ needs.build.result }}"
+
+          echo "Change detection result: ${changes_result}"
+          echo "Build required: ${build_required}"
+          echo "Matrix build result: ${build_result}"
+
+          if [[ "${changes_result}" != "success" ]]; then
+            echo "::error::Changed-file detection failed."
+            exit 1
+          fi
+
+          if [[ "${build_required}" != "true" ]]; then
+            echo "No build-relevant files changed."
+            echo "Ubuntu compilation check passes without building."
+            exit 0
+          fi
+
+          if [[ "${{ github.event_name }}" == "pull_request" &&
+                "${{ github.event.pull_request.draft }}" == "true" ]]; then
+            echo "Draft pull request; compilation is intentionally skipped."
+            exit 0
+          fi
+
+          if [[ "${build_result}" != "success" ]]; then
+            echo "::error::One or more Ubuntu build configurations failed."
+            exit 1
+          fi
+
+          echo "All Ubuntu build configurations passed."

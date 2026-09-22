@@ -1,8 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# Since it relies on a configuration file,
-# the package pyyaml needs to be installed
+set -euo pipefail
 
-find . -name build -prune -o -type f \
-    -name "*CMakeLists.txt" -print \
-    | xargs -n1 cmake-format -i
+if ! command -v cmake-format >/dev/null 2>&1; then
+    echo "Error: cmake-format was not found in PATH." >&2
+    echo "Install it with: python -m pip install cmakelang" >&2
+    exit 1
+fi
+
+find . \
+    \( -type d \( \
+        -name build -o \
+        -name dependency_install -o \
+        -name .git \
+    \) -prune \) \
+    -o \
+    \( -type f \( \
+        -name 'CMakeLists.txt' -o \
+        -name '*.cmake' \
+    \) -print0 \) |
+    xargs -0 --no-run-if-empty \
+        cmake-format \
+        -i

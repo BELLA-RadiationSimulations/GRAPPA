@@ -23,6 +23,11 @@ set(GRAPPA_SUPPORT_GDML_GEOMETRY OFF)
 if(${Geant4_gdml_FOUND})
     set(GRAPPA_SUPPORT_GDML_GEOMETRY ON)
     message(STATUS "Found support for GDML")
+else()
+    message(
+        STATUS
+            "Support for GDML was not found in this Geant4 installation. GDML geometry construction will not be available."
+    )
 endif()
 
 if(GRAPPA_SUPPORT_GDML_GEOMETRY)
