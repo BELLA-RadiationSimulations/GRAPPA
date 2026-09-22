@@ -195,6 +195,7 @@ jobs:
             --log-level=VERBOSE \
             -DWITH_GEANT4_UIVIS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
+            -DGRAPPA_PREFER_STATIC_GEANT4=OFF \
             -DGeant4_DIR="${{ steps.geant4.outputs.dir }}" \
             -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install"
 
