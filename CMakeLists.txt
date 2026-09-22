@@ -93,6 +93,8 @@ if(WITH_GEANT4_UIVIS)
         ui_all
         vis_all
     )
+else()
+    message(STATUS "Visualization support for GRAPPA not included")
 endif()
 
 # Here we set that GRAPPA will prefer static over shared libraries, if both are
