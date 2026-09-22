@@ -67,10 +67,10 @@ jobs:
               https://cern.ch/geant4-data/releases/lib4.11.4/Linux-g++11.5.0-Alma9.tar.gz
             cache_id: "11.4.0-gcc11-alma9"
 
-          - geant4: "11.1.2"
+          - geant4: "11.2.2"
             binary_url: >-
-              https://cern.ch/geant4-data/releases/lib4.11.1.p02/Linux-g++8.5.0-CC8.tar.gz
-            cache_id: "11.1.2-gcc8-centos8"
+              https://cern.ch/geant4-data/releases/lib4.11.2.p02/Linux-g++11.4.1-Alma9.tar.gz
+            cache_id: "11.2.2-gcc11-alma9"
 
     env:
       GEANT4_INSTALL: >-

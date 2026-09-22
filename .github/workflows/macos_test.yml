@@ -67,10 +67,10 @@ jobs:
               https://cern.ch/geant4-data/releases/lib4.11.4/Darwin-clang17.0.0-Tahoe.tar.gz
             cache_id: "11.4.0-clang17-tahoe"
 
-          - geant4: "11.1.2"
+          - geant4: "11.2.2"
             binary_url: >-
-              https://cern.ch/geant4-data/releases/lib4.11.1.p02/Darwin-clang14.0.3-Ventura.tar.gz
-            cache_id: "11.1.2-clang14-ventura"
+              https://cern.ch/geant4-data/releases/lib4.11.2.p02/Darwin-clang15.0.0-Sonoma.tar.gz
+            cache_id: "11.2.2-clang14-ventura"
 
     env:
       GEANT4_INSTALL: >-
