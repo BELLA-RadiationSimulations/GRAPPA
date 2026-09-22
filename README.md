@@ -3,6 +3,7 @@
 [![macOS build](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/macos_test.yml/badge.svg?branch=dev)](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/macos_test.yml?query=branch%3Adev)
 [![Ubuntu build](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/ubuntu_test.yml/badge.svg?branch=dev)](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/ubuntu_test.yml?query=branch%3Adev)
 [![Code style](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/check_style.yml/badge.svg?branch=dev)](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/check_style.yml?query=branch%3Adev)
+[![clang-tidy](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/clang_tidy_gdml.yml/badge.svg?branch=dev)](https://github.com/BELLA-RadiationSimulations/GRAPPA/actions/workflows/clang_tidy_gdml.yml?query=branch%3Adev)
 
 ![Beam on target](media/GRAPPA_setup_transparent_background.png)
 
