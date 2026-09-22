@@ -221,10 +221,12 @@ jobs:
         run: |
           set -euo pipefail
 
+          rm -rf build
           cmake \
             -S . \
             -B build \
             --log-level=VERBOSE \
+            -DWITH_GEANT4_UIVIS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
             -DGeant4_DIR="${{ steps.geant4.outputs.dir }}" \
             -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install"
