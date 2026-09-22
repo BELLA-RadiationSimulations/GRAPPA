@@ -113,6 +113,27 @@ jobs:
           tar -xzf "${archive}" -C "${GEANT4_INSTALL}"
           rm -f "${archive}"
 
+      - name: Install Geant4 runtime dependencies (mapping missing libexpat)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          sudo apt-get update
+          sudo apt-get install -y libexpat1-dev
+
+          expat_library="$(g++ -print-file-name=libexpat.so)"
+
+          if [[ ! -f "${expat_library}" ]]; then
+            echo "::error::Ubuntu's libexpat.so was not found."
+            exit 1
+          fi
+
+          sudo mkdir -p /usr/lib64
+          sudo ln -sf "${expat_library}" /usr/lib64/libexpat.so
+
+          ls -l /usr/lib64/libexpat.so
+
+
       - name: Locate and verify Geant4
         id: geant4
         shell: bash
@@ -195,7 +216,6 @@ jobs:
             --log-level=VERBOSE \
             -DWITH_GEANT4_UIVIS=OFF \
             -DCMAKE_BUILD_TYPE=Release \
-            -DGRAPPA_PREFER_STATIC_GEANT4=OFF \
             -DGeant4_DIR="${{ steps.geant4.outputs.dir }}" \
             -DCMAKE_INSTALL_PREFIX="${{ github.workspace }}/install"
 
