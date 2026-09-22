@@ -20,7 +20,6 @@
 #include <G4EmModelActivator.hh>
 #include <G4EmParameters.hh>
 #include <G4eplusAnnihilation.hh>
-#include <G4eplusTo2or3GammaModel.hh>
 #include <G4Gamma.hh>
 #include <G4GammaConversion.hh>
 #include <G4GammaConversionToMuons.hh>
@@ -192,10 +191,6 @@ void GRPEmPhysics::ConstructProcess()
 
     // annihilation
     auto anni = new G4eplusAnnihilation();
-    if (param->Use3GammaAnnihilationOnFly())
-    {
-        anni->SetEmModel(new G4eplusTo2or3GammaModel());
-    }
 
     ph->RegisterProcess(new G4eIonisation(), particle);
     ph->RegisterProcess(new G4eBremsstrahlung(), particle);
